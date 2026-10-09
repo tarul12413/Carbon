@@ -70,3 +70,53 @@ GSAP, Motion and zod are deferred to the milestone that first uses them, so noth
 
 - **Lighthouse (local, Edge):** home LCP 2.56 to 2.69 s, TBT about 320 ms, against budgets of 2.5 s and 200 ms. This machine's Lighthouse benchmark index is 277 (a typical CI runner scores several times higher), so simulated 4x CPU throttling overstates the cost. GitHub Actions is the reference; local numbers are indicative only.
 - **JavaScript:** the near-empty home route already ships 137 KB gzipped (Next.js + React runtime). That leaves about 33 KB of the 170 KB budget for M1. GSAP + ScrollTrigger alone is roughly that size, so the steep-clock scene must load after the headline and outside the initial bundle, and Motion stays off the home route.
+
+## M1: Design system and home page
+
+### D-012 Logo mark redrawn as SVG
+
+- **What:** The four-glyph mark (leaf, circle, dot grid, waves) is an inline SVG in `CarbonMark.tsx`, measured from `docs/logo.png` (pixel bounding boxes, then a side-by-side render check). The wordmark is "CARBON" set in Jost.
+- **Why:** The supplied PNGs are small rasters (447–500 px, mostly whitespace). An SVG stays sharp, takes the theme colour, costs no request, and lets the glyphs assemble one by one (header, 400 ms, skipped for reduced motion).
+- **Alternatives:** Using the PNG (blurry at 2x, fixed colour); an automatic trace (needs a new tool, noisier paths). The `.avif` in docs/ was not used: opaque grey background and unclear source.
+
+### D-013 Steep clock: sticky stage, GSAP scrub, CSS variable
+
+- **What:** A tall track (320 svh on phones, 420 svh above 600 px) holds a `position: sticky` stage. GSAP ScrollTrigger scrubs a proxy from 0 to 1 (`scrub: 0.35`) and writes `--steep` on the stage. CSS reads it for the liquid level (`scaleY`), the darker brew layer and the amber wash (opacity). React re-renders only when the whole hour changes.
+- **Why:** Native scroll, no scroll hijacking and no pin spacer, so layout stays stable. Only transform and opacity animate.
+- **Modes:** One media query, `(prefers-reduced-motion: no-preference) and (min-height: 520px)`, chooses pinned or stacked. Stacked is also the server render and the no-JS view, so the content is always there.
+- **Loading:** GSAP (45 KB gzipped) loads on the first scroll or when the section enters the viewport. Home first load is 140.7 KB gzipped (budget 170). An e2e test guards both numbers.
+- **Accessibility:** The clock value is real text ("28 hours steeped"); the checkpoint line is announced through a polite live region; previous/next buttons step between checkpoints; inactive cards are `inert` while pinned.
+- **Bug found and fixed:** Hours were floored, so pixel rounding landed on 27h for 28h and never reached 96h. Hours now round to the nearest whole hour; covered by unit and e2e tests.
+- **Alternatives:** CSS scroll-driven animations (uneven support, and the brief names GSAP); ScrollTrigger `pin` (adds a spacer and reflow).
+
+### D-014 Home content sources
+
+- Cold brew names, notes and steep times are transcribed from menu page 3 into `data/menu.json` (partial transcription; the full menu is M2) and validated with zod at build time.
+- "Signatures" shows the three drinks that carry Carbon's name (page 8), because the menu marks only cold brews as signature (Q-10). No prices anywhere on the home page; an e2e test checks the rendered text.
+- Events teaser facts come from the pitch plan's PDF audit (Coffee Raves with a DJ, "Drip It Up" brewing workshops, the BMW Motorrad launch on 21 June 2025).
+- The "Next event" line in Today at Carbon waits for event data in M4 (Q-13).
+
+### D-015 Open-now status computed in the browser
+
+- **What:** `OutletStatus` uses `useSyncExternalStore` with a 30-second clock. The static HTML shows plain hours; the browser swaps in "Open now, till 11:45 PM" or "Closed. Opens 9 AM" in Asia/Kolkata time.
+- **Why:** The page is static, so a server-computed status would freeze at build time. Status uses a dot shape plus text, never colour alone.
+
+### D-016 Placeholders are visible
+
+- **What:** Unconfirmed values render through `<Tbc>` with a dotted underline and a small "TBC" tag, controlled by `NEXT_PUBLIC_FLAG_SHOW_PLACEHOLDERS` (on by default).
+- **Why:** In a pitch, a founder should never mistake an assumed address or hour for a fact. Turn it off for screenshots once values are confirmed.
+
+### D-017 Honest framing
+
+- The footer says "A concept demo. Not Carbon's official website." Together with `noindex` (D-008), this keeps the demo from being mistaken for Carbon's own site.
+
+### D-018 Test servers on their own ports
+
+- **What:** Playwright starts `next start` on 3100 and Lighthouse on 3101.
+- **Why:** A dev server was already running on 3000; reusing it measured unminified dev bundles (777 KB) and hid a real overflow bug.
+
+### D-019 M1 measurements and open risks
+
+- Lighthouse (local, benchmark index about 1,450): performance 96–98, accessibility 100, CLS 0, TBT 110–170 ms, home LCP 2.5 s. LCP passes with no margin: FCP is 0.9 s and the rest is simulated render delay. To revisit in M8 (font subset, hydration cost).
+- The compact-phone sticky "Book" bar from the responsive plan is deferred to M3, when the booking flow exists to link into.
+- Menu pages were rendered for transcription with pdf.js in a scratch folder (no project dependency).
