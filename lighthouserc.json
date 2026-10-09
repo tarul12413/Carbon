@@ -8,7 +8,8 @@
         "http://localhost:3101/menu",
         "http://localhost:3101/cold-brew",
         "http://localhost:3101/outlets/c-scheme",
-        "http://localhost:3101/story"
+        "http://localhost:3101/story",
+        "http://localhost:3101/book"
       ],
       "numberOfRuns": 3
     },
