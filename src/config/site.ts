@@ -1,3 +1,4 @@
+import type { DailyHours } from "@/domain/hours";
 import { placeholders } from "./placeholders";
 
 /**
@@ -20,6 +21,7 @@ export interface OutletConfig {
   readonly name: string;
   readonly address: string;
   readonly addressConfirmed: boolean;
+  readonly hours: DailyHours;
 }
 
 export const outlets: readonly OutletConfig[] = [
@@ -28,17 +30,20 @@ export const outlets: readonly OutletConfig[] = [
     name: "C Scheme",
     address: "F-6A, Ground Floor, Amir Manzil, Ramesh Marg, C Scheme, Jaipur",
     addressConfirmed: true,
+    hours: placeholders.openingHours.value,
   },
   {
     slug: "raja-park",
     name: "Raja Park / Tilak Nagar",
     address: `${placeholders.rajaParkBuildingNumber.value}, Jaipur`,
     addressConfirmed: false,
+    hours: placeholders.openingHours.value,
   },
   {
     slug: "vaishali-nagar",
     name: "Vaishali Nagar",
     address: placeholders.vaishaliNagarAddress.value,
     addressConfirmed: false,
+    hours: placeholders.openingHours.value,
   },
 ];

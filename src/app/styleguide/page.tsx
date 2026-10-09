@@ -39,7 +39,7 @@ function ThemePanel({ theme }: { theme: "night" | "paper" }) {
         >
           Book a table
         </button>
-        <a href="#top" className="text-accent underline underline-offset-4">
+        <a href="#content" className="text-accent underline underline-offset-4">
           See the menu
         </a>
         <span className="text-success">● Open now</span>
@@ -52,7 +52,7 @@ function ThemePanel({ theme }: { theme: "night" | "paper" }) {
 
 export default function StyleguidePage() {
   return (
-    <main id="top" className="content-cap flex flex-col gap-12 py-12">
+    <main id="content" className="content-cap flex flex-col gap-12 py-12">
       <h1 className="text-h1 font-semibold">{copy.m0.styleguideTitle}</h1>
 
       <section aria-labelledby="palette">
