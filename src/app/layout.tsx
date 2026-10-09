@@ -17,6 +17,8 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
   variable: "--font-plex-mono",
   display: "swap",
+  /* Mono text is never the first paint, so it does not compete with Jost and CSS. */
+  preload: false,
 });
 
 export const metadata: Metadata = {

@@ -3,7 +3,13 @@
     "collect": {
       "startServerCommand": "npm run start -- --port 3101",
       "startServerReadyPattern": "Ready",
-      "url": ["http://localhost:3101/", "http://localhost:3101/styleguide"],
+      "url": [
+        "http://localhost:3101/",
+        "http://localhost:3101/menu",
+        "http://localhost:3101/cold-brew",
+        "http://localhost:3101/outlets/c-scheme",
+        "http://localhost:3101/story"
+      ],
       "numberOfRuns": 3
     },
     "assert": {
