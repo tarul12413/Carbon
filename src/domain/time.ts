@@ -74,3 +74,11 @@ export function longDay(date: string): string {
     new Date(Date.UTC(y, m - 1, d)),
   );
 }
+
+/** "2025-06-21" → "21 June 2025". */
+export function fullDate(date: string): string {
+  const [y, m, d] = parseDate(date);
+  return new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(
+    new Date(Date.UTC(y, m - 1, d)),
+  );
+}

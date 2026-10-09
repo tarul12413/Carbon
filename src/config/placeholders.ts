@@ -76,6 +76,17 @@ export const placeholders = {
     20,
     "Largest party the booking form takes. Bigger groups are pointed to the enquiry form (Blueprint 5.3).",
   ),
+  payAtCafeDeadline: placeholder(
+    "P-22",
+    { label: "a time Carbon sets", demoHours: 2 },
+    "Event seats reserved to pay at the cafe are released if unpaid by this deadline. The label is shown; demoHours (before the start) drives the demo's logic.",
+  ),
+  waitlistClaimMinutes: placeholder(
+    "P-23",
+    30,
+    "When a seat opens, the first person on the waitlist has this long to claim it before it goes to the next.",
+  ),
+  ticketsPerOrderMax: placeholder("P-24", 6, "Most tickets one order can hold."),
 } as const;
 
 export type PlaceholderKey = keyof typeof placeholders;

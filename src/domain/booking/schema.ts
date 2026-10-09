@@ -59,7 +59,7 @@ export const holdInputSchema = z.object({
   }),
   note: z.string().trim().max(LIMITS.note, "note.long"),
   whatsappOptIn: z.boolean(),
-  privacyAccepted: z.literal(true, "privacy.required"),
+  privacyAccepted: z.boolean().refine((accepted) => accepted, "privacy.required"),
   noticeVersion: z.string().min(1),
   /** Honeypot: hidden from people, filled in by naive bots. Must stay empty. */
   website: z.string().max(0, "bot"),
