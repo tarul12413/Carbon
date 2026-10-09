@@ -61,6 +61,16 @@ export const placeholders = {
     "draft-0",
     "Privacy notice version recorded with consent. Legal text is not written yet.",
   ),
+  outletVibeLine: placeholder(
+    "P-19",
+    "",
+    "One line per outlet about the room, from the staff. The pitch plan says to ask rather than invent.",
+  ),
+  pressLinks: placeholder(
+    "P-20",
+    "",
+    "Article URLs for the three press pieces. The brief asks for titles only, with placeholder links.",
+  ),
 } as const;
 
 export type PlaceholderKey = keyof typeof placeholders;
