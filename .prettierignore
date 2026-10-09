@@ -1,0 +1,9 @@
+docs/
+.next/
+node_modules/
+tests/screenshots/
+tests/e2e/.results/
+playwright-report/
+.lighthouseci/
+package-lock.json
+next-env.d.ts
