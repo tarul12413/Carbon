@@ -51,7 +51,7 @@ async function fillDetails(page: Page) {
 
 const storedWebBookings = (page: Page) =>
   page.evaluate(() => {
-    const db = JSON.parse(localStorage.getItem("carbon-demo:bookings:v1") ?? "{}") as {
+    const db = JSON.parse(localStorage.getItem("carbon-demo:db:v2") ?? "{}") as {
       bookings?: { source: string; status: string }[];
     };
     return (db.bookings ?? []).filter((b) => b.source === "web");
@@ -69,7 +69,7 @@ test.describe("book a small table", () => {
     await expect(page.getByRole("heading", { level: 1, name: "Review and pay" })).toBeVisible();
     await expect(page.getByRole("timer")).toHaveText(/^(10:00|09:\d\d)$/);
     await expect(page.getByRole("radio", { name: /Pay at the cafe/ })).toBeChecked();
-    await expect(page.getByRole("radio", { name: /Pay online/ })).toBeDisabled();
+    await expect(page.getByRole("radio", { name: /Pay online/ })).not.toBeChecked();
     await axe(page);
     await fitsScreen(page);
     await shot(page, "book-review", info.project.name, true);
@@ -132,6 +132,7 @@ test.describe("book a small table", () => {
     await fillDetails(page);
     await page.getByRole("button", { name: "Review" }).dblclick();
     await expect(page.getByRole("heading", { level: 1, name: "Review and pay" })).toBeVisible();
+    await page.getByText("Pay at the cafe", { exact: true }).click();
     await page.getByRole("button", { name: "Confirm booking" }).dblclick();
     await expect(page.getByRole("heading", { level: 1, name: "Table's yours." })).toBeVisible();
     expect(await storedWebBookings(page)).toEqual([expect.objectContaining({ status: "confirmed" })]);
