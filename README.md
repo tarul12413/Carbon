@@ -32,3 +32,10 @@ npm run lhci         # Lighthouse budgets
 - `/book` runs the six-step flow; `/book/CRB-1234` confirms and manages a booking.
 - Bookings live in your browser (localStorage) in the hosted demo, so a booking made on one device is not visible on another. "Demo controls" at the foot of the booking pages expire holds or reset the demo data.
 - Rules: `src/domain/booking`. Mock engine: `src/services/mock/bookingEngine.ts`. Route handlers with the same rules: `src/app/api`. Set `NEXT_PUBLIC_BOOKING_TRANSPORT=http` to send the UI through them.
+
+## Events and checkout (M4)
+
+- `/events` lists the labelled sample events; `/events/coffee-rave` sells tickets, `/events/drip-it-up` is sold out with a waitlist.
+- `/checkout/<order>` offers pay online or at the cafe. Paying online opens a clearly labelled sample payment sheet; with the dev panel on, pick Success, Failed or Pending there.
+- `/tickets/<code>` shows the signed QR; `/tickets/<code>/cancel` cancels and refunds.
+- "Demo controls" at the foot of these pages: open a seat for the waitlist, play the bank on a pending payment, expire holds, reset demo data.

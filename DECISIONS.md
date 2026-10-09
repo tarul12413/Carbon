@@ -209,3 +209,60 @@ GSAP, Motion and zod are deferred to the milestone that first uses them, so noth
 - Unit: 108 tests. E2E: 117 pass at 360, 744 and 1440 px (axe clean on every booking screen), 3 skipped by design.
 - Lighthouse, simulated: accessibility 100 and CLS 0 on all six URLs (now including `/book`). LCP medians of three runs: home 2.47 s, `/cold-brew` 2.57 s, `/outlets/c-scheme` 2.39 s, `/story` 2.39 s, `/menu` 2.61 s, `/book` 2.62 s. The CI assertion takes the best run, and fails on `/menu` (2.59 s) and `/book` (2.61 s).
 - **Known gap, unchanged from D-025:** LCP sits right at the 2.5 s line and moves with machine load. The M2 build, measured again on the same machine the same night, gave `/menu` 2.47 to 2.73 s, so this is not an M3 regression. It is the M8 performance item.
+
+## M4: Events, checkout, tickets
+
+### D-033 Dependencies: uqr and @noble/hashes
+
+- **uqr 0.1.3** (April 2026, no dependencies) encodes ticket QRs; the page draws the SVG itself in brand colours with a proper quiet zone. Alternatives: `qrcode` (bigger, canvas-oriented), `qrcode-generator` (older API).
+- **@noble/hashes 2.4.0** (August 2026) signs ticket tokens and the sample gateway's payment signatures with HMAC-SHA256. It works outside secure contexts, unlike Web Crypto, so a phone on the LAN over http still works. Alternative: Web Crypto `subtle` (async, https only).
+- The signing keys are labelled public placeholders (`*-not-a-secret`). The brief forbids real keys; Phase 2 signs on the server with secrets from the environment.
+
+### D-034 One mock database for everything
+
+- Bookings, orders, tickets, the waitlist and handled webhook ids live in one object (`src/services/mock/db.ts`, version 2, localStorage key `carbon-demo:db:v2`). A deposit payment can then confirm its table booking in the same step, and cancelling that booking refunds the deposit.
+- `createMockBackend` exposes `bookings`, `ticketing`, `gateway` (the sample payment sheet and bank), `demo` and `webhooks`. Route handlers mirror the planned API: `/api/events/:slug/availability`, `/api/events/:slug/waitlist`, `/api/waitlist/:id`, `/api/orders`, `/api/orders/:id`, `/api/orders/:id/checkout`, `/api/orders/:id/verify`, `/api/tickets/:code`, `/api/tickets/:code/cancel`, `/api/webhooks/payments`, plus `/api/demo-gateway/{pay,settle}` for the demo only.
+- The browser loads the engines only after the page has loaded and gone idle, so they never compete with the first paint (`/events` LCP went from 3.6 s to 2.3 s).
+
+### D-035 Order state machine and the payment flow
+
+- States: held, awaiting_payment, reserved (pay at the cafe), paid, expired, cancelled, refunded (`src/domain/orders/machine.ts`). A failed attempt is not a state: the order stays held and the customer can try again, use another method, or pay at the cafe.
+- Payment follows the blueprint's Razorpay pattern without Razorpay. The server sets the amount and ignores any price in the request. The client gets a gateway order id, the sample sheet returns a payment id and signature, and `verify` checks the signature without finishing anything. The webhook is the source of truth: it is signed, each event id is handled once, and the order's state decides what an event can still do.
+- Edge cases from Blueprint 11, all unit-tested: double tap on Pay (idempotency key, one order per hold); money arriving after the hold ran out (seats taken back if still free, otherwise an automatic refund); the same webhook delivered twice (one ticket); pending then declined (back to held).
+- Amounts are unknown (P-03, P-04), so they are `null` and always shown as "Rs ---". Nothing is computed from an invented price.
+
+### D-036 Sample payment sheet
+
+- A clearly labelled "Sample payment sheet: not a real gateway, no money moves", light on the dark site, with generic UPI, cards, netbanking and wallets and no gateway branding (brief). Nothing typed into it is stored or sent.
+- With the dev panel flag on, the sheet has a "Demo outcome" choice: success, failed, pending. On the pending screen, demo controls play the bank: approve, approve with the webhook sent twice, or decline.
+
+### D-037 Events, stock and tickets
+
+- Sample events (Q-07) live in `data/events.json`: Coffee Rave, Drip It Up and Kitchen Rave (names from Carbon's own events), dated days from today, all labelled "Sample". Past: the BMW Motorrad launch (Q-12). The list and detail pages render per request so the dates stay current; home rebuilds hourly for "Next up" (Q-13).
+- Seats left = quota minus sample sales, live holds, pending payments, pay-at-cafe reservations, paid orders and seats offered to the waitlist, checked and taken in one step. "Few left" at a fifth of the quota or less (a display rule, not a Carbon policy). Up to 6 per order (P-24).
+- Pay at the cafe reserves seats and issues an unpaid ticket. Unpaid seats are released at a deadline before the start (P-22: "a time Carbon sets", 2 hours in the demo's logic).
+- One ticket per order, admitting the whole party (wireframe: "Coffee Rave x 2"). Its QR holds a signed token (code, event, seats, issue time). The door scanner in M5 verifies it and marks it used once.
+- Cancel and refund: inside the window (P-05), a paid ticket is refunded to the original method ("Rs ---", "timing depends on your bank") and a pay-at-cafe ticket is simply released. Freed seats go to the waitlist first.
+- On phones the fixed "Book a table" bar is hidden on pages with their own primary action (booking, checkout, tickets, event detail).
+
+### D-038 Waitlist
+
+- Only for sold-out events. Phone, WhatsApp consent, privacy notice and a honeypot; the same phone joining again gets its existing place.
+- When seats open, the first person whose party fits gets an offer with a claim window (P-23, 30 minutes); the seats are held for them, so nobody else can take them. If the window lapses, the next person is offered, and lapses that happened while nobody was looking are caught up in order, as a background job would. Messages are shown as samples; nothing is sent.
+- The demo control "Someone cancels (open a seat)" releases one sample seat, to show the offer chain.
+
+### D-039 Table deposit
+
+- "Pay online" on the booking review is live: it creates a deposit order tied to the table hold and goes to the same checkout (online only; "Pay at the cafe instead" confirms the booking directly). Paying confirms the booking with "Deposit paid online". Cancelling it later refunds the deposit; a payment that lands after the table hold ran out is refunded automatically.
+- Known rough edge for M8: a fast double tap on "Review" can land the second tap on the next screen's pay choice. The booking is still made once; the choice can be changed before confirming.
+
+### D-040 Lighthouse gates
+
+- The 170 KB script budget is the brief's home-route budget, so it is an error on `/` only and a warning elsewhere (`assertMatrix`). Booking and event pages carry the mock engine, about 100 KB gzipped of which is zod and the rules, loaded after the page is idle. Phase 2 moves that work to the server.
+- `/events` and `/events/coffee-rave` are now in the Lighthouse run.
+
+### D-041 M4 measurements
+
+- Unit: 133 tests. E2E: 147 pass at 360, 744 and 1440 px, 3 skipped by design. Covered: events list and filters, buying a ticket with success, failed then retry, and pending with a repeated webhook; pay at the cafe; detail checks; hold expiry; cancel and refund; waitlist join, offer and claim; table deposit. Every new screen is axe-clean.
+- Lighthouse, simulated: accessibility 100 everywhere. LCP medians: `/events` 2.30 s, `/events/coffee-rave` about 2.5 s, home 2.46 to 2.56 s. `/menu` (2.60 s) and `/book` (2.65 to 2.77 s) still miss 2.5 s: the gap from D-025 and D-032, for M8.
+- Home JS (Playwright budget test): passes under 170 KB.
