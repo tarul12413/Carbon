@@ -1,12 +1,15 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { fingerprint, runIdempotent, type IdempotencyLedger } from "@/domain/idempotency";
 import type { HoldInput } from "@/domain/booking/schema";
-import { createBookingBackend, memoryStore, type BookingBackend } from "@/services/mock/bookingBackend";
+import type { BookingService } from "@/services/bookings";
+import type { DemoControls } from "@/services/demo";
+import { createMockBackend, memoryStore } from "@/services/mock/mockBackend";
 import { mockOutlets } from "@/services/mock/outlets";
 
 const IST = "Asia/Kolkata";
 let now = new Date("2026-10-10T12:00:00+05:30");
-let backend: BookingBackend;
+let backend: BookingService;
+let demo: DemoControls;
 
 const hold = (over: Partial<HoldInput> = {}): HoldInput => ({
   outlet: "raja-park",
@@ -30,13 +33,13 @@ const minutes = (n: number) => {
 beforeEach(() => {
   now = new Date("2026-10-10T12:00:00+05:30");
   let seed = 1;
-  backend = createBookingBackend({
+  ({ bookings: backend, demo } = createMockBackend({
     store: memoryStore(),
     outlets: mockOutlets,
     timeZone: IST,
     clock: () => now,
     random: () => (seed = (seed * 16807) % 2147483647) / 2147483647,
-  });
+  }));
 });
 
 describe("idempotency ledger", () => {
@@ -113,7 +116,7 @@ describe("booking a small table", () => {
     });
     const bot = await backend.createHold(hold({ website: "https://spam.example" }), "b");
     expect(!bot.ok && bot.error.code).toBe("bot_check");
-    const noConsent = await backend.createHold({ ...hold(), privacyAccepted: false as true }, "c");
+    const noConsent = await backend.createHold({ ...hold(), privacyAccepted: false }, "c");
     expect(!noConsent.ok && noConsent.error.fields).toEqual({ privacyAccepted: "privacy.required" });
   });
 
@@ -173,7 +176,7 @@ describe("hold expiry", () => {
 
   it("the demo control ends live holds now", async () => {
     await backend.createHold(hold(), "a");
-    expect(await backend.expireHolds()).toBe(1);
+    expect(await demo.expireHolds()).toBe(1);
   });
 });
 
@@ -247,7 +250,7 @@ describe("seed data", () => {
 
   it("reset restores the seed", async () => {
     await backend.createHold(hold(), "a");
-    await backend.reset();
+    await demo.reset();
     const slots = await backend.getAvailability({ outlet: "raja-park", date: "2026-10-11", partySize: 2 });
     expect(slots.ok && slots.value.slots.find((s) => s.time === "19:00")?.remaining).toBe(19);
   });

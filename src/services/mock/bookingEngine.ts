@@ -1,12 +1,9 @@
-import { z } from "zod";
-import seed from "../../../data/bookings.json";
 import { alternativeSlots, bookableDates, slotsFor, isBookable } from "@/domain/booking/availability";
 import { newBookingCode } from "@/domain/booking/code";
 import { nextStatus, type BookingEvent } from "@/domain/booking/machine";
 import { bookingKind, canChangeOrCancel, findDuplicate } from "@/domain/booking/rules";
 import {
   availabilityQuerySchema,
-  bookingSchema,
   changeInputSchema,
   confirmInputSchema,
   holdInputSchema,
@@ -15,11 +12,13 @@ import {
 } from "@/domain/booking/schema";
 import { bookingSettingsFor } from "@/domain/booking/settings";
 import { toMinutes } from "@/domain/hours";
-import type { IdempotencyLedger } from "@/domain/idempotency";
-import { OUTLET_SLUGS, type Outlet } from "@/domain/outlet";
-import { addDays, localDate, zonedInstant } from "@/domain/time";
+import type { Outlet } from "@/domain/outlet";
+import { zonedInstant } from "@/domain/time";
 import { err, ok } from "@/lib/result";
-import type { Availability, BookingError, BookingResult } from "../bookings";
+import type { Availability, BookingResult } from "../bookings";
+import type { ServiceError } from "../errors";
+import { invalidInput as invalid, type EngineContext, type MockDb } from "./db";
+import { refundDeposit } from "./ordersEngine";
 
 /**
  * The mock booking server. Pure functions over a plain database object, so the same rules run in
@@ -27,74 +26,6 @@ import type { Availability, BookingError, BookingResult } from "../bookings";
  * Each call runs synchronously from load to save, which is what makes a hold atomic here;
  * Phase 2 gets the same guarantee from a database transaction that locks the slot.
  */
-
-export const bookingDbSchema = z.object({
-  version: z.literal(1),
-  bookings: z.array(bookingSchema),
-  idempotency: z.record(z.string(), z.object({ fingerprint: z.string(), at: z.string(), response: bookingSchema })),
-});
-export type BookingDb = z.infer<typeof bookingDbSchema>;
-export type BookingLedger = IdempotencyLedger<Booking>;
-
-export interface EngineContext {
-  readonly now: Date;
-  readonly timeZone: string;
-  readonly outlets: readonly Outlet[];
-  readonly random: () => number;
-}
-
-const seedSchema = z.object({
-  bookings: z.array(
-    z.object({
-      dayOffset: z.number().int().min(0),
-      outlet: z.enum(OUTLET_SLUGS),
-      time: z.string(),
-      partySize: z.number().int().positive(),
-      status: z.enum(["confirmed", "requested"]),
-      occasion: z.string().optional(),
-    }),
-  ),
-});
-
-/** Fresh database: the fictional seed, dated from today. */
-export function seedDb(ctx: EngineContext): BookingDb {
-  const today = localDate(ctx.now, ctx.timeZone);
-  const at = ctx.now.toISOString();
-  const taken = new Set<string>();
-  const bookings = seedSchema.parse(seed).bookings.map((s, i): Booking => {
-    const n = String(i + 1).padStart(2, "0");
-    const date = addDays(today, s.dayOffset);
-    const code = newBookingCode(taken, ctx.random);
-    taken.add(code);
-    return {
-      code,
-      outlet: s.outlet,
-      date,
-      time: s.time,
-      startsAt: zonedInstant(date, toMinutes(s.time), ctx.timeZone).toISOString(),
-      partySize: s.partySize,
-      kind: s.status === "requested" ? "request" : "instant",
-      status: s.status,
-      name: `Sample guest ${n}`,
-      phone: `+9190000000${n}`,
-      note: "",
-      whatsappOptIn: false,
-      consent: { noticeVersion: "seed", at },
-      holdExpiresAt: at,
-      ...(s.status === "confirmed" ? { payment: "cafe" as const } : {}),
-      ...(s.occasion ? { request: { occasion: s.occasion, budgetPerHead: "" } } : {}),
-      source: "seed",
-      createdAt: at,
-      history: [{ status: s.status, at }],
-    };
-  });
-  return { version: 1, bookings, idempotency: {} };
-}
-
-const invalid = (issues: readonly { path: PropertyKey[]; message: string }[]): BookingError => ({
-  code: issues.some((i) => i.message === "bot") ? "bot_check" : "invalid_input",
-  fields: Object.fromEntries(issues.map((i) => [i.path.map(String).join(".") || "_", i.message])),
-});
 
 const outletOf = (ctx: EngineContext, slug: string) => ctx.outlets.find((o) => o.slug === slug);
 
@@ -114,7 +45,7 @@ function transition(booking: Booking, event: BookingEvent, now: Date): boolean {
 }
 
 /** Holds past their expiry become expired. Runs before every read and write. */
-export function sweepExpiredHolds(db: BookingDb, now: Date): number {
+export function sweepExpiredHolds(db: MockDb, now: Date): number {
   let count = 0;
   for (const booking of db.bookings) {
     if (booking.status === "held" && Date.parse(booking.holdExpiresAt) <= now.getTime()) {
@@ -129,7 +60,7 @@ export function listDates(ctx: EngineContext, outlet: Outlet): string[] {
   return bookableDates(ctx.now, ctx.timeZone, bookingSettingsFor(outlet.slug));
 }
 
-export function getAvailability(db: BookingDb, ctx: EngineContext, raw: unknown): BookingResult<Availability> {
+export function getAvailability(db: MockDb, ctx: EngineContext, raw: unknown): BookingResult<Availability> {
   const parsed = availabilityQuerySchema.safeParse(raw);
   if (!parsed.success) return err(invalid(parsed.error.issues));
   const query = parsed.data;
@@ -146,12 +77,12 @@ export function getAvailability(db: BookingDb, ctx: EngineContext, raw: unknown)
 
 /** Checks a date, time and party against the rules; returns the slot error, if any. */
 function checkSlot(
-  db: BookingDb,
+  db: MockDb,
   ctx: EngineContext,
   outlet: Outlet,
   want: { readonly date: string; readonly time: string; readonly partySize: number },
   ignoreCode?: string,
-): BookingError | null {
+): ServiceError | null {
   const settings = bookingSettingsFor(outlet.slug);
   if (want.partySize > settings.maxPartySize) return { code: "party_too_large" };
   if (!listDates(ctx, outlet).includes(want.date)) return { code: "outside_window" };
@@ -168,7 +99,7 @@ function checkSlot(
   return null;
 }
 
-export function createHold(db: BookingDb, ctx: EngineContext, raw: unknown): BookingResult {
+export function createHold(db: MockDb, ctx: EngineContext, raw: unknown): BookingResult {
   const parsed = holdInputSchema.safeParse(raw);
   if (!parsed.success) return err(invalid(parsed.error.issues));
   const input = parsed.data;
@@ -206,14 +137,14 @@ export function createHold(db: BookingDb, ctx: EngineContext, raw: unknown): Boo
   return ok(booking);
 }
 
-function findLive(db: BookingDb, code: string): BookingResult {
+function findLive(db: MockDb, code: string): BookingResult {
   const booking = db.bookings.find((b) => b.code === code);
   return booking ? ok(booking) : err({ code: "not_found" });
 }
 
 /** A held booking moving on: refused once the hold has run out. */
 function finishHold(
-  db: BookingDb,
+  db: MockDb,
   ctx: EngineContext,
   code: string,
   event: "confirm" | "request",
@@ -230,7 +161,7 @@ function finishHold(
   return ok(booking);
 }
 
-export function confirm(db: BookingDb, ctx: EngineContext, code: string, raw: unknown): BookingResult {
+export function confirm(db: MockDb, ctx: EngineContext, code: string, raw: unknown): BookingResult {
   const parsed = confirmInputSchema.safeParse(raw);
   if (!parsed.success) return err(invalid(parsed.error.issues));
   return finishHold(db, ctx, code, "confirm", (b) => {
@@ -238,7 +169,7 @@ export function confirm(db: BookingDb, ctx: EngineContext, code: string, raw: un
   });
 }
 
-export function sendRequest(db: BookingDb, ctx: EngineContext, code: string, raw: unknown): BookingResult {
+export function sendRequest(db: MockDb, ctx: EngineContext, code: string, raw: unknown): BookingResult {
   const parsed = requestInputSchema.safeParse(raw);
   if (!parsed.success) return err(invalid(parsed.error.issues));
   return finishHold(db, ctx, code, "request", (b) => {
@@ -250,7 +181,7 @@ export function sendRequest(db: BookingDb, ctx: EngineContext, code: string, raw
  * Cancels a confirmed booking before the cutoff. On a live hold it releases the table instead
  * (the flow does this when someone goes back and changes the slot); the machine calls that expired.
  */
-export function cancel(db: BookingDb, ctx: EngineContext, code: string): BookingResult {
+export function cancel(db: MockDb, ctx: EngineContext, code: string): BookingResult {
   const found = findLive(db, code);
   if (!found.ok) return found;
   const booking = found.value;
@@ -261,11 +192,12 @@ export function cancel(db: BookingDb, ctx: EngineContext, code: string): Booking
   if (booking.status !== "confirmed") return err({ code: "not_allowed" });
   if (!canChangeOrCancel(booking, ctx.now, bookingSettingsFor(booking.outlet))) return err({ code: "cutoff_passed" });
   transition(booking, "cancel", ctx.now);
+  if (booking.payment === "online") refundDeposit(db, ctx, booking.code);
   return ok(booking);
 }
 
 /** Moves a confirmed booking to a new slot. Its own seats do not count against the new slot. */
-export function change(db: BookingDb, ctx: EngineContext, code: string, raw: unknown): BookingResult {
+export function change(db: MockDb, ctx: EngineContext, code: string, raw: unknown): BookingResult {
   const parsed = changeInputSchema.safeParse(raw);
   if (!parsed.success) return err(invalid(parsed.error.issues));
   const found = findLive(db, code);
@@ -284,12 +216,12 @@ export function change(db: BookingDb, ctx: EngineContext, code: string, raw: unk
   return ok(booking);
 }
 
-export function getBooking(db: BookingDb, code: string): BookingResult {
+export function getBooking(db: MockDb, code: string): BookingResult {
   return findLive(db, code);
 }
 
 /** Demo panel: end every live hold now. */
-export function expireHolds(db: BookingDb, ctx: EngineContext): number {
+export function expireHolds(db: MockDb, ctx: EngineContext): number {
   for (const booking of db.bookings) {
     if (booking.status === "held") booking.holdExpiresAt = ctx.now.toISOString();
   }

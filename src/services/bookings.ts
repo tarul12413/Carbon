@@ -7,29 +7,9 @@ import type {
   HoldInput,
   RequestInput,
 } from "@/domain/booking/schema";
-import type { Result } from "@/lib/result";
+import type { ServiceResult } from "./errors";
 
-export type BookingErrorCode =
-  | "invalid_input"
-  | "bot_check"
-  | "outside_window"
-  | "party_too_large"
-  | "slot_full"
-  | "not_found"
-  | "hold_expired"
-  | "not_allowed"
-  | "cutoff_passed"
-  | "idempotency_conflict";
-
-export interface BookingError {
-  readonly code: BookingErrorCode;
-  /** Field → message key, for invalid_input. */
-  readonly fields?: Readonly<Record<string, string>>;
-  /** Next best slots, for slot_full. */
-  readonly alternatives?: readonly { readonly date: string; readonly time: string }[];
-}
-
-export type BookingResult<T = Booking> = Result<T, BookingError>;
+export type BookingResult<T = Booking> = ServiceResult<T>;
 
 export interface Availability {
   readonly outlet: string;
@@ -52,14 +32,6 @@ export interface BookingService {
   change(code: string, input: ChangeInput, idempotencyKey: string): Promise<BookingResult>;
   cancel(code: string, idempotencyKey: string): Promise<BookingResult>;
   getBooking(code: string): Promise<BookingResult>;
-}
-
-/** Demo-only controls, shown in the dev panel. Not part of the Phase 2 API. */
-export interface DemoControls {
-  /** Wipes demo bookings and restores the seed. */
-  reset(): Promise<void>;
-  /** Ends every live hold now, to show what happens when time runs out. */
-  expireHolds(): Promise<number>;
 }
 
 export type { Booking };

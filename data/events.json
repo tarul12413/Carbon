@@ -1,0 +1,41 @@
+{
+  "source": "Sample events (OPEN_QUESTIONS Q-07). Names from Carbon's own events (pitch plan); dates, times, capacity and sales are invented for the demo and labelled 'Sample' on the site. Dates are days from today.",
+  "upcoming": [
+    {
+      "slug": "coffee-rave",
+      "title": "Coffee Rave",
+      "kind": "rave",
+      "outlet": "c-scheme",
+      "dayOffset": 5,
+      "time": "21:00",
+      "durationMinutes": 180,
+      "summary": "Cold brew and a DJ.",
+      "ticketTypes": [{ "id": "general", "name": "General", "quota": 40, "seedSold": 33 }],
+      "seedWaitlist": 0
+    },
+    {
+      "slug": "drip-it-up",
+      "title": "Drip It Up",
+      "kind": "workshop",
+      "outlet": "raja-park",
+      "dayOffset": 8,
+      "time": "11:00",
+      "durationMinutes": 120,
+      "summary": "A coffee brewing session.",
+      "ticketTypes": [{ "id": "general", "name": "General", "quota": 12, "seedSold": 12 }],
+      "seedWaitlist": 3
+    },
+    {
+      "slug": "kitchen-rave",
+      "title": "Kitchen Rave",
+      "kind": "rave",
+      "outlet": "vaishali-nagar",
+      "dayOffset": 12,
+      "time": "20:00",
+      "durationMinutes": 180,
+      "ticketTypes": [{ "id": "general", "name": "General", "quota": 60, "seedSold": 18 }],
+      "seedWaitlist": 0
+    }
+  ],
+  "past": [{ "title": "BMW Motorrad launch", "kind": "collab", "date": "2025-06-21" }]
+}

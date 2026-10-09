@@ -1,6 +1,6 @@
-import type { BookingErrorCode, BookingResult } from "@/services/bookings";
+import type { ServiceErrorCode, ServiceResult } from "@/services/errors";
 
-const statusFor: Record<BookingErrorCode, number> = {
+const statusFor: Record<ServiceErrorCode, number> = {
   invalid_input: 400,
   bot_check: 400,
   outside_window: 422,
@@ -11,10 +11,13 @@ const statusFor: Record<BookingErrorCode, number> = {
   not_allowed: 409,
   cutoff_passed: 409,
   idempotency_conflict: 422,
+  sold_out: 409,
+  too_many: 409,
+  signature_invalid: 400,
 };
 
 /** Same `{ ok, value | error }` body as the mock service, with a matching HTTP status. */
-export function respond<T>(result: BookingResult<T>, created = false): Response {
+export function respond<T>(result: ServiceResult<T>, created = false): Response {
   const status = result.ok ? (created ? 201 : 200) : statusFor[result.error.code];
   return Response.json(result, { status, headers: { "cache-control": "no-store" } });
 }

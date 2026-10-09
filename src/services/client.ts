@@ -1,30 +1,54 @@
 "use client";
 
-import type { BookingService, DemoControls } from "./bookings";
+import type { BookingService } from "./bookings";
+import type { DemoControls } from "./demo";
 import { createHttpBookingService } from "./http/bookings";
+import type { MockBackend } from "./mock/mockBackend";
+import type { DemoGateway, TicketingService } from "./ticketing";
 
 /**
- * Services for client components. The hosted demo keeps bookings in this browser (D-004);
- * NEXT_PUBLIC_BOOKING_TRANSPORT=http sends them to the route handlers instead.
+ * Services for client components. The hosted demo keeps its data in this browser (D-026);
+ * NEXT_PUBLIC_BOOKING_TRANSPORT=http sends bookings to the route handlers instead.
  *
- * The in-browser backend (the mock engine and zod) loads on first use, so pages that only link
- * to booking, and the prefetch of /book, stay light.
+ * The in-browser backend (the mock engines and zod) loads on first use, and never before the page
+ * has loaded and gone idle, so it does not compete with the first paint. Pages that only link to
+ * booking or events, and their prefetches, stay light.
  */
-const backend = () => import("./mock/browserBackend").then((m) => m.browserBackend);
+const idle = (resolve: () => void) =>
+  "requestIdleCallback" in window
+    ? window.requestIdleCallback(() => resolve(), { timeout: 1500 })
+    : setTimeout(resolve, 200);
+const pageLoaded = () =>
+  new Promise<void>((resolve) => {
+    if (document.readyState === "complete") idle(resolve);
+    else window.addEventListener("load", () => idle(resolve), { once: true });
+  });
+const backend = () =>
+  pageLoaded()
+    .then(() => import("./mock/browserBackend"))
+    .then((m) => m.browserBackend);
 
-const local: BookingService & DemoControls = {
-  getAvailability: async (query) => (await backend()).getAvailability(query),
-  createHold: async (input, key) => (await backend()).createHold(input, key),
-  confirm: async (code, input, key) => (await backend()).confirm(code, input, key),
-  sendRequest: async (code, input, key) => (await backend()).sendRequest(code, input, key),
-  change: async (code, input, key) => (await backend()).change(code, input, key),
-  cancel: async (code, key) => (await backend()).cancel(code, key),
-  getBooking: async (code) => (await backend()).getBooking(code),
-  reset: async () => (await backend()).reset(),
-  expireHolds: async () => (await backend()).expireHolds(),
-};
+/** A service whose every method waits for the backend to load, then calls through. */
+function deferred<K extends keyof MockBackend>(name: K): MockBackend[K] {
+  return new Proxy({} as MockBackend[K], {
+    get:
+      (_target, method) =>
+      async (...args: unknown[]) => {
+        const service = (await backend())[name];
+        const fn = Reflect.get(service, method) as (...a: unknown[]) => Promise<unknown>;
+        return fn.apply(service, args);
+      },
+  });
+}
 
-export const clientServices: { readonly bookings: BookingService; readonly demo: DemoControls } = {
-  bookings: process.env.NEXT_PUBLIC_BOOKING_TRANSPORT === "http" ? createHttpBookingService() : local,
-  demo: local,
+export const clientServices: {
+  readonly bookings: BookingService;
+  readonly ticketing: TicketingService;
+  readonly gateway: DemoGateway;
+  readonly demo: DemoControls;
+} = {
+  bookings: process.env.NEXT_PUBLIC_BOOKING_TRANSPORT === "http" ? createHttpBookingService() : deferred("bookings"),
+  ticketing: deferred("ticketing"),
+  gateway: deferred("gateway"),
+  demo: deferred("demo"),
 };

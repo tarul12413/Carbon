@@ -1,10 +1,10 @@
-import { bookingDbSchema } from "./bookingEngine";
-import { memoryStore, type DbStore } from "./bookingBackend";
+import { mockDbSchema } from "./db";
+import { memoryStore, type DbStore } from "./mockBackend";
 
-export const BROWSER_DB_KEY = "carbon-demo:bookings:v1";
+export const BROWSER_DB_KEY = "carbon-demo:db:v2";
 
 /**
- * Keeps the mock database in this browser's localStorage (D-004), so a booking made on one page
+ * Keeps the mock database in this browser's localStorage (D-026), so a booking made on one page
  * is there on the next, whichever serverless instance served the page. Falls back to memory when
  * storage is blocked (private windows, strict settings) and starts over if the saved data is unreadable.
  */
@@ -15,7 +15,7 @@ export function browserStore(): DbStore {
       try {
         const saved = window.localStorage.getItem(BROWSER_DB_KEY);
         if (!saved) return fallback.read();
-        const parsed = bookingDbSchema.safeParse(JSON.parse(saved));
+        const parsed = mockDbSchema.safeParse(JSON.parse(saved));
         return parsed.success ? parsed.data : null;
       } catch {
         return fallback.read();

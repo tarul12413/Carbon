@@ -1,0 +1,121 @@
+import { z } from "zod";
+import seed from "../../../data/bookings.json";
+import { newBookingCode } from "@/domain/booking/code";
+import { bookingSchema, type Booking } from "@/domain/booking/schema";
+import type { EventInfo } from "@/domain/events/types";
+import { toMinutes } from "@/domain/hours";
+import {
+  orderSchema,
+  ticketSchema,
+  waitlistEntrySchema,
+  webhookEventSchema,
+  type WaitlistEntry,
+} from "@/domain/orders/schema";
+import { OUTLET_SLUGS, type Outlet } from "@/domain/outlet";
+import { addDays, localDate, zonedInstant } from "@/domain/time";
+import type { ServiceError } from "../errors";
+
+/**
+ * The mock database: one plain object, so a single call can change a booking and the order that
+ * pays its deposit together. Saved whole after each call (D-026).
+ */
+export const mockDbSchema = z.object({
+  version: z.literal(2),
+  bookings: z.array(bookingSchema),
+  orders: z.array(orderSchema),
+  tickets: z.array(ticketSchema),
+  waitlist: z.array(waitlistEntrySchema),
+  /** Payment webhooks already handled, by event id (Blueprint section 9: webhook_events). */
+  webhooks: z.array(webhookEventSchema),
+  /** Seats freed by the demo control "someone cancels", by "event:ticket type". */
+  released: z.record(z.string(), z.number().int().nonnegative()),
+  idempotency: z.record(z.string(), z.object({ fingerprint: z.string(), at: z.string(), response: z.unknown() })),
+});
+export type MockDb = z.infer<typeof mockDbSchema>;
+
+export interface EngineContext {
+  readonly now: Date;
+  readonly timeZone: string;
+  readonly outlets: readonly Outlet[];
+  /** The sample events as of `now`. */
+  readonly events: readonly EventInfo[];
+  readonly random: () => number;
+}
+
+/** "ord_k3x9q0w2ab"-style ids from the injected random source. */
+export function randomId(prefix: string, random: () => number): string {
+  const alphabet = "abcdefghijklmnopqrstuvwxyz0123456789";
+  return `${prefix}_${Array.from({ length: 10 }, () => alphabet[Math.floor(random() * alphabet.length)]).join("")}`;
+}
+
+export const invalidInput = (issues: readonly { path: PropertyKey[]; message: string }[]): ServiceError => ({
+  code: issues.some((i) => i.message === "bot") ? "bot_check" : "invalid_input",
+  fields: Object.fromEntries(issues.map((i) => [i.path.map(String).join(".") || "_", i.message])),
+});
+
+const bookingSeedSchema = z.object({
+  bookings: z.array(
+    z.object({
+      dayOffset: z.number().int().min(0),
+      outlet: z.enum(OUTLET_SLUGS),
+      time: z.string(),
+      partySize: z.number().int().positive(),
+      status: z.enum(["confirmed", "requested"]),
+      occasion: z.string().optional(),
+    }),
+  ),
+});
+
+/** Fresh database: fictional bookings and waitlist entries (Q-08), dated from today. */
+export function seedDb(ctx: EngineContext): MockDb {
+  const today = localDate(ctx.now, ctx.timeZone);
+  const at = ctx.now.toISOString();
+  const taken = new Set<string>();
+  const bookings = bookingSeedSchema.parse(seed).bookings.map((s, i): Booking => {
+    const n = String(i + 1).padStart(2, "0");
+    const date = addDays(today, s.dayOffset);
+    const code = newBookingCode(taken, ctx.random);
+    taken.add(code);
+    return {
+      code,
+      outlet: s.outlet,
+      date,
+      time: s.time,
+      startsAt: zonedInstant(date, toMinutes(s.time), ctx.timeZone).toISOString(),
+      partySize: s.partySize,
+      kind: s.status === "requested" ? "request" : "instant",
+      status: s.status,
+      name: `Sample guest ${n}`,
+      phone: `+9190000000${n}`,
+      note: "",
+      whatsappOptIn: false,
+      consent: { noticeVersion: "seed", at },
+      holdExpiresAt: at,
+      ...(s.status === "confirmed" ? { payment: "cafe" as const } : {}),
+      ...(s.occasion ? { request: { occasion: s.occasion, budgetPerHead: "" } } : {}),
+      source: "seed",
+      createdAt: at,
+      history: [{ status: s.status, at }],
+    };
+  });
+
+  const waitlist = ctx.events.flatMap((event) =>
+    Array.from({ length: event.seedWaitlist }, (_, i): WaitlistEntry => {
+      const n = String(i + 1).padStart(2, "0");
+      return {
+        id: randomId("wl", ctx.random),
+        eventSlug: event.slug,
+        ticketTypeId: event.ticketTypes[0]?.id ?? "general",
+        quantity: 1,
+        phone: `+9190000001${n}`,
+        whatsappOptIn: true,
+        consent: { noticeVersion: "seed", at },
+        status: "waiting",
+        source: "seed",
+        createdAt: new Date(ctx.now.getTime() - (event.seedWaitlist - i) * 60 * 60_000).toISOString(),
+      };
+    }),
+  );
+
+  return { version: 2, bookings, orders: [], tickets: [], waitlist, webhooks: [], released: {}, idempotency: {} };
+}
