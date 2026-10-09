@@ -1,9 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+import { shot } from "./shot";
 
 const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"];
-const shot = (page: Page, name: string, project: string) =>
-  page.screenshot({ path: `tests/screenshots/m1/${name}-${project}.png` });
 
 async function scrollClockTo(page: Page, hour: number) {
   await page.evaluate((h) => {
