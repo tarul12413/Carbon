@@ -7,7 +7,7 @@ import type { MenuItem } from "@/domain/menu/schema";
 
 const t = copy.home.signatures;
 
-/** Drinks that carry Carbon's name, from menu page 8. Names and descriptions only; no prices on the home page. */
+/** Drinks that carry Carbon's name (menu pages 8 and 9). Names and descriptions only; no prices on the home page. */
 export function Signatures({ items }: { readonly items: readonly MenuItem[] }) {
   return (
     <section aria-labelledby="signatures-title" className="border-t border-line">
@@ -15,7 +15,7 @@ export function Signatures({ items }: { readonly items: readonly MenuItem[] }) {
         <SectionHeading id="signatures-title" eyebrow={t.eyebrow}>
           {t.title}
         </SectionHeading>
-        <ul className="grid gap-px overflow-hidden rounded-md border border-line bg-line tablet:grid-cols-3">
+        <ul className="grid gap-px overflow-hidden rounded-md border border-line bg-line tablet:grid-cols-2 laptop:grid-cols-4">
           {items.map((item) => (
             <li key={item.id} className="flex flex-col gap-3 bg-surface p-6">
               <h3 className="label-caps text-body">{item.name}</h3>
