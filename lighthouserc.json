@@ -1,9 +1,9 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "npm run start",
+      "startServerCommand": "npm run start -- --port 3101",
       "startServerReadyPattern": "Ready",
-      "url": ["http://localhost:3000/", "http://localhost:3000/styleguide"],
+      "url": ["http://localhost:3101/", "http://localhost:3101/styleguide"],
       "numberOfRuns": 3
     },
     "assert": {

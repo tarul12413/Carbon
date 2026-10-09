@@ -44,3 +44,4 @@ next-env.d.ts
 /tests/e2e/.results/
 /playwright-report/
 /.lighthouseci/
+/tests/screenshots/smoke/

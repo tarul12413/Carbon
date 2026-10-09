@@ -10,7 +10,7 @@ for (const path of ["/", "/styleguide"]) {
     expect(results.violations).toEqual([]);
 
     const name = path === "/" ? "home" : path.slice(1);
-    await page.screenshot({ path: `tests/screenshots/m0/${name}-${testInfo.project.name}.png`, fullPage: true });
+    await page.screenshot({ path: `tests/screenshots/smoke/${name}-${testInfo.project.name}.png`, fullPage: true });
   });
 
   test(`${path} has no horizontal overflow`, async ({ page }) => {
