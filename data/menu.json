@@ -1,0 +1,112 @@
+{
+  "source": "docs/menu.pdf (March 2026)",
+  "transcription": {
+    "status": "partial",
+    "pagesDone": [3, 8],
+    "note": "M1 transcribed the signature cold brews (page 3) and the three house-named drinks (page 8). The full menu is M2."
+  },
+  "categories": [
+    { "id": "signature-cold-brews", "name": "Signature Cold Brews", "page": 3 },
+    { "id": "coffee-mixology", "name": "Coffee Mixology", "page": 8 }
+  ],
+  "items": [
+    {
+      "id": "the-original",
+      "categoryId": "signature-cold-brews",
+      "name": "The Original",
+      "notes": "apricot & milk chocolate notes",
+      "pricePaise": 29000,
+      "steepHours": 28,
+      "tags": ["cold-brew"],
+      "available": true
+    },
+    {
+      "id": "whiskey-barrel",
+      "categoryId": "signature-cold-brews",
+      "name": "Whiskey Barrel",
+      "notes": "apple & bourbon notes",
+      "pricePaise": 32000,
+      "steepHours": 18,
+      "tags": ["cold-brew"],
+      "available": true
+    },
+    {
+      "id": "mint-lime",
+      "categoryId": "signature-cold-brews",
+      "name": "Mint Lime",
+      "notes": "citrus & mint notes",
+      "pricePaise": 30000,
+      "steepHours": 36,
+      "tags": ["cold-brew"],
+      "available": true
+    },
+    {
+      "id": "vanilla-orange",
+      "categoryId": "signature-cold-brews",
+      "name": "Vanilla Orange",
+      "notes": "citrus & vanilla notes",
+      "pricePaise": 32000,
+      "steepHours": 96,
+      "tags": ["cold-brew"],
+      "available": true
+    },
+    {
+      "id": "tropical-monk",
+      "categoryId": "signature-cold-brews",
+      "name": "Tropical Monk",
+      "notes": "kaffir, coconut & honey notes",
+      "pricePaise": 32000,
+      "steepHours": 28,
+      "tags": ["cold-brew"],
+      "available": true
+    },
+    {
+      "id": "berry-bold",
+      "categoryId": "signature-cold-brews",
+      "name": "Berry Bold",
+      "notes": "blueberry & honey notes",
+      "pricePaise": 32000,
+      "steepHours": 96,
+      "tags": ["cold-brew"],
+      "available": true
+    },
+    {
+      "id": "mango-passion",
+      "categoryId": "signature-cold-brews",
+      "name": "Mango Passion",
+      "notes": "mango & passion fruit notes",
+      "pricePaise": 32000,
+      "steepHours": 24,
+      "tags": ["cold-brew"],
+      "available": true
+    },
+    {
+      "id": "black-carbon-latte",
+      "categoryId": "coffee-mixology",
+      "name": "Black Carbon Latte",
+      "notes": "espresso shot, honey, milk crème, ice, activated charcoal",
+      "pricePaise": 27000,
+      "tags": ["house-named"],
+      "available": true
+    },
+    {
+      "id": "carbon-ginger-brew",
+      "categoryId": "coffee-mixology",
+      "name": "Carbon Ginger Brew",
+      "notes": "fresh ginger juice, mint leaves, lime, original cold brew",
+      "pricePaise": 26000,
+      "tags": ["house-named"],
+      "available": true
+    },
+    {
+      "id": "carbon-toddy",
+      "categoryId": "coffee-mixology",
+      "name": "Carbon Toddy",
+      "notes": "whiskey barrel cold brew, cinnamon, lime, honey, cardamom",
+      "servedHot": true,
+      "pricePaise": 28000,
+      "tags": ["house-named"],
+      "available": true
+    }
+  ]
+}
