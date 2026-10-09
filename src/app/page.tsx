@@ -1,14 +1,30 @@
-import Link from "next/link";
-import { copy } from "@/content/copy";
+import { BookWallTeaser } from "@/components/home/BookWallTeaser";
+import { EventsTeaser } from "@/components/home/EventsTeaser";
+import { Hero } from "@/components/home/Hero";
+import { OutletsSection } from "@/components/home/OutletsSection";
+import { Proof } from "@/components/home/Proof";
+import { Signatures } from "@/components/home/Signatures";
+import { SteepClock } from "@/components/home/SteepClock";
+import { TodayAtCarbon } from "@/components/home/TodayAtCarbon";
+import { services } from "@/services";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [coldBrews, houseSignatures] = await Promise.all([
+    services.menu.listColdBrews(),
+    services.menu.listHouseSignatures(),
+  ]);
+  const brews = coldBrews.map(({ id, name, notes, steepHours }) => ({ id, name, notes, steepHours }));
+
   return (
-    <main className="content-cap flex min-h-svh flex-col justify-center gap-8 py-16">
-      <h1 className="text-display font-semibold">{copy.home.heroHeadline}</h1>
-      <p className="font-mono text-fg-muted">00h · {copy.m0.holding}</p>
-      <Link href="/styleguide" className="text-accent underline underline-offset-4">
-        {copy.m0.styleguideTitle}
-      </Link>
+    <main id="content">
+      <Hero />
+      <SteepClock brews={brews} />
+      <TodayAtCarbon />
+      <Signatures items={houseSignatures} />
+      <OutletsSection />
+      <EventsTeaser />
+      <Proof />
+      <BookWallTeaser />
     </main>
   );
 }

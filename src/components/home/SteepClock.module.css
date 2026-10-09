@@ -1,0 +1,394 @@
+/*
+  Two modes, chosen in JS from one media query (see SteepClock.tsx):
+  - stacked: plain list of cards. Default for server render, no JS, reduced motion, short screens.
+  - pinned: a tall track with a sticky stage; native scroll drives --steep (0 to 1).
+  Only transform and opacity animate.
+*/
+
+.section {
+  border-top: 1px solid var(--line);
+}
+
+/* ---------- stacked ---------- */
+
+.section[data-mode="stacked"] .layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding-block: 4rem;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 40rem;
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.group {
+  display: grid;
+  gap: 1rem;
+  scroll-margin-top: 1rem;
+}
+
+.group:focus-visible {
+  outline-offset: 8px;
+}
+
+.groupHour {
+  font-family: var(--font-mono);
+  font-size: var(--text-h1);
+  line-height: 1;
+  color: var(--accent);
+}
+
+.cards {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 37.5rem) {
+  .section[data-mode="stacked"] .group {
+    grid-template-columns: 8rem 1fr;
+    align-items: start;
+  }
+
+  .section[data-mode="stacked"] .cards {
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  }
+}
+
+/* ---------- pinned ---------- */
+
+.section[data-mode="pinned"] .track {
+  height: 320svh;
+}
+
+@media (min-width: 37.5rem) {
+  .section[data-mode="pinned"] .track {
+    height: 420svh;
+  }
+}
+
+.section[data-mode="pinned"] .stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.amber {
+  display: none;
+}
+
+.section[data-mode="pinned"] .amber {
+  display: block;
+  position: absolute;
+  inset: 0;
+  background: var(--color-amber);
+  opacity: calc((1 - var(--steep, 0)) * 0.12);
+  pointer-events: none;
+}
+
+.section[data-mode="pinned"] .layout {
+  position: relative;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 5rem;
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-areas:
+    "head glass"
+    "clock glass"
+    "groups timeline"
+    "controls timeline";
+  column-gap: 1rem;
+  row-gap: 0.75rem;
+  padding-block: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-bottom));
+}
+
+.section[data-mode="pinned"] .head {
+  grid-area: head;
+}
+
+.section[data-mode="pinned"] .title,
+.section[data-mode="pinned"] .intro {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.clock {
+  grid-area: clock;
+}
+
+.face {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-clock);
+  line-height: 1;
+  font-weight: 500;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.digits {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.digit {
+  display: inline-block;
+  transform: rotate(calc(var(--tilt) * 0.35)) translateY(0.01em);
+  animation: strike 0.22s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+
+.unit {
+  margin-left: 0.04em;
+}
+
+@keyframes strike {
+  from {
+    opacity: 0;
+    transform: translateY(-0.12em) rotate(var(--tilt));
+  }
+  60% {
+    opacity: 1;
+  }
+}
+
+.typed {
+  margin-top: 0.5rem;
+  min-height: 1.6em;
+  font-family: var(--font-mono);
+  color: var(--fg);
+}
+
+.caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  margin-left: 0.15em;
+  vertical-align: -0.2em;
+  background: var(--accent);
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.glassCell {
+  grid-area: glass;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.glass {
+  width: 4.5rem;
+  overflow: visible;
+}
+
+.outline {
+  fill: none;
+  stroke: var(--fg);
+  stroke-width: 2.25;
+  stroke-linejoin: round;
+}
+
+.glint {
+  stroke: var(--fg);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  opacity: 0.35;
+}
+
+.liquid {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  transform: scaleY(var(--steep, 0));
+}
+
+.liquidDark {
+  fill: #2a1a0e;
+  opacity: calc(var(--steep, 0) * 0.9);
+}
+
+.drip {
+  fill: var(--accent);
+  animation: drip 1.6s cubic-bezier(0.55, 0, 1, 0.45) infinite paused;
+}
+
+.stage[data-in-view] .drip {
+  animation-play-state: running;
+}
+
+@keyframes drip {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(26px);
+    opacity: 0;
+  }
+}
+
+.timeline {
+  grid-area: timeline;
+  position: relative;
+  min-height: 8rem;
+  margin-block: 0.75rem;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0.5rem;
+  width: 1px;
+  background: var(--line-strong);
+}
+
+.tick {
+  position: absolute;
+  right: 0;
+  top: calc(var(--at) * 100%);
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  line-height: 1;
+  color: var(--fg-muted);
+}
+
+.tick::after {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--accent);
+  background: var(--surface);
+  transition: transform 0.2s ease;
+}
+
+.tick[data-reached] {
+  color: var(--fg);
+}
+
+.tick[data-active] {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.tick[data-active]::after {
+  background: var(--accent);
+  transform: scale(1.25);
+}
+
+.controls {
+  grid-area: controls;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.step {
+  display: inline-flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  color: var(--fg);
+}
+
+.step:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.section[data-mode="pinned"] .groups {
+  grid-area: groups;
+  display: grid;
+  align-content: start;
+  min-height: 0;
+}
+
+.section[data-mode="pinned"] .group {
+  grid-area: 1 / 1;
+  align-self: start;
+  opacity: 0;
+  transform: translateY(0.75rem);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+.section[data-mode="pinned"] .group[data-active] {
+  opacity: 1;
+  transform: none;
+}
+
+.section[data-mode="pinned"] .groupHour {
+  display: none;
+}
+
+.section[data-mode="pinned"] .cards {
+  gap: 0.75rem;
+}
+
+@media (min-width: 64rem) {
+  .section[data-mode="pinned"] .layout {
+    grid-template-columns: minmax(0, 1.1fr) 7rem minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "head timeline glass"
+      "clock timeline groups"
+      "controls timeline groups";
+    column-gap: 3rem;
+    padding-block: 2.5rem;
+  }
+
+  .section[data-mode="pinned"] .groups {
+    align-content: center;
+  }
+
+  .section[data-mode="pinned"] .group {
+    align-self: center;
+  }
+
+  .glassCell {
+    justify-content: flex-start;
+  }
+
+  .glass {
+    width: 8rem;
+  }
+
+  .clock {
+    align-self: center;
+  }
+}
