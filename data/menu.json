@@ -1,13 +1,178 @@
 {
   "source": "docs/menu.pdf (March 2026)",
   "transcription": {
-    "status": "partial",
-    "pagesDone": [3, 8],
-    "note": "M1 transcribed the signature cold brews (page 3) and the three house-named drinks (page 8). The full menu is M2."
+    "status": "complete",
+    "pagesDone": [3, 5, 6, 8, 9, 11, 12, 14, 15, 17, 19, 20],
+    "note": "Transcribed from rendered page images and checked line by line. Three spelling slips corrected (see OPEN_QUESTIONS.md). The top half of page 20 is blank in the source file."
   },
   "categories": [
-    { "id": "signature-cold-brews", "name": "Signature Cold Brews", "page": 3 },
-    { "id": "coffee-mixology", "name": "Coffee Mixology", "page": 8 }
+    {
+      "id": "signature-cold-brews",
+      "name": "Signature Cold Brews",
+      "page": 3,
+      "kind": "drinks"
+    },
+    {
+      "id": "slow-brews",
+      "name": "Slow Brews",
+      "page": 5,
+      "kind": "drinks",
+      "note": "*Upgrade beans @50.00"
+    },
+    {
+      "id": "pour-overs",
+      "name": "Pour Overs",
+      "page": 5,
+      "kind": "drinks"
+    },
+    {
+      "id": "espresso-bar",
+      "name": "Espresso Bar",
+      "page": 6,
+      "kind": "drinks"
+    },
+    {
+      "id": "espresso-add-ons",
+      "name": "Add Ons",
+      "page": 6,
+      "kind": "add-ons"
+    },
+    {
+      "id": "coffee-mixology",
+      "name": "Coffee Mixology",
+      "page": 8,
+      "kind": "drinks"
+    },
+    {
+      "id": "matcha",
+      "name": "Matcha at Carbon",
+      "page": 9,
+      "kind": "drinks"
+    },
+    {
+      "id": "mocktails",
+      "name": "Mocktails",
+      "page": 9,
+      "kind": "drinks"
+    },
+    {
+      "id": "smoothie-bowls",
+      "name": "Smoothie Bowls",
+      "page": 11,
+      "kind": "food"
+    },
+    {
+      "id": "shakes",
+      "name": "Shakes",
+      "page": 11,
+      "kind": "drinks"
+    },
+    {
+      "id": "iced-tea",
+      "name": "Iced Tea",
+      "page": 11,
+      "kind": "drinks"
+    },
+    {
+      "id": "no-caffeine-zone",
+      "name": "No Caffeine Zone",
+      "page": 12,
+      "kind": "drinks"
+    },
+    {
+      "id": "quenchers",
+      "name": "Quenchers",
+      "page": 12,
+      "kind": "drinks"
+    },
+    {
+      "id": "salads",
+      "name": "Salads",
+      "page": 14,
+      "kind": "food"
+    },
+    {
+      "id": "croffles",
+      "name": "Croffles",
+      "page": 14,
+      "kind": "food"
+    },
+    {
+      "id": "toasts",
+      "name": "Toasts",
+      "page": 14,
+      "kind": "food"
+    },
+    {
+      "id": "sandwiches",
+      "name": "Sandwiches",
+      "page": 15,
+      "kind": "food",
+      "group": "Between the Breads"
+    },
+    {
+      "id": "croissant-sandwiches",
+      "name": "Croissant Sandwiches",
+      "page": 15,
+      "kind": "food",
+      "group": "Between the Breads"
+    },
+    {
+      "id": "burger",
+      "name": "Burger",
+      "page": 15,
+      "kind": "food",
+      "note": "toasted bun"
+    },
+    {
+      "id": "tacos",
+      "name": "Tacos",
+      "page": 17,
+      "kind": "food"
+    },
+    {
+      "id": "pasta",
+      "name": "Pasta",
+      "page": 17,
+      "kind": "food",
+      "note": "choice of pasta: penne/ spaghetti"
+    },
+    {
+      "id": "pizza",
+      "name": "Pizza",
+      "page": 17,
+      "kind": "food"
+    },
+    {
+      "id": "wraps",
+      "name": "Wraps",
+      "page": 19,
+      "kind": "food"
+    },
+    {
+      "id": "back-to-basics",
+      "name": "Back to Basics",
+      "page": 19,
+      "kind": "food"
+    },
+    {
+      "id": "shareables",
+      "name": "Shareables",
+      "page": 19,
+      "kind": "food"
+    },
+    {
+      "id": "the-classics",
+      "name": "The Classics",
+      "page": 20,
+      "kind": "food"
+    },
+    {
+      "id": "food-add-ons",
+      "name": "Add Ons",
+      "page": 20,
+      "kind": "add-ons"
+    }
   ],
   "items": [
     {
@@ -15,7 +180,11 @@
       "categoryId": "signature-cold-brews",
       "name": "The Original",
       "notes": "apricot & milk chocolate notes",
-      "pricePaise": 29000,
+      "prices": [
+        {
+          "paise": 29000
+        }
+      ],
       "steepHours": 28,
       "tags": ["cold-brew"],
       "available": true
@@ -25,7 +194,11 @@
       "categoryId": "signature-cold-brews",
       "name": "Whiskey Barrel",
       "notes": "apple & bourbon notes",
-      "pricePaise": 32000,
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
       "steepHours": 18,
       "tags": ["cold-brew"],
       "available": true
@@ -35,7 +208,11 @@
       "categoryId": "signature-cold-brews",
       "name": "Mint Lime",
       "notes": "citrus & mint notes",
-      "pricePaise": 30000,
+      "prices": [
+        {
+          "paise": 30000
+        }
+      ],
       "steepHours": 36,
       "tags": ["cold-brew"],
       "available": true
@@ -45,7 +222,11 @@
       "categoryId": "signature-cold-brews",
       "name": "Vanilla Orange",
       "notes": "citrus & vanilla notes",
-      "pricePaise": 32000,
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
       "steepHours": 96,
       "tags": ["cold-brew"],
       "available": true
@@ -55,7 +236,11 @@
       "categoryId": "signature-cold-brews",
       "name": "Tropical Monk",
       "notes": "kaffir, coconut & honey notes",
-      "pricePaise": 32000,
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
       "steepHours": 28,
       "tags": ["cold-brew"],
       "available": true
@@ -65,7 +250,11 @@
       "categoryId": "signature-cold-brews",
       "name": "Berry Bold",
       "notes": "blueberry & honey notes",
-      "pricePaise": 32000,
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
       "steepHours": 96,
       "tags": ["cold-brew"],
       "available": true
@@ -75,9 +264,684 @@
       "categoryId": "signature-cold-brews",
       "name": "Mango Passion",
       "notes": "mango & passion fruit notes",
-      "pricePaise": 32000,
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
       "steepHours": 24,
       "tags": ["cold-brew"],
+      "available": true
+    },
+    {
+      "id": "cera-filter",
+      "categoryId": "slow-brews",
+      "name": "Cera Filter",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 22000
+        },
+        {
+          "label": "Cold",
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "v60-pourover",
+      "categoryId": "slow-brews",
+      "name": "V60 Pourover",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 20000
+        },
+        {
+          "label": "Cold",
+          "paise": 22000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "french-press",
+      "categoryId": "slow-brews",
+      "name": "French Press",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 20000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "aeropress",
+      "categoryId": "slow-brews",
+      "name": "Aeropress",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 20000
+        },
+        {
+          "label": "Cold",
+          "paise": 22000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "syphon",
+      "categoryId": "slow-brews",
+      "name": "Syphon",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 22000
+        },
+        {
+          "label": "Cold",
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "cleverdripper",
+      "categoryId": "slow-brews",
+      "name": "CleverDripper",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 22000
+        },
+        {
+          "label": "Cold",
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "orange-and-basil",
+      "categoryId": "pour-overs",
+      "name": "Orange & Basil",
+      "notes": "orange zest, basil & coffee poured over orange juice in a manual brew style",
+      "prices": [
+        {
+          "paise": 30000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "raspberry-and-rosemary",
+      "categoryId": "pour-overs",
+      "name": "Raspberry & Rosemary",
+      "notes": "raspberry pulp, coffee & rosemary infused water poured over in a manual brew style",
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "espresso",
+      "categoryId": "espresso-bar",
+      "name": "Espresso",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 15000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "cappuccino",
+      "categoryId": "espresso-bar",
+      "name": "Cappuccino",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 20000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "black-rose-cappuccino",
+      "categoryId": "espresso-bar",
+      "name": "Black Rose Cappuccino",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "cafe-latte",
+      "categoryId": "espresso-bar",
+      "name": "Cafe Latte",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 20000
+        },
+        {
+          "label": "Cold",
+          "paise": 22000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "spanish-latte",
+      "categoryId": "espresso-bar",
+      "name": "Spanish Latte",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 21000
+        },
+        {
+          "label": "Cold",
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "lotus-biscoff-latte",
+      "categoryId": "espresso-bar",
+      "name": "Lotus Biscoff Latte",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 25000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "salty-caramel-latte",
+      "categoryId": "espresso-bar",
+      "name": "Salty Caramel Latte",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "nutella-almond-latte",
+      "categoryId": "espresso-bar",
+      "name": "Nutella Almond Latte",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 27000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "cafe-mocha",
+      "categoryId": "espresso-bar",
+      "name": "Cafe Mocha",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 22000
+        },
+        {
+          "label": "Cold",
+          "paise": 25000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "orange-mocha",
+      "categoryId": "espresso-bar",
+      "name": "Orange Mocha",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "americano",
+      "categoryId": "espresso-bar",
+      "name": "Americano",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 16000
+        },
+        {
+          "label": "Cold",
+          "paise": 19000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "iced-filter-coffee",
+      "categoryId": "espresso-bar",
+      "name": "Iced Filter Coffee",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Cold",
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "irish-coffee",
+      "categoryId": "espresso-bar",
+      "name": "Irish Coffee",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 21000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "classic-macchiato",
+      "categoryId": "espresso-bar",
+      "name": "Classic Macchiato",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 20000
+        },
+        {
+          "label": "Cold",
+          "paise": 22000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "cortado",
+      "categoryId": "espresso-bar",
+      "name": "Cortado",
+      "notes": "cold version comes with oats milk",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 15000
+        },
+        {
+          "label": "Cold",
+          "paise": 20000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "piccolo",
+      "categoryId": "espresso-bar",
+      "name": "Piccolo",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 15000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "flat-white",
+      "categoryId": "espresso-bar",
+      "name": "Flat White",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Hot",
+          "paise": 15000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "affogato",
+      "categoryId": "espresso-bar",
+      "name": "Affogato",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Cold",
+          "paise": 25000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "lotus-biscoff-affogato",
+      "categoryId": "espresso-bar",
+      "name": "Lotus Biscoff Affogato",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Cold",
+          "paise": 35000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "classic-frappe",
+      "categoryId": "espresso-bar",
+      "name": "Classic Frappe",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Cold",
+          "paise": 26000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "iced-cold-coffee",
+      "categoryId": "espresso-bar",
+      "name": "Iced Cold Coffee",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Cold",
+          "paise": 22000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "vietnamese-drip",
+      "categoryId": "espresso-bar",
+      "name": "Vietnamese Drip",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Cold",
+          "paise": 29000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "espresso-tonic-orange-cranberry",
+      "categoryId": "espresso-bar",
+      "name": "Espresso Tonic/ Orange/ Cranberry",
+      "notes": "",
+      "prices": [
+        {
+          "label": "Cold",
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "vanilla-caramel-hazelnut-irish-flavour",
+      "categoryId": "espresso-add-ons",
+      "name": "Vanilla/ Caramel/ Hazelnut/ Irish flavour",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 5000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "non-dairy-milk",
+      "categoryId": "espresso-add-ons",
+      "name": "Non-Dairy Milk",
+      "notes": "Almond/ Oats",
+      "prices": [
+        {
+          "paise": 8000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "decaf",
+      "categoryId": "espresso-add-ons",
+      "name": "Decaf",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 5000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "raspberry-iced-latte",
+      "categoryId": "coffee-mixology",
+      "name": "Raspberry Iced Latte",
+      "notes": "raspberry foam, double espresso/ cold brew, milk, ice",
+      "prices": [
+        {
+          "paise": 27000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "espresso-cola",
+      "categoryId": "coffee-mixology",
+      "name": "Espresso Cola",
+      "notes": "espresso shot, coke, ice (add diet coke @30.00)",
+      "prices": [
+        {
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "vanilla-pistachio-latte",
+      "categoryId": "coffee-mixology",
+      "name": "Vanilla Pistachio Latte",
+      "notes": "pistachio syrup, espresso shot, vanilla cream",
+      "prices": [
+        {
+          "paise": 30000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "tiramisu-latte",
+      "categoryId": "coffee-mixology",
+      "name": "Tiramisu Latte",
+      "notes": "tiramisu, whisky barrel cold brew, milk, ice",
+      "prices": [
+        {
+          "paise": 34000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "coconut-espresso-latte",
+      "categoryId": "coffee-mixology",
+      "name": "Coconut Espresso Latte",
+      "notes": "fresh coconut water, espresso shot, coconut cream, milk, ice",
+      "prices": [
+        {
+          "paise": 27000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "caramel-sea-salt-latte",
+      "categoryId": "coffee-mixology",
+      "name": "Caramel Sea Salt Latte",
+      "notes": "caramel sauce, cream, pinch of sea salt, original cold brew",
+      "prices": [
+        {
+          "paise": 29000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "espresso-lemonana",
+      "categoryId": "coffee-mixology",
+      "name": "Espresso Lemonana",
+      "notes": "lemon juice, tonic water, double espresso shot, ice",
+      "prices": [
+        {
+          "paise": 25000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "jamun-coffee-tonic",
+      "categoryId": "coffee-mixology",
+      "name": "Jamun Coffee Tonic",
+      "notes": "jamun pulp, espresso shot, tonic water, ice",
+      "prices": [
+        {
+          "paise": 27000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "vanilla-strawberry-iced-latte",
+      "categoryId": "coffee-mixology",
+      "name": "Vanilla Strawberry Iced Latte",
+      "notes": "vanilla essence, fresh strawberry, espresso shot, milk, ice",
+      "prices": [
+        {
+          "paise": 26000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "caramel-popcorn-iced-latte",
+      "categoryId": "coffee-mixology",
+      "name": "Caramel Popcorn Iced Latte",
+      "notes": "caramel syrup, popcorn infused concoction, espresso shot, milk, ice",
+      "prices": [
+        {
+          "paise": 26000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "mocha-cream-cheese",
+      "categoryId": "coffee-mixology",
+      "name": "Mocha Cream Cheese",
+      "notes": "chocolate compound, espresso shot, milk, ice cream",
+      "prices": [
+        {
+          "paise": 27000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "sky-mint-latte",
+      "categoryId": "coffee-mixology",
+      "name": "Sky Mint Latte",
+      "notes": "blue tea, milk, ice, mint leaves, espresso shot",
+      "prices": [
+        {
+          "paise": 27000
+        }
+      ],
+      "tags": [],
       "available": true
     },
     {
@@ -85,8 +949,38 @@
       "categoryId": "coffee-mixology",
       "name": "Black Carbon Latte",
       "notes": "espresso shot, honey, milk crème, ice, activated charcoal",
-      "pricePaise": 27000,
+      "prices": [
+        {
+          "paise": 27000
+        }
+      ],
       "tags": ["house-named"],
+      "available": true
+    },
+    {
+      "id": "lavender-and-rose-latte",
+      "categoryId": "coffee-mixology",
+      "name": "Lavender & Rose Latte",
+      "notes": "lavender extract, rose water, espresso shot, ice, milk",
+      "prices": [
+        {
+          "paise": 27000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "woody-brew",
+      "categoryId": "coffee-mixology",
+      "name": "Woody Brew",
+      "notes": "orange juice, elderflower, cinnamon, cardamom, original cold brew",
+      "prices": [
+        {
+          "paise": 26000
+        }
+      ],
+      "tags": [],
       "available": true
     },
     {
@@ -94,7 +988,11 @@
       "categoryId": "coffee-mixology",
       "name": "Carbon Ginger Brew",
       "notes": "fresh ginger juice, mint leaves, lime, original cold brew",
-      "pricePaise": 26000,
+      "prices": [
+        {
+          "paise": 26000
+        }
+      ],
       "tags": ["house-named"],
       "available": true
     },
@@ -103,9 +1001,1413 @@
       "categoryId": "coffee-mixology",
       "name": "Carbon Toddy",
       "notes": "whiskey barrel cold brew, cinnamon, lime, honey, cardamom",
+      "prices": [
+        {
+          "paise": 28000
+        }
+      ],
       "servedHot": true,
-      "pricePaise": 28000,
       "tags": ["house-named"],
+      "available": true
+    },
+    {
+      "id": "forest-matcha",
+      "categoryId": "matcha",
+      "name": "Forest Matcha",
+      "notes": "espresso, matcha, fresh cream, honey, milk",
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "coconut-matcha-cream",
+      "categoryId": "matcha",
+      "name": "Coconut Matcha Cream",
+      "notes": "coconut water, matcha cream, milk, jaggery",
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "strawberry-matcha",
+      "categoryId": "matcha",
+      "name": "Strawberry Matcha",
+      "notes": "fresh strawberry, matcha, milk",
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "mango-matcha-latte",
+      "categoryId": "matcha",
+      "name": "Mango Matcha Latte",
+      "notes": "mango puree, matcha, milk",
+      "prices": [
+        {
+          "paise": 34000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "yuzu-matcha",
+      "categoryId": "matcha",
+      "name": "Yuzu Matcha",
+      "notes": "matcha, yuzu, sparkling water, tonic",
+      "prices": [
+        {
+          "paise": 37000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "matcha-latte",
+      "categoryId": "matcha",
+      "name": "Matcha Latte",
+      "notes": "hot/ cold",
+      "prices": [
+        {
+          "paise": 30000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "cinnamon-apple-sparkler",
+      "categoryId": "mocktails",
+      "name": "Cinnamon Apple Sparkler",
+      "notes": "fresh apple juice, cinnamon syrup, ginger",
+      "prices": [
+        {
+          "paise": 25000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "elderflower-and-strawberry-float",
+      "categoryId": "mocktails",
+      "name": "Elderflower and Strawberry Float",
+      "notes": "elderflower infused soda, fresh strawberry, vanilla ice cream",
+      "prices": [
+        {
+          "paise": 25000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "tropical-breeze",
+      "categoryId": "mocktails",
+      "name": "Tropical Breeze",
+      "notes": "mango chunks, orange juice, mango juice, mint leaves, basil, elderflower, chia seeds, aerated water, ice",
+      "prices": [
+        {
+          "paise": 25000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "pink-carbon",
+      "categoryId": "mocktails",
+      "name": "Pink Carbon",
+      "notes": "fresh strawberry, ice, milk, activated charcoal",
+      "prices": [
+        {
+          "paise": 25000
+        }
+      ],
+      "tags": ["house-named"],
+      "available": true
+    },
+    {
+      "id": "spicy-tangy",
+      "categoryId": "mocktails",
+      "name": "Spicy Tangy",
+      "notes": "orange juice, tabasco, mint leaves, house spices",
+      "prices": [
+        {
+          "paise": 22000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "virgin-mojito",
+      "categoryId": "mocktails",
+      "name": "Virgin Mojito",
+      "notes": "Ask for flavour: Strawberry, Mix berry, Orange",
+      "prices": [
+        {
+          "paise": 19000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "lemon-slush",
+      "categoryId": "mocktails",
+      "name": "Lemon Slush",
+      "notes": "lemon juice, mint leaves, ice slush, pinch of salt",
+      "prices": [
+        {
+          "paise": 17000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "fresh-lime-water-sweet-salted",
+      "categoryId": "mocktails",
+      "name": "Fresh Lime Water Sweet/ Salted",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 13000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "berry-burst",
+      "categoryId": "smoothie-bowls",
+      "name": "Berry Burst",
+      "notes": "blueberries, strawberries, raspberries, banana, yoghurt, topped with pumpkin seeds, apple, pomegranate",
+      "prices": [
+        {
+          "paise": 40000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "spinach-mango",
+      "categoryId": "smoothie-bowls",
+      "name": "Spinach Mango",
+      "notes": "spinach, mango, yoghurt, honey, granola, banana, almond, chia seeds",
+      "prices": [
+        {
+          "paise": 40000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "oreo",
+      "categoryId": "shakes",
+      "name": "Oreo",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "kitkat",
+      "categoryId": "shakes",
+      "name": "Kitkat",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "brownie",
+      "categoryId": "shakes",
+      "name": "Brownie",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 26000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "strawberry",
+      "categoryId": "shakes",
+      "name": "Strawberry",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "lotus-biscoff",
+      "categoryId": "shakes",
+      "name": "Lotus Biscoff",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "avocado-rose",
+      "categoryId": "shakes",
+      "name": "Avocado Rose",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 35000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "nutella",
+      "categoryId": "shakes",
+      "name": "Nutella",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "classic-iced-tea",
+      "categoryId": "iced-tea",
+      "name": "Classic Iced Tea",
+      "notes": "Ask for flavour: Lemon, Peach, Strawberry",
+      "prices": [
+        {
+          "paise": 20000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "summer-iced-tea",
+      "categoryId": "iced-tea",
+      "name": "Summer Iced Tea",
+      "notes": "Ask for flavour: Watermelon, Mango",
+      "prices": [
+        {
+          "paise": 25000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "red-bull-iced-tea",
+      "categoryId": "iced-tea",
+      "name": "Red Bull Iced Tea",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 29000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "hot-chocolate",
+      "categoryId": "no-caffeine-zone",
+      "name": "Hot Chocolate",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 27000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "iced-chocolate",
+      "categoryId": "no-caffeine-zone",
+      "name": "Iced Chocolate",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 28000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "hot-biscoff",
+      "categoryId": "no-caffeine-zone",
+      "name": "Hot Biscoff",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 28000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "hot-nutella",
+      "categoryId": "no-caffeine-zone",
+      "name": "Hot Nutella",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 28000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "iced-nutella",
+      "categoryId": "no-caffeine-zone",
+      "name": "Iced Nutella",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 34000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "classic-green-tea",
+      "categoryId": "no-caffeine-zone",
+      "name": "Classic Green Tea",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 14000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "ginger-lemon-honey-tea",
+      "categoryId": "no-caffeine-zone",
+      "name": "Ginger Lemon Honey Tea",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 18000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "hibiscus-tea",
+      "categoryId": "no-caffeine-zone",
+      "name": "Hibiscus Tea",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 18000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "chamomile-tea",
+      "categoryId": "no-caffeine-zone",
+      "name": "Chamomile Tea",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 18000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "seasonal-fresh-juice",
+      "categoryId": "quenchers",
+      "name": "Seasonal Fresh Juice",
+      "notes": "ask for flavours",
+      "prices": [
+        {
+          "paise": 18000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "kombucha",
+      "categoryId": "quenchers",
+      "name": "Kombucha",
+      "notes": "ask for flavours",
+      "prices": [
+        {
+          "paise": 25000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "tonic-water",
+      "categoryId": "quenchers",
+      "name": "Tonic Water",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 12000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "ginger-ale",
+      "categoryId": "quenchers",
+      "name": "Ginger Ale",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 12000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "coke",
+      "categoryId": "quenchers",
+      "name": "Coke",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 12000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "diet-coke",
+      "categoryId": "quenchers",
+      "name": "Diet Coke",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 13000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "red-bull-energy-drink",
+      "categoryId": "quenchers",
+      "name": "Red Bull Energy Drink",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 20000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "packaged-drinking-water",
+      "categoryId": "quenchers",
+      "name": "Packaged Drinking Water",
+      "notes": "",
+      "priceNote": "MRP",
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "caesar",
+      "categoryId": "salads",
+      "name": "Caesar",
+      "notes": "iceberg lettuce, lime juice, mayonnaise, parmesan, croutons",
+      "prices": [
+        {
+          "paise": 28000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "greek",
+      "categoryId": "salads",
+      "name": "Greek",
+      "notes": "bell pepper, iceberg lettuce, onion, tomatoes, cucumber, feta, vinaigrette",
+      "prices": [
+        {
+          "paise": 30000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "bocconcini-crunchy",
+      "categoryId": "salads",
+      "name": "Bocconcini Crunchy",
+      "notes": "sweet Valencia orange, Bocconcini, roman lettuce, cashews, orange reduction",
+      "prices": [
+        {
+          "paise": 30000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "harvest",
+      "categoryId": "salads",
+      "name": "Harvest",
+      "notes": "Roman lettuce, green apple, cucumber, dry cranberry, goat cheese, apple vinaigrette",
+      "prices": [
+        {
+          "paise": 28000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "falafel-hummus",
+      "categoryId": "salads",
+      "name": "Falafel Hummus",
+      "notes": "onion bell pepper, olives, cherry tomato, lime vinaigrette, chickpea, hummus",
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "herbeese",
+      "categoryId": "croffles",
+      "name": "Herbeese",
+      "notes": "spiced oregano, cherry tomato & garlic confit, cheese spread, lettuce",
+      "prices": [
+        {
+          "paise": 35000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "chilli-street",
+      "categoryId": "croffles",
+      "name": "Chilli Street",
+      "notes": "harissa mayo, zucchini, caramelised onion, feta, chilli",
+      "prices": [
+        {
+          "paise": 35000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "nutty-nutella",
+      "categoryId": "croffles",
+      "name": "Nutty Nutella",
+      "notes": "hazelnut, mascarpone, espresso, vanilla ice cream, nutella",
+      "prices": [
+        {
+          "paise": 35000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "guacamole",
+      "categoryId": "toasts",
+      "name": "Guacamole",
+      "notes": "sundried tomato pesto, guacamole, microgreens",
+      "prices": [
+        {
+          "paise": 33000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "pink-humm",
+      "categoryId": "toasts",
+      "name": "Pink Humm",
+      "notes": "beetroot hummus, pomegranate seeds, feta, microgreens",
+      "prices": [
+        {
+          "paise": 28000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "creamy-fungi",
+      "categoryId": "toasts",
+      "name": "Creamy Fungi",
+      "notes": "golden garlic, mushroom, onion, thyme, bechamel sauce, truffle oil",
+      "prices": [
+        {
+          "paise": 33000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "jalapeno-and-cheese",
+      "categoryId": "toasts",
+      "name": "Jalapeno & Cheese",
+      "notes": "mozzarella, jalapeno, roasted garlic, olive oil",
+      "prices": [
+        {
+          "paise": 28000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "chilli-cheese-toast",
+      "categoryId": "toasts",
+      "name": "Chilli Cheese Toast",
+      "notes": "classic, home style",
+      "prices": [
+        {
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "avocado-and-chimichurri-smash",
+      "categoryId": "sandwiches",
+      "name": "Avocado & Chimichurri Smash",
+      "notes": "cherry tomato, pickled onions, feta cheese, ciabatta",
+      "prices": [
+        {
+          "paise": 38000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "mushroom-and-four-cheese-melt",
+      "categoryId": "sandwiches",
+      "name": "Mushroom & Four Cheese Melt",
+      "notes": "button, shiitake, mozzarella, cheddar, feta, goat cheese",
+      "prices": [
+        {
+          "paise": 37000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "caprese",
+      "categoryId": "sandwiches",
+      "name": "Caprese",
+      "notes": "focaccia, fresh mozzarella, lettuce, sun-dried tomato, balsamic reduction, chilli mayo",
+      "prices": [
+        {
+          "paise": 35000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "classic-club",
+      "categoryId": "sandwiches",
+      "name": "Classic Club",
+      "notes": "lettuce, zucchini, mushroom, bell pepper, onion, pesto mayo, cheese slice, toasted bread",
+      "prices": [
+        {
+          "paise": 37000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "all-indian-affair",
+      "categoryId": "sandwiches",
+      "name": "All Indian Affair",
+      "notes": "fried potato masala, onion, bingo mad angles, masala banana chips, mint mayo",
+      "prices": [
+        {
+          "paise": 33000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "tandoori-cottage-cheese",
+      "categoryId": "sandwiches",
+      "name": "Tandoori Cottage Cheese",
+      "notes": "Indian spices marinated cottage cheese, lettuce, harissa mayo",
+      "prices": [
+        {
+          "paise": 34000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "exotic-veg",
+      "categoryId": "croissant-sandwiches",
+      "name": "Exotic Veg",
+      "notes": "zucchini, bell peppers, sun dried tomato, balsamic reduction",
+      "prices": [
+        {
+          "paise": 38000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "avocado-and-burrata",
+      "categoryId": "croissant-sandwiches",
+      "name": "Avocado & Burrata",
+      "notes": "mashed avocado, baby burrata, basil leaves",
+      "prices": [
+        {
+          "paise": 40000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "burrata-pesto",
+      "categoryId": "croissant-sandwiches",
+      "name": "Burrata Pesto",
+      "notes": "lettuce, caramelised onions, pesto, cashew pesto, peri peri",
+      "prices": [
+        {
+          "paise": 45000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "farmhouse",
+      "categoryId": "croissant-sandwiches",
+      "name": "Farmhouse",
+      "notes": "cottage cheese/ tofu, toasted assorted veggies, mushroom, hummus, sriracha mascarpone mayo",
+      "prices": [
+        {
+          "paise": 40000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "crispy-veg-patty",
+      "categoryId": "burger",
+      "name": "Crispy Veg Patty",
+      "notes": "vegetable patty, lettuce, onion, tangy mayo",
+      "prices": [
+        {
+          "paise": 18000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "mexican-nacho",
+      "categoryId": "burger",
+      "name": "Mexican Nacho",
+      "notes": "Mexican patty, crispy lettuce, nacho salsa, chilli mayo",
+      "prices": [
+        {
+          "paise": 20000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "paneer-patty",
+      "categoryId": "burger",
+      "name": "Paneer Patty",
+      "notes": "panko paneer patty, crispy lettuce, spicy ranch sauce, harissa mayo",
+      "prices": [
+        {
+          "paise": 20000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "black-bean",
+      "categoryId": "tacos",
+      "name": "Black Bean",
+      "notes": "refried bean, fajita vegetables, queso blanco, pineapple salsa, sour cream",
+      "prices": [
+        {
+          "paise": 28000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "crispy-mushroom",
+      "categoryId": "tacos",
+      "name": "Crispy Mushroom",
+      "notes": "freshly fried mushroom, fajita vegetables, queso blanco, guacamole, pineapple salsa",
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "alfredo",
+      "categoryId": "pasta",
+      "name": "Alfredo",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 43000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "arrabiata",
+      "categoryId": "pasta",
+      "name": "Arrabiata",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 43000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "parma-rosa",
+      "categoryId": "pasta",
+      "name": "Parma Rosa",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 45000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "basil-pesto",
+      "categoryId": "pasta",
+      "name": "Basil Pesto",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 47000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "aglio-e-olio",
+      "categoryId": "pasta",
+      "name": "Aglio-E-Olio",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 37000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "mac-n-cheese",
+      "categoryId": "pasta",
+      "name": "Mac N Cheese",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 44000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "lasagna",
+      "categoryId": "pasta",
+      "name": "Lasagna",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 44000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "classic-margherita",
+      "categoryId": "pizza",
+      "name": "Classic Margherita",
+      "notes": "cherry tomato, fresh mozzarella, parmesan, basil",
+      "prices": [
+        {
+          "paise": 49000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "quattro-formaggi",
+      "categoryId": "pizza",
+      "name": "Quattro Formaggi",
+      "notes": "fresh mozzarella, yellow cheddar, goat cheese, parmesan",
+      "prices": [
+        {
+          "paise": 59000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "exotic-veggie",
+      "categoryId": "pizza",
+      "name": "Exotic Veggie",
+      "notes": "mushroom, bell pepper, broccoli, baby corn, fresh mozzarella, parmesan",
+      "prices": [
+        {
+          "paise": 52000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "peppy-paneer",
+      "categoryId": "pizza",
+      "name": "Peppy Paneer",
+      "notes": "cottage cheese, bell pepper, red pepper, fresh mozzarella, parmesan",
+      "prices": [
+        {
+          "paise": 54000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "mushroom-and-goat-cheese",
+      "categoryId": "pizza",
+      "name": "Mushroom & Goat Cheese",
+      "notes": "roasted mushroom, onions, goat cheese, fresh mozzarella, parmesan",
+      "prices": [
+        {
+          "paise": 56000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "spicy-mexicano",
+      "categoryId": "pizza",
+      "name": "Spicy Mexicano",
+      "notes": "mascarpone cream cheese, artichoke, roasted garlic, red pepper, jalapeno, red Thai chilli, harissa mascarpone spread",
+      "prices": [
+        {
+          "paise": 53000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "volcano",
+      "categoryId": "pizza",
+      "name": "Volcano",
+      "notes": "sundried tomatoes, broccoli, red pepper, basil, fresh mozzarella",
+      "prices": [
+        {
+          "paise": 59000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "tandoori-paneer-tikka",
+      "categoryId": "wraps",
+      "name": "Tandoori Paneer Tikka",
+      "notes": "spicy paneer marinated in tandoori sauce, fresh veggies, chilli mayo",
+      "prices": [
+        {
+          "paise": 24000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "veg-patty",
+      "categoryId": "wraps",
+      "name": "Veg Patty",
+      "notes": "mix vegetable patty, fresh veggies, harissa mayo",
+      "prices": [
+        {
+          "paise": 22000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "falafel-shawarma",
+      "categoryId": "wraps",
+      "name": "Falafel Shawarma",
+      "notes": "homemade falafel, tortilla, fresh veggies, cucumber pickle, hummus",
+      "prices": [
+        {
+          "paise": 25000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "crispy-mushroom-burrito",
+      "categoryId": "wraps",
+      "name": "Crispy Mushroom Burrito",
+      "notes": "wheat tortilla, crispy mushroom, fajita veggies, salsa, guacamole, sour cream",
+      "prices": [
+        {
+          "paise": 25000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "salted-french-fries",
+      "categoryId": "back-to-basics",
+      "name": "Salted French Fries",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 22000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "peri-peri-french-fries",
+      "categoryId": "back-to-basics",
+      "name": "Peri - Peri French Fries",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 26000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "truffle-parmesan-french-fries",
+      "categoryId": "back-to-basics",
+      "name": "Truffle Parmesan French Fries",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 36000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "jalapeno-cheesy-fries",
+      "categoryId": "back-to-basics",
+      "name": "Jalapeno Cheesy Fries",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 33000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "nachos-with-guacamole-and-sour-cream",
+      "categoryId": "back-to-basics",
+      "name": "Nachos with Guacamole & Sour Cream",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 38000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "loaded-nachos",
+      "categoryId": "back-to-basics",
+      "name": "Loaded Nachos",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "maggi",
+      "categoryId": "back-to-basics",
+      "name": "Maggi",
+      "notes": "classic/ golden garlic maggi/ Italian style",
+      "prices": [
+        {
+          "paise": 20000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "pull-apart-garlic-bread",
+      "categoryId": "shareables",
+      "name": "Pull Apart Garlic Bread",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 32000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "falafel-platter",
+      "categoryId": "shareables",
+      "name": "Falafel Platter",
+      "notes": "crispy chickpea falafels, hummus, pita bread, fresh salad",
+      "prices": [
+        {
+          "paise": 40000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "veggie-quesadillas",
+      "categoryId": "shareables",
+      "name": "Veggie Quesadillas",
+      "notes": "grilled tortillas, cheese, spiced vegetables, salsa, sour cream",
+      "prices": [
+        {
+          "paise": 42000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "cottage-cheese-steak",
+      "categoryId": "shareables",
+      "name": "Cottage Cheese Steak",
+      "notes": "bell pepper sauce, herb rice, sauteed vegetables",
+      "prices": [
+        {
+          "paise": 45000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "korean-bun",
+      "categoryId": "the-classics",
+      "name": "Korean Bun",
+      "notes": "cream cheese, garlic, parsley, unsalted butter",
+      "prices": [
+        {
+          "paise": 30000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "cinnamon-rolls",
+      "categoryId": "the-classics",
+      "name": "Cinnamon Rolls",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 22000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "classic-croissant",
+      "categoryId": "the-classics",
+      "name": "Classic Croissant",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 17000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "pain-au-chocolat",
+      "categoryId": "the-classics",
+      "name": "Pain Au Chocolat",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 21000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "roasted-almond-and-white-chocolate-croissant",
+      "categoryId": "the-classics",
+      "name": "Roasted Almond & White Chocolate Croissant",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 22000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "bread-2-slices",
+      "categoryId": "food-add-ons",
+      "name": "Bread (2 slices)",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 5000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "vegetables",
+      "categoryId": "food-add-ons",
+      "name": "Vegetables",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 7000
+        }
+      ],
+      "tags": [],
+      "available": true
+    },
+    {
+      "id": "cheese-dip-guacamole-dip",
+      "categoryId": "food-add-ons",
+      "name": "Cheese Dip/ Guacamole Dip",
+      "notes": "",
+      "prices": [
+        {
+          "paise": 9000
+        }
+      ],
+      "tags": [],
       "available": true
     }
   ]
