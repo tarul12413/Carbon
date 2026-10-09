@@ -26,3 +26,9 @@ npm run lhci         # Lighthouse budgets
 - `src/styles/tokens.css`: design tokens (Night and Paper themes)
 - `/styleguide`: palette and type specimen
 - `DECISIONS.md`: what was decided and why
+
+## Booking (M3)
+
+- `/book` runs the six-step flow; `/book/CRB-1234` confirms and manages a booking.
+- Bookings live in your browser (localStorage) in the hosted demo, so a booking made on one device is not visible on another. "Demo controls" at the foot of the booking pages expire holds or reset the demo data.
+- Rules: `src/domain/booking`. Mock engine: `src/services/mock/bookingEngine.ts`. Route handlers with the same rules: `src/app/api`. Set `NEXT_PUBLIC_BOOKING_TRANSPORT=http` to send the UI through them.

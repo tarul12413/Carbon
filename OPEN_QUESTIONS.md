@@ -4,40 +4,38 @@ Placeholders (P-xx) match the ids in `src/config/placeholders.ts`. Change the va
 
 ## Placeholders in use
 
-| Id   | What                                    | Placeholder              | Source of the gap                                  |
-| ---- | --------------------------------------- | ------------------------ | -------------------------------------------------- |
-| P-01 | Largest party that confirms instantly   | 6, per outlet            | Brief, Blueprint open item 1                       |
-| P-02 | Table and seat hold length              | 10 minutes               | Brief                                              |
-| P-03 | Event ticket prices                     | "Rs ---"                 | Brief                                              |
-| P-04 | Online table deposit                    | "Rs ---"                 | Brief                                              |
-| P-05 | Cancellation window                     | "X hours"                | Brief, Blueprint open item 4                       |
-| P-06 | Stamps for a reward                     | 8                        | Brief, Blueprint open item 3                       |
-| P-07 | Large-group reply time                  | "X hours"                | Brief, Blueprint open item 10                      |
-| P-08 | Opening hours, all outlets              | 09:00 to 23:45           | Listings conflict (23:45, 23:59, midnight)         |
-| P-09 | Vaishali Nagar address                  | TBD                      | B-42 Prince Road vs Plot 42, Yojna-9 B, Bhan Nagar |
-| P-10 | Raja Park / Tilak Nagar building number | Shanti Path, number TBD  | Brief                                              |
-| P-11 | WhatsApp number                         | fictional +91 0000000000 | Not given                                          |
-| P-12 | Slot length                             | 30 minutes               | Blueprint open item 5 (my placeholder)             |
-| P-13 | Table dwell time                        | 90 minutes               | Blueprint open item 5 (my placeholder)             |
-| P-14 | Capacity per slot per outlet            | 24 seats                 | Blueprint open item 5 (my placeholder)             |
-| P-15 | Same-day lead time                      | 60 minutes               | Blueprint data model (my placeholder)              |
-| P-16 | How far ahead you can book              | 30 days                  | Blueprint data model (my placeholder)              |
-| P-17 | Minimum gap between stamps              | 30 minutes               | Blueprint section 9 (my placeholder)               |
-| P-18 | Privacy notice version                  | "draft-0"                | Legal text not written                             |
-| P-19 | One line per outlet about the room      | not shown; marked TBC    | Pitch plan: ask the staff, do not invent           |
-| P-20 | Press article links                     | "Link to come"           | Brief: titles only, placeholder links              |
+| Id   | What                                    | Placeholder                              | Source of the gap                                  |
+| ---- | --------------------------------------- | ---------------------------------------- | -------------------------------------------------- |
+| P-01 | Largest party that confirms instantly   | 6, per outlet                            | Brief, Blueprint open item 1                       |
+| P-02 | Table and seat hold length              | 10 minutes                               | Brief                                              |
+| P-03 | Event ticket prices                     | "Rs ---"                                 | Brief                                              |
+| P-04 | Online table deposit                    | "Rs ---"                                 | Brief                                              |
+| P-05 | Change and cancellation window          | "X hours" (demo logic: 2 h)              | Brief, Blueprint open item 4                       |
+| P-06 | Stamps for a reward                     | 8                                        | Brief, Blueprint open item 3                       |
+| P-07 | Large-group reply time                  | "X hours"                                | Brief, Blueprint open item 10                      |
+| P-08 | Opening hours, all outlets              | 09:00 to 23:45                           | Listings conflict (23:45, 23:59, midnight)         |
+| P-09 | Vaishali Nagar address                  | TBD                                      | B-42 Prince Road vs Plot 42, Yojna-9 B, Bhan Nagar |
+| P-10 | Raja Park / Tilak Nagar building number | Shanti Path, number TBD                  | Brief                                              |
+| P-11 | WhatsApp number                         | fictional +91 0000000000                 | Not given                                          |
+| P-12 | Slot length                             | 30 minutes                               | Blueprint open item 5 (my placeholder)             |
+| P-13 | Table dwell time                        | 90 minutes                               | Blueprint open item 5 (my placeholder)             |
+| P-14 | Capacity per slot per outlet            | 24 seats                                 | Blueprint open item 5 (my placeholder)             |
+| P-15 | Same-day lead time                      | 60 minutes                               | Blueprint data model (my placeholder)              |
+| P-16 | How far ahead you can book              | 30 days                                  | Blueprint data model (my placeholder)              |
+| P-17 | Minimum gap between stamps              | 30 minutes                               | Blueprint section 9 (my placeholder)               |
+| P-18 | Privacy notice version                  | "draft-0"                                | Legal text not written                             |
+| P-19 | One line per outlet about the room      | not shown; marked TBC                    | Pitch plan: ask the staff, do not invent           |
+| P-20 | Press article links                     | "Link to come"                           | Brief: titles only, placeholder links              |
+| P-21 | Largest party the booking form takes    | 20; bigger groups go to the enquiry form | Blueprint 5.3 (my placeholder)                     |
 
 ## Questions for you (Tarul)
 
-| #    | Question                                                                                                                                                     | Default I will use unless you say otherwise                                    | Needed by |
-| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | --------- |
-| Q-02 | Pitch-plan extras not in the brief: "Pick your Carbon" quiz, drip sound, Google review link from QR, LocalBusiness schema, "nearest outlet" at the clock end | LocalBusiness schema only; the rest logged as "later"                          | M1        |
-| Q-03 | Booking step count: brief says six, blueprint says five or fewer from home                                                                                   | Brief's six; the large-group request replaces step 5's pay choice              | M3        |
-| Q-07 | Sample events (Coffee Rave, Kitchen Rave, "Drip It Up") have no dates, prices or capacity                                                                    | Labelled "sample" with future dates, "Rs ---" prices                           | M4        |
-| Q-08 | Fictional customers in admin seed data                                                                                                                       | Obviously fake names and +91 90000 000xx numbers                               | M3        |
-| Q-13 | "Today at Carbon" should also show the next event (Blueprint), but there is no event data yet                                                                | Added with the events module in M4                                             | M4        |
-| Q-14 | The menu section "No Caffeine Zone" includes Classic Green Tea, which has caffeine                                                                           | Show the menu's section name as printed; make no caffeine-free claim or filter | M7        |
-| Q-15 | Do prices or items differ by outlet? (Pitch plan: still to check)                                                                                            | One menu for all three outlets                                                 | M7        |
+| #    | Question                                                                                                                      | Default I will use unless you say otherwise         | Needed by     |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- | ------------- |
+| Q-16 | Last seating: the demo only offers times whose whole table time (P-13, 90 min) ends before closing, so the last slot is 10 PM | Last slot = closing minus table time                | Before launch |
+| Q-17 | Large-group requests do not hold seats until staff approve. Should a request block capacity while it waits?                   | No; staff check capacity when approving (M7)        | M7            |
+| Q-18 | Can a customer withdraw a request online? The blueprint's state machine has no requested-to-cancelled step                    | Not online; they reply on WhatsApp                  | M7            |
+| Q-19 | Blueprint 5.3 mentions a waitlist when a day is full; the brief has waitlists for events only                                 | "Nothing left, try the next day"; no table waitlist | M4            |
 
 ## Answered
 
@@ -51,6 +49,13 @@ Placeholders (P-xx) match the ids in `src/config/placeholders.ts`. Change the va
 | Q-10 | Find the signatures across all menu pages, exact menu names (2026-10-10)           | Four drinks carry the Carbon name: Black Carbon Latte, Carbon Ginger Brew, Carbon Toddy, Pink Carbon |
 | Q-11 | OK to reuse "Coffee stronger than your ex." (2026-10-10)                           | Footer and /story heading                                                                            |
 | Q-12 | OK to name the BMW Motorrad launch (2026-10-10)                                    | Events teaser and /story timeline                                                                    |
+| Q-02 | Defaults accepted (2026-10-10)                                                     | LocalBusiness schema only; the rest logged as "later"                                                |
+| Q-03 | Defaults accepted (2026-10-10)                                                     | Brief's six; the large-group request replaces step 5's pay choice                                    |
+| Q-07 | Defaults accepted (2026-10-10)                                                     | Labelled "sample" with future dates, "Rs ---" prices                                                 |
+| Q-08 | Defaults accepted (2026-10-10)                                                     | Obviously fake names and +91 90000 000xx numbers                                                     |
+| Q-13 | Defaults accepted (2026-10-10)                                                     | Added with the events module in M4                                                                   |
+| Q-14 | Defaults accepted (2026-10-10)                                                     | Show the menu's section name as printed; make no caffeine-free claim or filter                       |
+| Q-15 | Defaults accepted (2026-10-10)                                                     | One menu for all three outlets                                                                       |
 
 ## Conflicts between the docs (brief wins)
 

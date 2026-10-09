@@ -29,7 +29,7 @@ GSAP, Motion and zod are deferred to the milestone that first uses them, so noth
 - **Why:** As a devDependency it added 21 audit findings (puppeteer's tree) to the repo. Running it on demand keeps the lockfile clean while CI still enforces the budgets.
 - **Known gap:** one high-severity dev-only finding remains (`braces`, via ESLint's glob tooling). No non-breaking fix exists; it never ships to the browser.
 
-### D-004 Deploying the demo on Vercel with mock state (to settle in M3)
+### D-004 Deploying the demo on Vercel with mock state (settled in M3, see D-026)
 
 - **Problem:** The brief puts an in-memory store behind route handlers. On Vercel each request can hit a different serverless instance, so in-memory bookings would vanish or differ between pages.
 - **Direction:** Keep the service interfaces and route-handler shapes from Blueprint section 9. For the hosted demo, the mock adapter keeps its state in the visitor's browser (localStorage), so one person can book as a customer and approve as admin in the same browser. Route handlers keep the in-memory store for local runs and tests. Phase 2 swaps both for Postgres.
@@ -118,7 +118,7 @@ GSAP, Motion and zod are deferred to the milestone that first uses them, so noth
 ### D-019 M1 measurements and open risks
 
 - Lighthouse (local, benchmark index about 1,450): performance 96–98, accessibility 100, CLS 0, TBT 110–170 ms, home LCP 2.5 s. LCP passes with no margin: FCP is 0.9 s and the rest is simulated render delay. To revisit in M8 (font subset, hydration cost).
-- The compact-phone sticky "Book" bar from the responsive plan is deferred to M3, when the booking flow exists to link into.
+- The compact-phone sticky "Book" bar from the responsive plan is deferred to M3, when the booking flow exists to link into (done in M3, D-031).
 - Menu pages were rendered for transcription with pdf.js in a scratch folder (no project dependency).
 
 ## M2: Menu, outlets, cold brew, story
@@ -158,3 +158,54 @@ GSAP, Motion and zod are deferred to the milestone that first uses them, so noth
 - E2E: 86 tests pass at 360, 744 and 1440 px (axe clean and no horizontal overflow on every new page). Home JS stays at 140.7 KB gzipped.
 - Lighthouse, simulated throttling (the CI gate): every page passes. LCP 2.25 to 2.47 s, CLS 0, accessibility 100. `/menu` first failed at 2.6 s; the IBM Plex Mono preload was competing with Jost and CSS for the first paint and is now off (mono text is never the first paint).
 - **Known gap:** with real devtools throttling on this machine, LCP lands at 2.7 to 3.3 s (noisy, three runs per page). The trace shows the async hydration scripts finishing before first paint. For M8: measure on the CI runner, try inlining critical CSS, and trim the client components present on every page.
+
+## M3: Booking
+
+### D-026 Where mock bookings live (settles D-004)
+
+- **What:** One mock engine (`src/services/mock/bookingEngine.ts`) holds every booking rule as pure functions over a plain database object. Two stores feed it: the visitor's localStorage for the hosted demo (`browserStore`), and process memory behind the route handlers (`serverBookings`) for local runs and tests. `NEXT_PUBLIC_BOOKING_TRANSPORT=http` makes the UI talk to the route handlers instead.
+- **Why:** On Vercel, serverless instances do not share memory, so a booking made on one request could vanish on the next. In the browser it survives reloads and works for one person playing customer and, in M7, admin. The same engine behind both means the rules are tested once.
+- **Endpoints:** `GET /api/availability`, `POST /api/bookings`, `GET /api/bookings/:code`, `POST /api/bookings/:code/{confirm,request,change,cancel}` (Blueprint section 9). Bodies are `{ ok, value }` or `{ ok: false, error }` with a matching HTTP status. Writes need an `Idempotency-Key` header.
+- **Atomic holds:** each call runs synchronously from load to save, so two holds cannot both take the last seats. Phase 2 gets the same from a database transaction that locks the slot.
+- **Weight:** the engine and zod load only when the flow first calls the service (dynamic import in `src/services/client.ts`). Home JS: 160.5 KB gzipped, including the prefetch of `/book`; it was 254 KB before this split.
+- **Alternatives:** a hosted KV store (accounts and secrets in a mock phase); shipping the engine in the page bundle (96 KB gzipped more, prefetched from every page with a Book link).
+
+### D-027 Booking rules
+
+- Availability is capacity minus the party sizes of confirmed bookings and live instant holds whose 90-minute table time overlaps the slot (Blueprint section 9). Large-group requests do not take seats until approved (Q-17).
+- Slots are on a 30-minute grid; a slot is offered only if its whole table time fits before closing (Q-16), and same-day slots start at least 60 minutes from now (P-15). "Filling up" means fewer seats would be left after this party than one more small group needs.
+- Instant up to 6 (P-01), request above, up to 20 on the form (P-21); bigger parties are pointed to the enquiry form.
+- Holds last 10 minutes (P-02). Expiry is checked on every read and write, so an expired hold frees its seats at once without a background job.
+- Duplicates: same phone, same slot and same party within five minutes returns the existing booking. Party size is part of the match, because a different party is a different booking.
+- Change or cancel only for confirmed bookings, up to the window (P-05: "X hours" shown, 2 hours in the demo's logic). A change moves the booking in one step and does not count its own seats.
+- Going back in the flow and changing outlet, time or party releases the old hold (cancel on a held booking marks it expired; the state machine has no held-to-cancelled step).
+- Fully covered by unit tests: availability, instant versus request, hold expiry at the exact instant, idempotency, the state machine, the race for the last seats, and the route handlers.
+
+### D-028 Idempotency and double submits
+
+- Successful writes are remembered for 24 hours under their key with a fingerprint of the request. The same key and request replays the first answer; the same key with a different request is refused. Failures are not remembered, so a retry can succeed.
+- The client derives one key per distinct request (`useIdempotencyKey`), disables the button and keeps an in-flight guard. A double tap on Review or Confirm makes one booking (e2e test).
+
+### D-029 The flow
+
+- Six steps as in the brief (Q-03): outlet, date and time, party size, details, review and pay choice, confirmation. Large groups get the request form at step five; step six is the booking's own page, `/book/CRB-1234`, which is also the manage page.
+- The step lives in the URL (`?step=`), so the browser back button works; the draft lives in sessionStorage, so a reload keeps it. The step heading takes focus on each change.
+- The details form is validated by the service, not twice: the form shows the field errors it gets back, with a summary at the top. A hidden honeypot field is the "invisible bot check"; a real one comes with the Phase 2 backend.
+- Pay online is shown but disabled, labelled "Checkout arrives in the next build", with the deposit as "Rs ---" (P-04). M4 wires it to the sample payment sheet.
+- The hold countdown is a `role="timer"`; screen readers hear it at 5 minutes and 1 minute, not every second. When it runs out the page says so and offers to check the time again with the details kept.
+- The booking page masks the phone number (anyone with the code can open it), offers a calendar file, a WhatsApp message preview (labelled as a sample; nothing is sent), directions for confirmed addresses only, and change or cancel.
+- `/book` server-renders step one inside the same layout component as the flow, so the swap to the live flow does not shift the page (CLS 0).
+
+### D-030 Demo controls
+
+- With the `devPanel` flag on, booking pages end with a "Demo controls" disclosure: expire holds now, and reset demo bookings to the seed. The seed is fictional (Q-08) and dated relative to today, so tomorrow evening at C Scheme is always busy enough to show full and filling-up slots.
+
+### D-031 Phone Book bar
+
+- Below 600 px every page except the booking flow has a fixed "Book a table" bar (Blueprint section 6: primary action in the thumb zone). Its height is a CSS variable, `--sticky-bar`, which the pinned steep clock adds to its bottom padding so its controls stay clear.
+
+### D-032 M3 measurements
+
+- Unit: 108 tests. E2E: 117 pass at 360, 744 and 1440 px (axe clean on every booking screen), 3 skipped by design.
+- Lighthouse, simulated: accessibility 100 and CLS 0 on all six URLs (now including `/book`). LCP medians of three runs: home 2.47 s, `/cold-brew` 2.57 s, `/outlets/c-scheme` 2.39 s, `/story` 2.39 s, `/menu` 2.61 s, `/book` 2.62 s. The CI assertion takes the best run, and fails on `/menu` (2.59 s) and `/book` (2.61 s).
+- **Known gap, unchanged from D-025:** LCP sits right at the 2.5 s line and moves with machine load. The M2 build, measured again on the same machine the same night, gave `/menu` 2.47 to 2.73 s, so this is not an M3 regression. It is the M8 performance item.
