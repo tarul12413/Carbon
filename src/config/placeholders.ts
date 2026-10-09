@@ -1,0 +1,66 @@
+/**
+ * Every value Carbon has not confirmed lives here, and nowhere else.
+ * Each entry is mirrored in OPEN_QUESTIONS.md under the same id.
+ * When Carbon answers, change the value, set `confirmed: true`, and close the question.
+ */
+
+export interface Placeholder<T> {
+  readonly id: string;
+  readonly value: T;
+  readonly confirmed: false;
+  readonly note: string;
+}
+
+const placeholder = <T>(id: string, value: T, note: string): Placeholder<T> => ({
+  id,
+  value,
+  confirmed: false,
+  note,
+});
+
+export const placeholders = {
+  instantMaxPartySize: placeholder(
+    "P-01",
+    6,
+    "Groups at or below this size confirm instantly; larger groups send a request. Per outlet.",
+  ),
+  holdMinutes: placeholder("P-02", 10, "How long a table or event seat is held during checkout."),
+  ticketPriceLabel: placeholder("P-03", "Rs ---", "Event ticket prices are unknown; shown as text, never computed."),
+  depositPriceLabel: placeholder("P-04", "Rs ---", "Optional online table deposit amount is unknown."),
+  cancellationWindowLabel: placeholder(
+    "P-05",
+    "X hours",
+    "How long before a booking or event a customer can still cancel.",
+  ),
+  stampRewardThreshold: placeholder("P-06", 8, "Stamps needed for a reward, if Carbon runs a stamp card at all."),
+  groupReplyTimeLabel: placeholder("P-07", "X hours", "How fast staff reply to large-group requests."),
+  openingHours: placeholder(
+    "P-08",
+    { open: "09:00", close: "23:45" },
+    "Listings conflict: 23:45 (Google, Zomato, District), 23:59 (Swiggy), midnight (Instagram). Same hours assumed at every outlet.",
+  ),
+  vaishaliNagarAddress: placeholder(
+    "P-09",
+    "Address to be confirmed",
+    "Sources conflict between B-42 Prince Road and Plot 42, Yojna-9 B, Bhan Nagar.",
+  ),
+  rajaParkBuildingNumber: placeholder(
+    "P-10",
+    "Shanti Path (building number to be confirmed)",
+    "Only the street is known.",
+  ),
+  whatsappNumber: placeholder("P-11", "+910000000000", "Fictional. Carbon's WhatsApp number has not been given."),
+  slotMinutes: placeholder("P-12", 30, "Booking slot length. Blueprint open item 5."),
+  dwellMinutes: placeholder("P-13", 90, "How long a table stays occupied. Blueprint open item 5."),
+  capacityPerSlot: placeholder("P-14", 24, "Seats bookable per slot per outlet. Blueprint open item 5."),
+  minLeadMinutes: placeholder("P-15", 60, "Earliest a same-day booking can start, from now."),
+  maxDaysAhead: placeholder("P-16", 30, "How far ahead a table can be booked."),
+  stampMinGapMinutes: placeholder("P-17", 30, "Minimum time between two stamps for the same customer."),
+  noticeVersion: placeholder(
+    "P-18",
+    "draft-0",
+    "Privacy notice version recorded with consent. Legal text is not written yet.",
+  ),
+} as const;
+
+export type PlaceholderKey = keyof typeof placeholders;

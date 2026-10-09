@@ -1,0 +1,103 @@
+/*
+  Design tokens. Palette from docs/BRIEF.md "DESIGN SYSTEM" and Blueprint section 3.
+  Raw palette lives in @theme so Tailwind generates utilities (bg-amber, text-bone…).
+  Semantic roles (surface, text, accent…) switch per theme via [data-theme].
+  The "-deep" shades are derived by darkening the brand hue until it reaches 4.5:1
+  on Paper; they are not Carbon colours. See DECISIONS.md D-006.
+*/
+
+@theme {
+  --color-carbon-black: #121212;
+  --color-graphite: #211f20;
+  --color-pewter: #393536;
+  --color-bone: #ece7df;
+  --color-concrete: #9a968f;
+  --color-amber: #d98e3b;
+  --color-ember: #d9553f;
+  --color-leaf: #6fa37b;
+  --color-paper: #d2d2d2;
+  --color-ink: #373737;
+
+  --color-amber-deep: #7c5122;
+  --color-ember-deep: #9a3c2d;
+  --color-leaf-deep: #43624a;
+  --color-concrete-deep: #5e5a55;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+
+  --text-display: clamp(3rem, 1.2rem + 8vw, 7.5rem);
+  --text-display--line-height: 0.95;
+  --text-clock: clamp(5rem, 2rem + 16vw, 14rem);
+  --text-clock--line-height: 1;
+  --text-h1: clamp(2.25rem, 1.6rem + 3.2vw, 4.5rem);
+  --text-h1--line-height: 1.05;
+  --text-h2: clamp(1.75rem, 1.45rem + 1.5vw, 2.75rem);
+  --text-h2--line-height: 1.15;
+  --text-h3: 1.5rem;
+  --text-h3--line-height: 1.25;
+  --text-body: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-body--line-height: 1.55;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.45;
+
+  --tracking-label: 0.12em;
+
+  --breakpoint-compact: 20rem;
+  --breakpoint-phone: 24.375rem;
+  --breakpoint-tablet: 37.5rem;
+  --breakpoint-laptop: 64rem;
+  --breakpoint-large: 90rem;
+  --breakpoint-wide: 120rem;
+
+  --container-content: 90rem;
+}
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-strong: var(--surface-strong);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+:root,
+[data-theme="night"] {
+  color-scheme: dark;
+  --surface: var(--color-carbon-black);
+  --surface-raised: var(--color-graphite);
+  --surface-strong: var(--color-pewter);
+  --fg: var(--color-bone);
+  --fg-muted: var(--color-concrete);
+  --line: var(--color-pewter);
+  --line-strong: var(--color-concrete);
+  --accent: var(--color-amber);
+  --on-accent: var(--color-carbon-black);
+  --danger: var(--color-ember);
+  --success: var(--color-leaf);
+  --focus-ring: var(--color-amber);
+}
+
+[data-theme="paper"] {
+  color-scheme: light;
+  --surface: var(--color-paper);
+  --surface-raised: var(--color-bone);
+  --surface-strong: var(--color-paper);
+  --fg: var(--color-ink);
+  --fg-muted: var(--color-concrete-deep);
+  --line: var(--color-concrete-deep);
+  --line-strong: var(--color-ink);
+  --accent: var(--color-amber-deep);
+  --on-accent: var(--color-bone);
+  --danger: var(--color-ember-deep);
+  --success: var(--color-leaf-deep);
+  --focus-ring: var(--color-amber-deep);
+}
