@@ -1,9 +1,28 @@
+import { z } from "zod";
 import seed from "../../../data/outlets.json";
 import { placeholders } from "@/config/placeholders";
-import { outletSeedSchema, type Outlet } from "@/domain/outlet";
+import { OUTLET_SLUGS, type Outlet } from "@/domain/outlet";
 import type { OutletService } from "../outlets";
 
-const outlets: readonly Outlet[] = outletSeedSchema.parse(seed).outlets.map((o) => {
+export const outletSeedSchema = z.object({
+  source: z.string(),
+  outlets: z.array(
+    z
+      .object({
+        slug: z.enum(OUTLET_SLUGS),
+        name: z.string(),
+        /** Confirmed address. */
+        address: z.string().optional(),
+        /** Key in src/config/placeholders.ts when the address is not confirmed. */
+        addressPlaceholder: z.enum(["rajaParkBuildingNumber", "vaishaliNagarAddress"]).optional(),
+      })
+      .refine((o) => Boolean(o.address) !== Boolean(o.addressPlaceholder), {
+        message: "An outlet has a confirmed address or an address placeholder, not both",
+      }),
+  ),
+});
+
+export const mockOutlets: readonly Outlet[] = outletSeedSchema.parse(seed).outlets.map((o) => {
   const tbc = o.addressPlaceholder ? placeholders[o.addressPlaceholder] : undefined;
   const hours = placeholders.openingHours;
   return {
@@ -18,9 +37,9 @@ const outlets: readonly Outlet[] = outletSeedSchema.parse(seed).outlets.map((o) 
 
 export const mockOutletService: OutletService = {
   async listOutlets() {
-    return outlets;
+    return mockOutlets;
   },
   async getOutlet(slug) {
-    return outlets.find((o) => o.slug === slug) ?? null;
+    return mockOutlets.find((o) => o.slug === slug) ?? null;
   },
 };

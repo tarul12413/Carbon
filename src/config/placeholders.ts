@@ -27,10 +27,10 @@ export const placeholders = {
   holdMinutes: placeholder("P-02", 10, "How long a table or event seat is held during checkout."),
   ticketPriceLabel: placeholder("P-03", "Rs ---", "Event ticket prices are unknown; shown as text, never computed."),
   depositPriceLabel: placeholder("P-04", "Rs ---", "Optional online table deposit amount is unknown."),
-  cancellationWindowLabel: placeholder(
+  cancellationWindow: placeholder(
     "P-05",
-    "X hours",
-    "How long before a booking or event a customer can still cancel.",
+    { label: "X hours", demoHours: 2 },
+    "How long before a booking or event a customer can still change or cancel. The label is shown; demoHours only drives the demo's logic.",
   ),
   stampRewardThreshold: placeholder("P-06", 8, "Stamps needed for a reward, if Carbon runs a stamp card at all."),
   groupReplyTimeLabel: placeholder("P-07", "X hours", "How fast staff reply to large-group requests."),
@@ -70,6 +70,11 @@ export const placeholders = {
     "P-20",
     "",
     "Article URLs for the three press pieces. The brief asks for titles only, with placeholder links.",
+  ),
+  maxPartySize: placeholder(
+    "P-21",
+    20,
+    "Largest party the booking form takes. Bigger groups are pointed to the enquiry form (Blueprint 5.3).",
   ),
 } as const;
 

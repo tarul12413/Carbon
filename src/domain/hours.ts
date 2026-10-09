@@ -13,7 +13,7 @@ export type OutletStatus =
   | { readonly state: "open"; readonly closesAt: string }
   | { readonly state: "closed"; readonly opensAt: string; readonly opensDay: "today" | "tomorrow" };
 
-const toMinutes = (hhmm: string): number => {
+export const toMinutes = (hhmm: string): number => {
   const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(hhmm);
   if (!match) throw new Error(`Expected HH:MM, got ${hhmm}`);
   return Number(match[1]) * 60 + Number(match[2]);
