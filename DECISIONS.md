@@ -120,3 +120,41 @@ GSAP, Motion and zod are deferred to the milestone that first uses them, so noth
 - Lighthouse (local, benchmark index about 1,450): performance 96–98, accessibility 100, CLS 0, TBT 110–170 ms, home LCP 2.5 s. LCP passes with no margin: FCP is 0.9 s and the rest is simulated render delay. To revisit in M8 (font subset, hydration cost).
 - The compact-phone sticky "Book" bar from the responsive plan is deferred to M3, when the booking flow exists to link into.
 - Menu pages were rendered for transcription with pdf.js in a scratch folder (no project dependency).
+
+## M2: Menu, outlets, cold brew, story
+
+### D-020 Full menu transcription
+
+- **What:** 166 items in 27 sections from the 12 menu pages of the March 2026 PDF, rendered to images (pdf.js in a scratch folder) and transcribed line by line into `data/menu.json`. Validated with zod at build time; unit tests pin the counts, the seven steep times and the price formats.
+- **Model:** prices in paise, with an optional Hot/Cold label per price; `priceNote` for "MRP"; section `kind` (drinks, food, add-ons), printed `group` ("Between the Breads") and `note` ("*Upgrade beans @50.00").
+- **No invented claims:** the only tags are `cold-brew` and `house-named`. I first tagged mocktails and the "No Caffeine Zone" as caffeine-free, then removed it: that section includes green tea (Q-14). Dietary tags wait for Carbon (brief: confirm before stating vegetarian or alcohol-free).
+- **Corrections:** three spelling slips fixed, listed in OPEN_QUESTIONS.
+
+### D-021 Signatures
+
+- Signatures are the seven cold brews plus the four drinks that carry the Carbon name (Q-10 answer). A unit test checks that every item with "Carbon" in its name is tagged, so a new one cannot be missed.
+- The periodic view shows these 11 only, with symbols derived from the menu name (`elementSymbols`, unique by construction). The list view is always one tap away.
+
+### D-022 /menu
+
+- Paper theme on the page's `main` only, so the Night header and footer frame it like a printed menu on a dark table.
+- Server renders the full list (works without JS, deep links like `/menu#whiskey-barrel` land on the item). The client adds search (every word must match name, notes or section; accent-insensitive), filters, a sticky toolbar, a live result count, empty-state suggestions and a View Transition between List and Periodic.
+- The item sheet is a native `<dialog>` (focus trap, Escape and backdrop close for free), styled as a bottom sheet on phones.
+- PDF: the full 24-page file is served as-is (Q-06), with its edition, page count and size. `data/menu-document.json` stands in for the admin upload in M7. The record holds the date it was added to the site, not an invented print date.
+- Table QR: `/menu?src=qr&outlet=<slug>` shows "Scanned at <outlet>" and nothing else. No ordering.
+
+### D-023 Outlets behind a service
+
+- Outlets moved from config into `data/outlets.json` behind `services.outlets`, like the menu, so Phase 2 can swap the source. Unconfirmed addresses reference their placeholder (P-09, P-10) instead of holding text.
+- `/outlets/[slug]` is statically generated for the three slugs; anything else is a 404. Google Maps directions and `CafeOrCoffeeShop` structured data appear only for confirmed addresses, and the structured data leaves out the placeholder hours.
+
+### D-024 /cold-brew and /story
+
+- /cold-brew quotes Carbon's own cold brew paragraph from menu page 3 (attributed), then a steep explorer: a native range input (0 to 96, keyboard and screen reader friendly) plus checkpoint buttons, driving the same hand-drawn glass as the home clock. No process claims beyond the menu's own words.
+- /story uses only Carbon's material: the cover line, the BMW Motorrad launch, the awards, the Carbon 2.0 Tilak Nagar build (page 16), and the three press pieces by publication, headline and date (page 21). No article text, links marked P-20.
+
+### D-025 M2 measurements
+
+- E2E: 86 tests pass at 360, 744 and 1440 px (axe clean and no horizontal overflow on every new page). Home JS stays at 140.7 KB gzipped.
+- Lighthouse, simulated throttling (the CI gate): every page passes. LCP 2.25 to 2.47 s, CLS 0, accessibility 100. `/menu` first failed at 2.6 s; the IBM Plex Mono preload was competing with Jost and CSS for the first paint and is now off (mono text is never the first paint).
+- **Known gap:** with real devtools throttling on this machine, LCP lands at 2.7 to 3.3 s (noisy, three runs per page). The trace shows the async hydration scripts finishing before first paint. For M8: measure on the CI runner, try inlining critical CSS, and trim the client components present on every page.
