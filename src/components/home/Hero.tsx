@@ -4,11 +4,11 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { copy } from "@/content/copy";
 import { routes } from "@/config/routes";
-import { outlets, site } from "@/config/site";
+import { site } from "@/config/site";
+import { services } from "@/services";
 import styles from "./Hero.module.css";
 
 const t = copy.home.hero;
-const flagship = outlets[0]!;
 
 function DropArt() {
   return (
@@ -24,7 +24,8 @@ function DropArt() {
   );
 }
 
-export function Hero() {
+export async function Hero() {
+  const [flagship] = await services.outlets.listOutlets();
   return (
     <section aria-labelledby="hero-title" className={styles.hero}>
       <div className={`content-cap ${styles.grid}`}>
@@ -54,10 +55,12 @@ export function Hero() {
             {t.scrollHint}
             <Icon name="arrowDown" className="size-4" />
           </Link>
-          <span className="hidden text-small laptop:inline-flex laptop:items-center laptop:gap-1">
-            <span className="text-fg-muted">{flagship.name}:</span>
-            <OutletStatus hours={flagship.hours} timeZone={site.timeZone} />
-          </span>
+          {flagship && (
+            <span className="hidden text-small laptop:inline-flex laptop:items-center laptop:gap-1">
+              <span className="text-fg-muted">{flagship.name}:</span>
+              <OutletStatus hours={flagship.hours} timeZone={site.timeZone} />
+            </span>
+          )}
         </div>
       </div>
     </section>

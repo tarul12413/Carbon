@@ -5,14 +5,15 @@ import { Tbc } from "@/components/ui/Tbc";
 import { copy } from "@/content/copy";
 import { placeholders } from "@/config/placeholders";
 import { routes } from "@/config/routes";
-import { outlets } from "@/config/site";
 import { formatClock } from "@/domain/hours";
+import { services } from "@/services";
 import { primaryNav } from "./navItems";
 
 const hours = placeholders.openingHours;
 const whatsappHref = `https://wa.me/${placeholders.whatsappNumber.value.replace(/\D/g, "")}`;
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const outlets = await services.outlets.listOutlets();
   return (
     <footer className="mt-auto border-t border-line bg-surface-raised">
       <div className="content-cap grid gap-10 py-12 tablet:grid-cols-2 laptop:grid-cols-4">

@@ -4,11 +4,13 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { copy } from "@/content/copy";
 import { routes } from "@/config/routes";
-import { outlets, site } from "@/config/site";
+import { site } from "@/config/site";
+import { services } from "@/services";
 
 const t = copy.home.today;
 
-export function TodayAtCarbon() {
+export async function TodayAtCarbon() {
+  const outlets = await services.outlets.listOutlets();
   return (
     <section aria-labelledby="today-title" className="border-t border-line">
       <div className="content-cap grid gap-10 py-16 laptop:grid-cols-[1fr_1.2fr] laptop:items-center laptop:py-24">

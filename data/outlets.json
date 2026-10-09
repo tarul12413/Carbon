@@ -1,0 +1,20 @@
+{
+  "source": "docs/BRIEF.md (SEED DATA: Outlets)",
+  "outlets": [
+    {
+      "slug": "c-scheme",
+      "name": "C Scheme",
+      "address": "F-6A, Ground Floor, Amir Manzil, Ramesh Marg, C Scheme, Jaipur"
+    },
+    {
+      "slug": "raja-park",
+      "name": "Raja Park / Tilak Nagar",
+      "addressPlaceholder": "rajaParkBuildingNumber"
+    },
+    {
+      "slug": "vaishali-nagar",
+      "name": "Vaishali Nagar",
+      "addressPlaceholder": "vaishaliNagarAddress"
+    }
+  ]
+}
