@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { Button } from "@/components/ui/Button";
 import { copy } from "@/content/copy";
 import { placeholders } from "@/config/placeholders";
+import { routes } from "@/config/routes";
 import { site } from "@/config/site";
 import { bookableDates } from "@/domain/booking/availability";
 import {
@@ -18,12 +19,13 @@ import {
   type FlowStep,
 } from "@/domain/booking/flow";
 import { holdMsLeft } from "@/domain/booking/hold";
-import type { Booking, HoldInput } from "@/domain/booking/schema";
+import type { Booking } from "@/domain/booking/schema";
 import type { BookingSettings } from "@/domain/booking/settings";
 import { isOutletSlug, type OutletSlug } from "@/domain/outlet";
 import { useIdempotencyKey } from "@/lib/useIdempotencyKey";
 import { useNow } from "@/lib/useNow";
-import type { BookingError, BookingResult } from "@/services/bookings";
+import type { BookingResult } from "@/services/bookings";
+import type { ServiceError } from "@/services/errors";
 import { clientServices } from "@/services/client";
 import { DetailsStep, type FieldErrors } from "./DetailsStep";
 import { FlowFrame, OutletChoices, type FlowOutlet } from "./FlowFrame";
@@ -45,7 +47,7 @@ interface BookingFlowProps {
   readonly settings: Readonly<Record<OutletSlug, BookingSettings>>;
 }
 
-type Problem = BookingError | { readonly code: "network" };
+type Problem = ServiceError | { readonly code: "network" };
 type Outcome<T> = BookingResult<T> | { readonly ok: false; readonly error: { readonly code: "network" } };
 
 const network = (): Outcome<never> => ({ ok: false, error: { code: "network" } });
@@ -171,7 +173,7 @@ export function BookingFlow({ outlets, settings }: BookingFlowProps) {
       release(draft.code);
     }
     /* The service checks every field; the form shows what it sends back. */
-    const result = await run(() => service.createHold(input as HoldInput, key));
+    const result = await run(() => service.createHold(input, key));
     if (result.ok) {
       heldKey.current = key;
       setFieldErrors({});
@@ -187,8 +189,18 @@ export function BookingFlow({ outlets, settings }: BookingFlowProps) {
     if (result.error.code === "slot_full") setRefresh((n) => n + 1);
   };
 
-  const confirm = async () => {
+  const confirm = async (payment: "cafe" | "online") => {
     if (inFlight.current || !held) return;
+    if (payment === "online") {
+      const input = { bookingCode: held.code };
+      const order = await run(() =>
+        clientServices.ticketing.createDepositOrder(input, keyFor({ op: "deposit", ...input })),
+      );
+      if (order.ok) router.push(routes.checkout(order.value.id));
+      else if (order.error.code === "hold_expired") setExpired(true);
+      else setProblem(order.error);
+      return;
+    }
     const result = await run(() =>
       service.confirm(held.code, { payment: "cafe" }, keyFor({ op: "confirm", code: held.code })),
     );

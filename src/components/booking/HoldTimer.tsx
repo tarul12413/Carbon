@@ -11,9 +11,11 @@ const ANNOUNCE_AT = [5 * 60_000, 60_000];
 interface HoldTimerProps {
   readonly msLeft: number;
   readonly onExpire: () => void;
+  /** Defaults to "Table held for". */
+  readonly label?: string;
 }
 
-export function HoldTimer({ msLeft, onExpire }: HoldTimerProps) {
+export function HoldTimer({ msLeft, onExpire, label = t.label }: HoldTimerProps) {
   const announced = useRef(new Set<number>());
   const live = useRef<HTMLParagraphElement>(null);
   const expired = msLeft <= 0;
@@ -22,9 +24,9 @@ export function HoldTimer({ msLeft, onExpire }: HoldTimerProps) {
     const mark = ANNOUNCE_AT.find((m) => msLeft <= m && msLeft > m - 2_000 && !announced.current.has(m));
     if (mark !== undefined && live.current) {
       announced.current.add(mark);
-      live.current.textContent = t.announce(formatCountdown(msLeft));
+      live.current.textContent = `${label} ${formatCountdown(msLeft)}.`;
     }
-  }, [msLeft]);
+  }, [msLeft, label]);
 
   useEffect(() => {
     if (expired) onExpire();
@@ -32,8 +34,8 @@ export function HoldTimer({ msLeft, onExpire }: HoldTimerProps) {
 
   return (
     <div className="flex items-center justify-center gap-2 rounded-full bg-surface-raised px-4 py-2 font-mono font-medium text-accent">
-      <span>{t.label}</span>
-      <span role="timer" aria-label={t.label} className="tabular-nums">
+      <span>{label}</span>
+      <span role="timer" aria-label={label} className="tabular-nums">
         {formatCountdown(msLeft)}
       </span>
       <p ref={live} className="sr-only" aria-live="polite" />

@@ -8,6 +8,9 @@ import { SteepClock } from "@/components/home/SteepClock";
 import { TodayAtCarbon } from "@/components/home/TodayAtCarbon";
 import { services } from "@/services";
 
+/** Rebuilt hourly so "Next up" (sample events dated from today) stays current. */
+export const revalidate = 3600;
+
 export default async function HomePage() {
   const [coldBrews, houseSignatures] = await Promise.all([
     services.menu.listColdBrews(),

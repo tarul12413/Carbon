@@ -5,10 +5,13 @@ import { ButtonLink } from "@/components/ui/Button";
 import { copy } from "@/content/copy";
 import { routes } from "@/config/routes";
 
-/** Phones only: the primary action in the thumb zone (Blueprint section 6). Hidden in the booking flow itself. */
+/** Pages with their own primary action, where a second one would only cover it. */
+const OWN_ACTION = [routes.book, "/checkout", "/tickets", `${routes.events}/`];
+
+/** Phones only: the primary action in the thumb zone (Blueprint section 6). */
 export function StickyBookBar() {
   const pathname = usePathname();
-  if (pathname.startsWith(routes.book)) return null;
+  if (OWN_ACTION.some((prefix) => pathname.startsWith(prefix))) return null;
   return (
     <>
       <div className="h-(--sticky-bar)" aria-hidden="true" />

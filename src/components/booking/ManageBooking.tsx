@@ -16,9 +16,10 @@ import { canChangeOrCancel } from "@/domain/booking/rules";
 import type { Booking } from "@/domain/booking/schema";
 import type { BookingSettings } from "@/domain/booking/settings";
 import type { OutletSlug } from "@/domain/outlet";
+import { downloadText } from "@/lib/download";
 import { mapsHref } from "@/lib/maps";
 import { useIdempotencyKey } from "@/lib/useIdempotencyKey";
-import type { BookingErrorCode } from "@/services/bookings";
+import type { ServiceErrorCode } from "@/services/errors";
 import { clientServices } from "@/services/client";
 import type { BookingOutlet } from "./BookingFlow";
 import { SummaryList } from "./BookingSummary";
@@ -48,7 +49,7 @@ export function ManageBooking({ code, outlets, settings }: ManageBookingProps) {
   const [load, setLoad] = useState<Load>({ state: "loading" });
   const [mode, setMode] = useState<"view" | "change" | "cancel">("view");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<BookingErrorCode | "network" | null>(null);
+  const [error, setError] = useState<ServiceErrorCode | "network" | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [pick, setPick] = useState<{ date: string; time: string | undefined } | null>(null);
   const [whatsapp, setWhatsapp] = useState(false);
@@ -111,10 +112,7 @@ export function ManageBooking({ code, outlets, settings }: ManageBookingProps) {
       dwellMinutes: outletSettings.dwellMinutes,
       now: new Date(),
     });
-    const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
-    const link = Object.assign(document.createElement("a"), { href: url, download: `carbon-${booking.code}.ics` });
-    link.click();
-    URL.revokeObjectURL(url);
+    downloadText(`carbon-${booking.code}.ics`, ics, "text/calendar");
   };
 
   const rows = [
@@ -123,7 +121,7 @@ export function ManageBooking({ code, outlets, settings }: ManageBookingProps) {
     [t.review.party, String(booking.partySize)],
     [t.review.name, booking.name],
     [t.review.phone, maskIndianMobile(booking.phone)],
-    ...(booking.status === "confirmed" ? [[m.payment, m.payAtCafe] as const] : []),
+    ...(booking.payment ? [[m.payment, booking.payment === "online" ? m.paidOnline : m.payAtCafe] as const] : []),
   ] as const;
 
   const titles: Record<Booking["status"], string> = {
@@ -164,6 +162,9 @@ export function ManageBooking({ code, outlets, settings }: ManageBookingProps) {
         </div>
       )}
       {booking.status === "cancelled" && <p className="text-fg-muted">{m.cancelledBody}</p>}
+      {booking.status === "cancelled" && booking.payment === "online" && (
+        <p className="text-fg-muted">{m.depositRefund}</p>
+      )}
 
       <SummaryList rows={rows} />
 

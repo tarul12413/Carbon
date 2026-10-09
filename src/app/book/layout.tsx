@@ -1,4 +1,4 @@
-import { DemoPanel } from "@/components/booking/DemoPanel";
+import { DemoPanel } from "@/components/demo/DemoPanel";
 import { flags } from "@/config/flags";
 
 export default function BookLayout({ children }: { readonly children: React.ReactNode }) {

@@ -29,37 +29,45 @@ interface ReviewStepProps {
   readonly booking: Booking;
   readonly outletName: string;
   readonly busy: boolean;
-  readonly onConfirm: () => void;
+  readonly onConfirm: (payment: "cafe" | "online") => void;
 }
 
 /** Step five for small groups: summary and the pay choice (wireframe 05, screen 4). */
 export function ReviewStep({ booking, outletName, busy, onConfirm }: ReviewStepProps) {
+  const [payment, setPayment] = useState<"cafe" | "online">("cafe");
   const submit = (event: FormEvent) => {
     event.preventDefault();
-    onConfirm();
+    onConfirm(payment);
   };
   return (
     <form onSubmit={submit} className="flex flex-col gap-6">
       <SummaryList rows={summaryRows(booking, outletName)} />
       <fieldset className="flex flex-col gap-3">
         <legend className="label-caps mb-3 text-small text-fg-muted">{t.review.payLegend}</legend>
-        <RadioCard name="payment" value="cafe" defaultChecked title={t.review.payCafe} hint={t.review.payCafeHint} />
+        <RadioCard
+          name="payment"
+          value="cafe"
+          checked={payment === "cafe"}
+          onChange={() => setPayment("cafe")}
+          title={t.review.payCafe}
+          hint={t.review.payCafeHint}
+        />
         <RadioCard
           name="payment"
           value="online"
-          disabled
+          checked={payment === "online"}
+          onChange={() => setPayment("online")}
           title={t.review.payOnline}
           hint={
             <>
               {t.review.payOnlineHint}{" "}
               <Tbc id={placeholders.depositPriceLabel.id}>{placeholders.depositPriceLabel.value}</Tbc>
-              <span className="block text-small">{t.review.payOnlineLater}</span>
             </>
           }
         />
       </fieldset>
       <Button type="submit" disabled={busy} aria-disabled={busy}>
-        {busy ? t.review.confirming : t.review.confirm}
+        {busy ? t.review.confirming : payment === "online" ? t.review.toPayment : t.review.confirm}
       </Button>
     </form>
   );

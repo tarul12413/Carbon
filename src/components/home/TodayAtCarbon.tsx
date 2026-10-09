@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { OutletStatus } from "@/components/outlets/OutletStatus";
+import { whenShort } from "@/components/booking/format";
 import { ButtonLink } from "@/components/ui/Button";
+import { Chip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { copy } from "@/content/copy";
 import { routes } from "@/config/routes";
@@ -10,7 +12,9 @@ import { services } from "@/services";
 const t = copy.home.today;
 
 export async function TodayAtCarbon() {
-  const outlets = await services.outlets.listOutlets();
+  const [outlets, events] = await Promise.all([services.outlets.listOutlets(), services.events.listUpcoming()]);
+  const next = events[0];
+  const nextOutlet = outlets.find((o) => o.slug === next?.outlet);
   return (
     <section aria-labelledby="today-title" className="border-t border-line">
       <div className="content-cap grid gap-10 py-16 laptop:grid-cols-[1fr_1.2fr] laptop:items-center laptop:py-24">
@@ -38,6 +42,21 @@ export async function TodayAtCarbon() {
               </li>
             ))}
           </ul>
+          {next && (
+            <Link
+              href={routes.event(next.slug)}
+              className="group flex min-h-11 flex-wrap items-center gap-x-3 gap-y-1 rounded-md border border-dashed border-line-strong p-4 hover-fine:border-fg"
+            >
+              <span className="label-caps text-small text-fg-muted">{t.nextUp}</span>
+              <span className="font-semibold">{next.title}</span>
+              <span className="text-fg-muted">
+                {whenShort(next.date, next.time)}, {nextOutlet?.name}
+              </span>
+              <Chip tone="outline" className="text-fg-muted">
+                {copy.events.sample}
+              </Chip>
+            </Link>
+          )}
           <div className="grid gap-3 tablet:grid-cols-2">
             <ButtonLink href={routes.book}>{copy.home.hero.book}</ButtonLink>
             <ButtonLink href={routes.menu} variant="secondary">
