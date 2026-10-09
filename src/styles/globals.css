@@ -13,6 +13,14 @@
   html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    /* Height of the phone "Book a table" bar (StickyBookBar), so pinned scenes can keep clear of it. */
+    --sticky-bar: 0px;
+  }
+
+  @media (width < 37.5rem) {
+    html:has([data-sticky-bar]) {
+      --sticky-bar: calc(3.625rem + max(0.75rem, env(safe-area-inset-bottom)));
+    }
   }
 
   body {

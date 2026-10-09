@@ -3,6 +3,7 @@ import { IBM_Plex_Mono, Jost } from "next/font/google";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SteepEasterEgg } from "@/components/layout/SteepEasterEgg";
+import { StickyBookBar } from "@/components/layout/StickyBookBar";
 import { copy } from "@/content/copy";
 import "@/styles/globals.css";
 
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SiteHeader />
         {children}
         <SiteFooter />
+        <StickyBookBar />
         <SteepEasterEgg />
         <div className="noise-overlay" aria-hidden="true" />
       </body>

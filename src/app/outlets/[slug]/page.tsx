@@ -13,6 +13,7 @@ import { routes } from "@/config/routes";
 import { site } from "@/config/site";
 import { formatClock } from "@/domain/hours";
 import type { Outlet } from "@/domain/outlet";
+import { mapsHref } from "@/lib/maps";
 import { services } from "@/services";
 
 const t = copy.outlets;
@@ -52,9 +53,6 @@ function localBusiness(outlet: Outlet) {
         }),
   };
 }
-
-const mapsHref = (outlet: Outlet) =>
-  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${site.name} ${outlet.address}`)}`;
 
 export default async function OutletPage({ params }: PageProps) {
   const outlet = await services.outlets.getOutlet((await params).slug);

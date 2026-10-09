@@ -3,6 +3,11 @@ import { cx } from "@/lib/cx";
 /** 1.5px line icons on a 24px grid, drawn for this project. */
 const paths = {
   arrowRight: "M5 12h14M13 6l6 6-6 6",
+  arrowLeft: "M19 12H5M11 6l-6 6 6 6",
+  minus: "M6 12h12",
+  plus: "M12 6v12M6 12h12",
+  check: "M5 12.5l4.5 4.5L19 7",
+  calendar: "M4 6h16v14H4V6zM4 10h16M8 3v5M16 3v5",
   arrowDown: "M12 5v14M6 13l6 6 6-6",
   chevronUp: "M6 15l6-6 6 6",
   chevronDown: "M6 9l6 6 6-6",
