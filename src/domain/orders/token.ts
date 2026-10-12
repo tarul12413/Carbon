@@ -3,13 +3,14 @@ import { sha256 } from "@noble/hashes/sha2.js";
 import { utf8ToBytes } from "@noble/hashes/utils.js";
 
 /**
- * Signed tokens for ticket QRs and the sample gateway's payment signatures.
+ * Signed tokens for ticket QRs, stamp card QRs and the sample gateway's payment signatures.
  * HMAC-SHA256, so a QR cannot be forged or edited without the key. In the demo the keys below are
  * public placeholders and signing runs wherever the mock runs; Phase 2 signs on the server with
  * secrets from the environment and never ships them to the browser.
  */
 export const DEMO_TICKET_KEY = "carbon-demo-ticket-key-not-a-secret";
 export const DEMO_GATEWAY_KEY = "carbon-demo-gateway-key-not-a-secret";
+export const DEMO_STAMP_KEY = "carbon-demo-stamp-key-not-a-secret";
 
 const base64url = (bytes: Uint8Array) => {
   let binary = "";
@@ -44,18 +45,31 @@ export interface TicketClaims {
   readonly i: number;
 }
 
-export function signTicket(claims: TicketClaims, key = DEMO_TICKET_KEY): string {
+/** Signs any small JSON payload as "body.signature". */
+export function signClaims(claims: object, key: string): string {
   const body = base64url(utf8ToBytes(JSON.stringify(claims)));
   return `${body}.${signature(body, key)}`;
 }
 
-export function verifyTicket(token: string, key = DEMO_TICKET_KEY): TicketClaims | null {
+/** The payload of a token signed with `key`, or null if it was forged, edited or is not a token. */
+export function readClaims(token: string, key: string): Record<string, unknown> | null {
   const [body, sig, extra] = token.split(".");
   if (!body || !sig || extra !== undefined || !sameSignature(sig, signature(body, key))) return null;
   try {
-    const claims = JSON.parse(new TextDecoder().decode(fromBase64url(body))) as TicketClaims;
-    return typeof claims.c === "string" && typeof claims.q === "number" ? claims : null;
+    const claims: unknown = JSON.parse(new TextDecoder().decode(fromBase64url(body)));
+    return claims && typeof claims === "object" ? (claims as Record<string, unknown>) : null;
   } catch {
     return null;
   }
+}
+
+export function signTicket(claims: TicketClaims, key = DEMO_TICKET_KEY): string {
+  return signClaims(claims, key);
+}
+
+export function verifyTicket(token: string, key = DEMO_TICKET_KEY): TicketClaims | null {
+  const claims = readClaims(token, key);
+  return claims && typeof claims.c === "string" && typeof claims.e === "string" && typeof claims.q === "number"
+    ? (claims as unknown as TicketClaims)
+    : null;
 }

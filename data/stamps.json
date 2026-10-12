@@ -1,0 +1,28 @@
+{
+  "note": "Fictional stamp cards for the demo (Q-08). Phones are +91 90000 002xx. Remove before launch.",
+  "customers": [
+    {
+      "name": "Sample guest A",
+      "stamps": [
+        { "daysAgo": 20, "outlet": "c-scheme" },
+        { "daysAgo": 14, "outlet": "c-scheme" },
+        { "daysAgo": 9, "outlet": "raja-park" },
+        { "daysAgo": 4, "outlet": "c-scheme" },
+        { "daysAgo": 1, "outlet": "vaishali-nagar" }
+      ]
+    },
+    {
+      "name": "Sample guest B",
+      "stamps": [
+        { "daysAgo": 40, "outlet": "raja-park" },
+        { "daysAgo": 33, "outlet": "raja-park" },
+        { "daysAgo": 27, "outlet": "c-scheme" },
+        { "daysAgo": 21, "outlet": "raja-park" },
+        { "daysAgo": 15, "outlet": "raja-park" },
+        { "daysAgo": 10, "outlet": "vaishali-nagar" },
+        { "daysAgo": 6, "outlet": "raja-park" },
+        { "daysAgo": 2, "outlet": "raja-park" }
+      ]
+    }
+  ]
+}

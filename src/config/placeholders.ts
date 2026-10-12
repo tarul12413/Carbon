@@ -87,6 +87,18 @@ export const placeholders = {
     "When a seat opens, the first person on the waitlist has this long to claim it before it goes to the next.",
   ),
   ticketsPerOrderMax: placeholder("P-24", 6, "Most tickets one order can hold."),
+  otpRules: placeholder(
+    "P-25",
+    { validMinutes: 5, maxAttempts: 5, resendSeconds: 30, requestsPerHour: 3 },
+    "Sign-in code rules for the stamp card. Blueprint section 9 lists these numbers as placeholders.",
+  ),
+  stampUndoMinutes: placeholder("P-26", 2, "How long a barista can undo a stamp they just added."),
+  stampReward: placeholder("P-27", "Set by Carbon", "What a full card earns. Carbon may not run a stamp card yet."),
+  outletPin: placeholder(
+    "P-28",
+    "1896",
+    "Mock outlet PIN for redeeming a full card. The same for every outlet in the demo; real PINs are never in code.",
+  ),
 } as const;
 
 export type PlaceholderKey = keyof typeof placeholders;

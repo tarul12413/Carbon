@@ -4,9 +4,13 @@ import { err, ok } from "@/lib/result";
 import type { BookingService } from "../bookings";
 import type { DemoControls } from "../demo";
 import type { ServiceResult } from "../errors";
+import { signStampQr } from "@/domain/loyalty/qr";
 import type { Order, WebhookEvent } from "@/domain/orders/schema";
 import type { DemoGateway, TicketingService } from "../ticketing";
+import type { LoyaltyService } from "../loyalty";
+import type { StaffService } from "../staff";
 import * as bookingEngine from "./bookingEngine";
+import * as loyaltyEngine from "./loyaltyEngine";
 import { mockDbSchema, seedDb, type EngineContext, type MockDb } from "./db";
 import { sampleEvents } from "./events";
 import * as ordersEngine from "./ordersEngine";
@@ -39,6 +43,8 @@ export interface MockBackend {
   readonly bookings: BookingService;
   readonly ticketing: TicketingService;
   readonly gateway: DemoGateway;
+  readonly loyalty: LoyaltyService;
+  readonly staff: StaffService;
   readonly demo: DemoControls;
   /** Our side of the payment webhook (POST /api/webhooks/payments). */
   readonly webhooks: { receive(event: Omit<WebhookEvent, "receivedAt">): Promise<ServiceResult<Order>> };
@@ -67,6 +73,7 @@ export function createMockBackend(options: BackendOptions): MockBackend {
     const db = options.store.read() ?? seedDb(ctx);
     bookingEngine.sweepExpiredHolds(db, ctx.now);
     ordersEngine.sweepOrders(db, ctx);
+    loyaltyEngine.sweepLoyalty(db, ctx);
     const result = fn(db, ctx);
     options.store.write(db);
     return result;
@@ -114,6 +121,33 @@ export function createMockBackend(options: BackendOptions): MockBackend {
     getWaitlistEntry: (id) => read((db) => ordersEngine.getWaitlistEntry(db, id)),
   };
 
+  const loyalty: LoyaltyService = {
+    requestOtp: (input, key) => write(key, { op: "otp", input }, (db, ctx) => loyaltyEngine.requestOtp(db, ctx, input)),
+    verifyOtp: (input, key) =>
+      write(key, { op: "otp-verify", input }, (db, ctx) => loyaltyEngine.verifyOtp(db, ctx, input)),
+    getCard: (session) => read((db, ctx) => loyaltyEngine.getCard(db, ctx, session)),
+    getQr: (session) => read((db, ctx) => loyaltyEngine.getQr(db, ctx, session)),
+    signOut: (session) => read((db) => loyaltyEngine.signOut(db, session)),
+    deleteCard: (session) => read((db, ctx) => loyaltyEngine.deleteCard(db, ctx, session)),
+  };
+
+  const staff: StaffService = {
+    findCard: (actor, lookup) => read((db, ctx) => loyaltyEngine.findCard(db, ctx, actor, lookup)),
+    addStamp: (actor, customerId, key) =>
+      write(key, { op: "stamp", actor, customerId }, (db, ctx) => loyaltyEngine.addStamp(db, ctx, actor, customerId)),
+    undoStamp: (actor, entryId, key) =>
+      write(key, { op: "undo", actor, entryId }, (db, ctx) => loyaltyEngine.undoStamp(db, ctx, actor, entryId)),
+    redeem: (actor, customerId, pin, key) =>
+      write(key, { op: "redeem", actor, customerId }, (db, ctx) =>
+        loyaltyEngine.redeem(db, ctx, actor, customerId, pin),
+      ),
+    findTicket: (actor, lookup) => read((db) => loyaltyEngine.findTicket(db, actor, lookup)),
+    checkIn: (actor, code, collected, key) =>
+      write(key, { op: "check-in", actor, code, collected }, (db, ctx) =>
+        loyaltyEngine.checkIn(db, ctx, actor, code, collected),
+      ),
+  };
+
   /** The sample gateway is "someone else's system": no idempotency ledger, its own event ids. */
   const gateway: DemoGateway = {
     pay: (gatewayOrderId, outcome) => read((db, ctx) => ordersEngine.gatewayPay(db, ctx, gatewayOrderId, outcome)),
@@ -137,11 +171,20 @@ export function createMockBackend(options: BackendOptions): MockBackend {
         return holds.length;
       }),
     openSeat: (slug) => read((db, ctx) => ordersEngine.openSeat(db, ctx, slug)),
+    scannable: () =>
+      read((db, ctx) => {
+        const session = db.sessions.at(-1);
+        const ticket = db.tickets.filter((t) => t.status === "valid" && !t.checkedInAt).at(-1);
+        return {
+          stamp: session ? signStampQr(session.customerId, ctx.now).token : null,
+          ticket: ticket?.token ?? null,
+        };
+      }),
   };
 
   const webhooks = {
     receive: (event: Omit<WebhookEvent, "receivedAt">) => read((db, ctx) => ordersEngine.handleWebhook(db, ctx, event)),
   };
 
-  return { bookings, ticketing, gateway, demo, webhooks };
+  return { bookings, ticketing, gateway, loyalty, staff, demo, webhooks };
 }

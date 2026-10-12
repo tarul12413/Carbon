@@ -57,6 +57,8 @@ export const ticketSchema = z.object({
   paid: z.boolean(),
   status: z.enum(["valid", "cancelled"]),
   checkedInAt: instant.nullable(),
+  /** Staff account that checked it in. */
+  checkedInBy: z.string().optional(),
   issuedAt: instant,
 });
 export type Ticket = z.infer<typeof ticketSchema>;

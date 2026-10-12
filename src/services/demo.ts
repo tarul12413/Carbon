@@ -6,4 +6,9 @@ export interface DemoControls {
   expireHolds(): Promise<number>;
   /** Someone with a sample ticket cancels: one seat opens and goes to the waitlist first. Returns seats now free. */
   openSeat(eventSlug: string): Promise<number>;
+  /**
+   * What the scanner's "Simulate scan" reads, standing in for the camera: the QR on the most recent
+   * stamp card signed in on this device, and the newest ticket not yet checked in.
+   */
+  scannable(): Promise<{ readonly stamp: string | null; readonly ticket: string | null }>;
 }

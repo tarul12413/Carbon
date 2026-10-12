@@ -4,6 +4,8 @@ import type { BookingService } from "./bookings";
 import type { DemoControls } from "./demo";
 import { createHttpBookingService } from "./http/bookings";
 import type { MockBackend } from "./mock/mockBackend";
+import type { LoyaltyService } from "./loyalty";
+import type { StaffService } from "./staff";
 import type { DemoGateway, TicketingService } from "./ticketing";
 
 /**
@@ -45,10 +47,14 @@ export const clientServices: {
   readonly bookings: BookingService;
   readonly ticketing: TicketingService;
   readonly gateway: DemoGateway;
+  readonly loyalty: LoyaltyService;
+  readonly staff: StaffService;
   readonly demo: DemoControls;
 } = {
   bookings: process.env.NEXT_PUBLIC_BOOKING_TRANSPORT === "http" ? createHttpBookingService() : deferred("bookings"),
   ticketing: deferred("ticketing"),
   gateway: deferred("gateway"),
+  loyalty: deferred("loyalty"),
+  staff: deferred("staff"),
   demo: deferred("demo"),
 };

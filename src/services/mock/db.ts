@@ -1,9 +1,20 @@
 import { z } from "zod";
 import seed from "../../../data/bookings.json";
+import stampSeed from "../../../data/stamps.json";
 import { newBookingCode } from "@/domain/booking/code";
 import { bookingSchema, type Booking } from "@/domain/booking/schema";
 import type { EventInfo } from "@/domain/events/types";
 import { toMinutes } from "@/domain/hours";
+import {
+  auditEntrySchema,
+  customerSchema,
+  customerSessionSchema,
+  otpChallengeSchema,
+  rewardSchema,
+  stampEntrySchema,
+  type Customer,
+  type StampEntry,
+} from "@/domain/loyalty/schema";
 import {
   orderSchema,
   ticketSchema,
@@ -30,6 +41,13 @@ export const mockDbSchema = z.object({
   /** Seats freed by the demo control "someone cancels", by "event:ticket type". */
   released: z.record(z.string(), z.number().int().nonnegative()),
   idempotency: z.record(z.string(), z.object({ fingerprint: z.string(), at: z.string(), response: z.unknown() })),
+  /* Stamp card (M5). Defaults let a version 2 database saved before M5 load as it is. */
+  customers: z.array(customerSchema).default([]),
+  otpChallenges: z.array(otpChallengeSchema).default([]),
+  sessions: z.array(customerSessionSchema).default([]),
+  stamps: z.array(stampEntrySchema).default([]),
+  rewards: z.array(rewardSchema).default([]),
+  audit: z.array(auditEntrySchema).default([]),
 });
 export type MockDb = z.infer<typeof mockDbSchema>;
 
@@ -66,7 +84,46 @@ const bookingSeedSchema = z.object({
   ),
 });
 
-/** Fresh database: fictional bookings and waitlist entries (Q-08), dated from today. */
+const stampSeedSchema = z.object({
+  customers: z.array(
+    z.object({
+      name: z.string(),
+      stamps: z.array(z.object({ daysAgo: z.number().int().positive(), outlet: z.enum(OUTLET_SLUGS) })),
+    }),
+  ),
+});
+
+/** Fictional stamp cards (Q-08), so the scanner has someone to look up by phone. */
+function seedCards(ctx: EngineContext, at: string): Pick<MockDb, "customers" | "stamps"> {
+  const customers: Customer[] = [];
+  const stamps: StampEntry[] = [];
+  stampSeedSchema.parse(stampSeed).customers.forEach((c, i) => {
+    const id = randomId("cus", ctx.random);
+    customers.push({
+      id,
+      phone: `+9190000002${String(i + 1).padStart(2, "0")}`,
+      name: c.name,
+      consent: { noticeVersion: "seed", at },
+      source: "seed",
+      createdAt: at,
+    });
+    for (const s of c.stamps) {
+      stamps.push({
+        id: randomId("stp", ctx.random),
+        customerId: id,
+        delta: 1,
+        reason: "visit",
+        outlet: s.outlet,
+        staffId: "seed",
+        at: new Date(ctx.now.getTime() - s.daysAgo * 24 * 60 * 60_000).toISOString(),
+      });
+    }
+  });
+  stamps.sort((a, b) => a.at.localeCompare(b.at));
+  return { customers, stamps };
+}
+
+/** Fresh database: fictional bookings, waitlist entries and stamp cards (Q-08), dated from today. */
 export function seedDb(ctx: EngineContext): MockDb {
   const today = localDate(ctx.now, ctx.timeZone);
   const at = ctx.now.toISOString();
@@ -117,5 +174,19 @@ export function seedDb(ctx: EngineContext): MockDb {
     }),
   );
 
-  return { version: 2, bookings, orders: [], tickets: [], waitlist, webhooks: [], released: {}, idempotency: {} };
+  return {
+    version: 2,
+    bookings,
+    orders: [],
+    tickets: [],
+    waitlist,
+    webhooks: [],
+    released: {},
+    idempotency: {},
+    ...seedCards(ctx, at),
+    otpChallenges: [],
+    sessions: [],
+    rewards: [],
+    audit: [],
+  };
 }

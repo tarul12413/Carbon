@@ -14,7 +14,19 @@ export type ServiceErrorCode =
   | "idempotency_conflict"
   | "sold_out"
   | "too_many"
-  | "signature_invalid";
+  | "signature_invalid"
+  | "rate_limited"
+  | "otp_invalid"
+  | "otp_expired"
+  | "otp_locked"
+  | "session_expired"
+  | "token_expired"
+  | "too_soon"
+  | "card_full"
+  | "not_enough_stamps"
+  | "pin_invalid"
+  | "already_used"
+  | "forbidden";
 
 export interface ServiceError {
   readonly code: ServiceErrorCode;
@@ -24,6 +36,13 @@ export interface ServiceError {
   readonly alternatives?: readonly { readonly date: string; readonly time: string }[];
   /** Seats still available, for too_many. */
   readonly left?: number;
+  /** When to try again, for rate_limited. */
+  readonly retryAt?: string;
+  /** Code tries left, for otp_invalid. */
+  readonly attemptsLeft?: number;
+  /** The last stamp and the next allowed one, for too_soon. */
+  readonly lastAt?: string;
+  readonly nextAt?: string;
 }
 
 export type ServiceResult<T> = Result<T, ServiceError>;
