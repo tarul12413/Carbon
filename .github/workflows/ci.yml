@@ -24,6 +24,8 @@ jobs:
       - run: npm run format:check
       - run: npm test
       - run: npm run build
+        env:
+          NEXT_PUBLIC_FLAG_STAMP_CARD: "true"
       - run: npx playwright install --with-deps chromium
       - run: npm run e2e
       - run: npm run lhci
