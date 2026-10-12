@@ -127,7 +127,7 @@ export function PartyStep({
           </p>
           <p className="text-fg-muted">{t.tooBigBody}</p>
           <Link
-            href={routes.enquire}
+            href={routes.enquireAbout("other")}
             className="inline-flex min-h-11 items-center font-medium text-accent underline underline-offset-4"
           >
             {t.enquire}

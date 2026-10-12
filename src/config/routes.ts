@@ -17,9 +17,13 @@ export const routes = {
   myCarbon: "/my-carbon",
   staff: "/staff",
   enquire: "/enquire",
+  enquireAbout: (type: "catering" | "collab" | "workshop" | "other") => `/enquire?type=${type}`,
   story: "/story",
   bookWall: "/book-wall",
+  bookWallAdd: "/book-wall/add",
   legal: "/legal/privacy",
+  legalPage: (page: "privacy" | "terms" | "refunds") => `/legal/${page}`,
+  offline: "/offline",
   menuItem: (id: string) => `/menu#${id}`,
   steepEnd: "/#steep-96",
 } as const;

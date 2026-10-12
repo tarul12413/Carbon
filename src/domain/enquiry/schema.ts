@@ -1,16 +1,10 @@
 import { z } from "zod";
-import { normalizeIndianMobile } from "./booking/phone";
-import { OUTLET_SLUGS } from "./outlet";
-import { isLocalDate } from "./time";
+import { normalizeIndianMobile } from "@/domain/booking/phone";
+import { OUTLET_SLUGS } from "@/domain/outlet";
+import { isLocalDate } from "@/domain/time";
+import { ENQUIRY_LIMITS, ENQUIRY_TYPES } from "./types";
 
-/** The brief's four kinds of enquiry (/enquire). */
-export const ENQUIRY_TYPES = ["catering", "collab", "workshop", "other"] as const;
-export type EnquiryType = (typeof ENQUIRY_TYPES)[number];
-
-export const isEnquiryType = (value: string | null | undefined): value is EnquiryType =>
-  typeof value === "string" && (ENQUIRY_TYPES as readonly string[]).includes(value);
-
-export const ENQUIRY_LIMITS = { name: 60, details: 600, detailsMin: 10, guestsMax: 2000 } as const;
+export { ENQUIRY_LIMITS, ENQUIRY_TYPES, isEnquiryType, type EnquiryType } from "./types";
 
 const instant = z.iso.datetime();
 

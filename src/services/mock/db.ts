@@ -4,7 +4,7 @@ import stampSeed from "../../../data/stamps.json";
 import { newBookingCode } from "@/domain/booking/code";
 import { bookingSchema, type Booking } from "@/domain/booking/schema";
 import type { EventInfo } from "@/domain/events/types";
-import { enquirySchema } from "@/domain/enquiry";
+import { enquirySchema } from "@/domain/enquiry/schema";
 import { toMinutes } from "@/domain/hours";
 import {
   auditEntrySchema,

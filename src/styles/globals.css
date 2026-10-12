@@ -129,3 +129,63 @@
     }
   }
 }
+
+/* Book wall (wireframe 10): spines stand on amber shelf lines and slide on as if placed by hand. */
+@layer components {
+  .shelf {
+    --shelf-h: 11rem;
+    --shelf-gap: 1.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.25rem;
+    row-gap: var(--shelf-gap);
+    padding-bottom: 0.25rem;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0 var(--shelf-h),
+      var(--accent) var(--shelf-h) calc(var(--shelf-h) + 3px),
+      transparent calc(var(--shelf-h) + 3px) calc(var(--shelf-h) + var(--shelf-gap))
+    );
+  }
+
+  @media (width >= 37.5rem) {
+    .shelf {
+      --shelf-h: 14rem;
+    }
+  }
+
+  .shelf-slot {
+    display: flex;
+    height: var(--shelf-h);
+    align-items: flex-end;
+  }
+
+  .spine {
+    transform-origin: bottom center;
+    animation: spine-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(var(--i, 0) * 35ms);
+  }
+
+  .shelf:not([data-in-view]) .spine {
+    animation-play-state: paused;
+  }
+
+  .spine-title {
+    writing-mode: vertical-rl;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-height: 100%;
+  }
+
+  @keyframes spine-in {
+    from {
+      opacity: 0;
+      transform: translateY(-2.5rem) rotate(calc(var(--tilt, 0) * 1deg));
+    }
+    70% {
+      opacity: 1;
+      transform: translateY(0) rotate(calc(var(--tilt, 0) * -0.2deg));
+    }
+  }
+}

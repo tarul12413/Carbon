@@ -23,6 +23,14 @@
   --color-leaf-deep: #43624a;
   --color-concrete-deep: #5e5a55;
 
+  /* Book wall spines (wireframe 10): muted cloth colours, all at least 4.5:1 against bone text. Not Carbon colours. */
+  --color-spine-0: #3a393c;
+  --color-spine-1: #6a4f36;
+  --color-spine-2: #44503f;
+  --color-spine-3: #7a4237;
+  --color-spine-4: #55535a;
+  --color-spine-5: #5e4632;
+
   --radius-sm: 4px;
   --radius-md: 6px;
 

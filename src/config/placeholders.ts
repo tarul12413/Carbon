@@ -107,7 +107,7 @@ export const placeholders = {
   ),
   privacyContact: placeholder(
     "P-31",
-    "the contact Carbon names",
+    "Carbon's privacy contact (to be named)",
     "Who handles privacy requests and grievances (DPDP Act). Not given.",
   ),
   retentionPeriod: placeholder(

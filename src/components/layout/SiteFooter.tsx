@@ -60,6 +60,7 @@ export async function SiteFooter() {
             {[
               ...primaryNav,
               ...(flags.stampCard ? [{ href: routes.myCarbon, label: copy.nav.myCarbon }] : []),
+              { href: routes.bookWall, label: copy.nav.bookWall },
               { href: routes.enquire, label: copy.nav.enquire },
               { href: routes.legal, label: copy.footer.legal },
             ].map((item) => (

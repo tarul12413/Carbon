@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SteepEasterEgg } from "@/components/layout/SteepEasterEgg";
 import { StickyBookBar } from "@/components/layout/StickyBookBar";
+import { ServiceWorker } from "@/components/system/ServiceWorker";
 import { copy } from "@/content/copy";
 import "@/styles/globals.css";
 
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {children}
         <SiteFooter />
         <StickyBookBar />
+        <ServiceWorker />
         <SteepEasterEgg />
         <div className="noise-overlay" aria-hidden="true" />
       </body>

@@ -1,12 +1,9 @@
 import { z } from "zod";
+import { WALL_LIMITS } from "./limits";
+
+export { WALL_LIMITS, WALL_MIN_FILL_SECONDS } from "./limits";
 
 const instant = z.iso.datetime();
-
-/** Field lengths (wireframe 10: "One line: why? (80 chars)"). Shared by the inputs and the service. */
-export const WALL_LIMITS = { title: 80, author: 60, line: 80, handle: 30 } as const;
-
-/** Seconds a person needs at least to fill the form: the mock bot check's time trap. */
-export const WALL_MIN_FILL_SECONDS = 3;
 
 /** Blueprint section 9: wall_entries. A "reader" entry is "I read this too": no text, no approval needed. */
 export const wallEntrySchema = z.object({

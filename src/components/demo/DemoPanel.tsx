@@ -13,12 +13,14 @@ export const DEMO_CHANGED = "carbon:demo-changed";
 interface DemoPanelProps {
   /** On an event page: adds "someone cancels", which opens a seat for the waitlist. */
   readonly eventSlug?: string;
+  /** On the book wall: approves waiting books, standing in for staff moderation until M7. */
+  readonly approveWall?: boolean;
   /** Extra controls for the page, e.g. the bank's answer on a pending payment. */
   readonly children?: ReactNode;
 }
 
 /** Demo-only controls (flag: devPanel). Not part of the product. */
-export function DemoPanel({ eventSlug, children }: DemoPanelProps) {
+export function DemoPanel({ eventSlug, approveWall, children }: DemoPanelProps) {
   const [message, setMessage] = useState("");
   const done = (text: string) => {
     setMessage(text);
@@ -31,6 +33,14 @@ export function DemoPanel({ eventSlug, children }: DemoPanelProps) {
         <p className="text-fg-muted">{t.note}</p>
         <div className="flex flex-wrap gap-3">
           {children}
+          {approveWall && (
+            <Button
+              variant="secondary"
+              onClick={async () => done(t.approvedWall(await clientServices.demo.approveWall()))}
+            >
+              {t.approveWall}
+            </Button>
+          )}
           {eventSlug && (
             <Button
               variant="secondary"

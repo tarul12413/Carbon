@@ -1,7 +1,7 @@
 import { z } from "zod";
 import seed from "../../../data/wall.json";
 import { placeholders } from "@/config/placeholders";
-import { ENQUIRY_LIMITS, enquiryInputSchema, type Enquiry } from "@/domain/enquiry";
+import { ENQUIRY_LIMITS, enquiryInputSchema, type Enquiry } from "@/domain/enquiry/schema";
 import { localDate } from "@/domain/time";
 import { hasProfanity } from "@/domain/wall/profanity";
 import { WALL_MIN_FILL_SECONDS, wallInputSchema, type WallEntry } from "@/domain/wall/schema";

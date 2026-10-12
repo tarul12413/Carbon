@@ -1,20 +1,56 @@
 {
   "source": "Sample shelf for the demo (Q-08 style): real book titles, fictional readers and lines. Shown with a 'Sample shelf' note. Remove before launch.",
   "books": [
-    { "title": "Malgudi Days", "author": "R. K. Narayan", "readers": [{ "line": "Short stories, one per cold brew.", "handle": "Sample reader A" }, { "line": "" }, { "line": "Swami never gets old." }] },
-    { "title": "The God of Small Things", "author": "Arundhati Roy", "readers": [{ "line": "Read it twice. Still not over it.", "handle": "Sample reader B" }, { "line": "" }] },
-    { "title": "A Suitable Boy", "author": "Vikram Seth", "readers": [{ "line": "Took three months and a lot of coffee." }] },
+    {
+      "title": "Malgudi Days",
+      "author": "R. K. Narayan",
+      "readers": [
+        { "line": "Short stories, one per cold brew.", "handle": "Sample reader A" },
+        { "line": "" },
+        { "line": "Swami never gets old." }
+      ]
+    },
+    {
+      "title": "The God of Small Things",
+      "author": "Arundhati Roy",
+      "readers": [{ "line": "Read it twice. Still not over it.", "handle": "Sample reader B" }, { "line": "" }]
+    },
+    {
+      "title": "A Suitable Boy",
+      "author": "Vikram Seth",
+      "readers": [{ "line": "Took three months and a lot of coffee." }]
+    },
     { "title": "Train to Pakistan", "author": "Khushwant Singh", "readers": [{ "line": "" }] },
-    { "title": "The Palace of Illusions", "author": "Chitra Banerjee Divakaruni", "readers": [{ "line": "The Mahabharata from Draupadi's side.", "handle": "Sample reader C" }] },
-    { "title": "Norwegian Wood", "author": "Haruki Murakami", "readers": [{ "line": "" }, { "line": "Quiet book for a loud evening." }] },
+    {
+      "title": "The Palace of Illusions",
+      "author": "Chitra Banerjee Divakaruni",
+      "readers": [{ "line": "The Mahabharata from Draupadi's side.", "handle": "Sample reader C" }]
+    },
+    {
+      "title": "Norwegian Wood",
+      "author": "Haruki Murakami",
+      "readers": [{ "line": "" }, { "line": "Quiet book for a loud evening." }]
+    },
     { "title": "Siddhartha", "author": "Hermann Hesse", "readers": [{ "line": "Short enough for one sitting." }] },
     { "title": "Gitanjali", "author": "Rabindranath Tagore", "readers": [{ "line": "", "handle": "Sample reader D" }] },
     { "title": "The White Tiger", "author": "Aravind Adiga", "readers": [{ "line": "" }] },
-    { "title": "Sapiens", "author": "Yuval Noah Harari", "readers": [{ "line": "Good for arguments at the next table." }, { "line": "" }] },
+    {
+      "title": "Sapiens",
+      "author": "Yuval Noah Harari",
+      "readers": [{ "line": "Good for arguments at the next table." }, { "line": "" }]
+    },
     { "title": "Kafka on the Shore", "author": "Haruki Murakami", "readers": [{ "line": "" }] },
-    { "title": "The Midnight Library", "author": "Matt Haig", "readers": [{ "line": "A good one to start on a slow Sunday.", "handle": "Sample reader E" }] },
+    {
+      "title": "The Midnight Library",
+      "author": "Matt Haig",
+      "readers": [{ "line": "A good one to start on a slow Sunday.", "handle": "Sample reader E" }]
+    },
     { "title": "Ikigai", "author": "Héctor García and Francesc Miralles", "readers": [{ "line": "" }] },
-    { "title": "The Little Prince", "author": "Antoine de Saint-Exupéry", "readers": [{ "line": "Ten minutes, every time." }, { "line": "" }] },
+    {
+      "title": "The Little Prince",
+      "author": "Antoine de Saint-Exupéry",
+      "readers": [{ "line": "Ten minutes, every time." }, { "line": "" }]
+    },
     { "title": "The Great Gatsby", "author": "F. Scott Fitzgerald", "readers": [{ "line": "" }] },
     { "title": "Atomic Habits", "author": "James Clear", "readers": [{ "line": "" }] }
   ]

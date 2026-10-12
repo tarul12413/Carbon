@@ -22,7 +22,7 @@ export function EventsTeaser() {
         </ul>
         <div className="flex flex-wrap gap-3">
           <ButtonLink href={routes.events}>{t.cta}</ButtonLink>
-          <ButtonLink href={routes.enquire} variant="secondary" className="bg-surface">
+          <ButtonLink href={routes.enquireAbout("collab")} variant="secondary" className="bg-surface">
             {t.host}
           </ButtonLink>
         </div>
