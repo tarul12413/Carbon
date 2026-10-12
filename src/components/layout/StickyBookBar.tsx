@@ -6,7 +6,7 @@ import { copy } from "@/content/copy";
 import { routes } from "@/config/routes";
 
 /** Pages with their own primary action, where a second one would only cover it. */
-const OWN_ACTION = [routes.book, "/checkout", "/tickets", `${routes.events}/`];
+const OWN_ACTION = [routes.book, "/checkout", "/tickets", `${routes.events}/`, routes.myCarbon, routes.staff];
 
 /** Phones only: the primary action in the thumb zone (Blueprint section 6). */
 export function StickyBookBar() {

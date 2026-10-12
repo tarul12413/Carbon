@@ -3,6 +3,7 @@ import { Logo } from "@/components/brand/Logo";
 import { Icon } from "@/components/ui/Icon";
 import { Tbc } from "@/components/ui/Tbc";
 import { copy } from "@/content/copy";
+import { flags } from "@/config/flags";
 import { placeholders } from "@/config/placeholders";
 import { routes } from "@/config/routes";
 import { formatClock } from "@/domain/hours";
@@ -58,6 +59,7 @@ export async function SiteFooter() {
           <ul className="flex flex-col">
             {[
               ...primaryNav,
+              ...(flags.stampCard ? [{ href: routes.myCarbon, label: copy.nav.myCarbon }] : []),
               { href: routes.enquire, label: copy.nav.enquire },
               { href: routes.legal, label: copy.footer.legal },
             ].map((item) => (

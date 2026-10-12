@@ -14,6 +14,8 @@ export const routes = {
   ticket: (code: string) => `/tickets/${code}`,
   ticketCancel: (code: string) => `/tickets/${code}/cancel`,
   booking: (code: string) => `/book/${code}`,
+  myCarbon: "/my-carbon",
+  staff: "/staff",
   enquire: "/enquire",
   story: "/story",
   bookWall: "/book-wall",
