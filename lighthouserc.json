@@ -11,7 +11,9 @@
         "http://localhost:3101/story",
         "http://localhost:3101/book",
         "http://localhost:3101/events",
-        "http://localhost:3101/events/coffee-rave"
+        "http://localhost:3101/events/coffee-rave",
+        "http://localhost:3101/book-wall",
+        "http://localhost:3101/enquire"
       ],
       "numberOfRuns": 3
     },

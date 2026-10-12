@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { hasProfanity } from "@/domain/wall/profanity";
 import { spineShape, titleKey } from "@/domain/wall/spine";
 import type { WallInput } from "@/domain/wall/schema";
-import type { EnquiryInput } from "@/domain/enquiry";
+import type { EnquiryInput } from "@/domain/enquiry/schema";
 import { createMockBackend, memoryStore, type MockBackend } from "@/services/mock/mockBackend";
 import { mockOutlets } from "@/services/mock/outlets";
 
@@ -229,5 +229,16 @@ describe("wall and enquiry routes", () => {
     expect(sent.status).toBe(201);
     const bad = await enquire(post("/api/enquiries", { type: "catering" }, { "idempotency-key": "e-1" }));
     expect(bad.status).toBe(400);
+  });
+});
+
+describe("legal pages", () => {
+  it("only use placeholders that exist", async () => {
+    const { copy } = await import("@/content/copy");
+    const { placeholders } = await import("@/config/placeholders");
+    const text = JSON.stringify(copy.legal);
+    const keys = [...text.matchAll(/\[\[(\w+)\]\]/g)].map((m) => m[1]);
+    expect(keys.length).toBeGreaterThan(5);
+    for (const k of keys) expect(Object.keys(placeholders)).toContain(k);
   });
 });

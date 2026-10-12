@@ -13,6 +13,8 @@ export default defineConfig({
   use: {
     baseURL,
     trace: "retain-on-failure",
+    /* The service worker caches pages; only the offline test turns it on (tests/e2e/site.spec.ts). */
+    serviceWorkers: "block",
     ...(process.env.PW_CHANNEL ? { channel: process.env.PW_CHANNEL } : {}),
   },
   projects: [
