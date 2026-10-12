@@ -30,15 +30,24 @@ Placeholders (P-xx) match the ids in `src/config/placeholders.ts`. Change the va
 | P-22 | Pay-at-cafe deadline for event seats    | "a time Carbon sets" (demo logic: 2 h before) | Blueprint 5.4                                      |
 | P-23 | Waitlist claim window                   | 30 minutes                                    | Blueprint 5.4 (my placeholder)                     |
 | P-24 | Tickets per order                       | 6                                             | My placeholder                                     |
+| P-25 | Sign-in code rules                      | 5 min, 5 tries, 30 s between sends, 3 an hour | Blueprint section 9                                |
+| P-26 | Undo window for a stamp                 | 2 minutes                                     | Blueprint 5.7 (my placeholder)                     |
+| P-27 | What a full card earns                  | "Set by Carbon"                               | Wireframe 09, Blueprint open item 3                |
+| P-28 | Outlet PIN to redeem                    | mock "1896", same at every outlet             | Brief: "outlet PIN (mock)"                         |
 
 ## Questions for you (Tarul)
 
-| #    | Question                                                                          | Default I will use unless you say otherwise | Needed by                          |
-| ---- | --------------------------------------------------------------------------------- | ------------------------------------------- | ---------------------------------- |
-| Q-20 | Prices for each event, and whether each sells online, at the cafe, or both        | "Rs ---"; both offered                      | Before launch                      |
-| Q-21 | Age rules for Coffee Raves (Blueprint open item 9)                                | Not shown                                   | Before launch                      |
-| Q-22 | The real event calendar: names, dates, capacity, posters                          | Three labelled samples                      | Before the pitch, if you have them |
-| Q-23 | Can tickets be passed to a friend? The demo shares the event link, not the ticket | Event link only                             | M5                                 |
+| #    | Question                                                                                                                                                                             | Default I will use unless you say otherwise | Needed by                          |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------- | ---------------------------------- |
+| Q-20 | Prices for each event, and whether each sells online, at the cafe, or both                                                                                                           | "Rs ---"; both offered                      | Before launch                      |
+| Q-21 | Age rules for Coffee Raves (Blueprint open item 9)                                                                                                                                   | Not shown                                   | Before launch                      |
+| Q-22 | The real event calendar: names, dates, capacity, posters                                                                                                                             | Three labelled samples                      | Before the pitch, if you have them |
+| Q-23 | Can tickets be passed to a friend? The demo shares the event link, not the ticket                                                                                                    | Event link only                             | M5                                 |
+| Q-24 | Does Carbon want a stamp card at all, and what does a full card earn? (Blueprint open item 3)                                                                                        | Off; reward shown as "Set by Carbon"        | Before switching the flag on       |
+| Q-25 | On a full card, do stamps keep counting past 8, or wait until the reward is redeemed?                                                                                                | Wait: no stamps on a full card              | Before switching the flag on       |
+| Q-26 | Can managers stamp cards? The blueprint lists only owners and baristas                                                                                                               | Owners and baristas only                    | M7                                 |
+| Q-27 | At the door, should a ticket for another day be refused, or just flagged?                                                                                                            | Flagged, still allowed                      | Before the first real event        |
+| Q-28 | All copy sits in one file, which every page downloads whole (about 17 KB gzipped). May I split it into one copy file per area (still under src/content) in M8 to win back load time? | Keep one file until you say                 | M8                                 |
 
 ## Answered
 

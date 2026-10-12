@@ -266,3 +266,49 @@ GSAP, Motion and zod are deferred to the milestone that first uses them, so noth
 - Unit: 133 tests. E2E: 147 pass at 360, 744 and 1440 px, 3 skipped by design. Covered: events list and filters, buying a ticket with success, failed then retry, and pending with a repeated webhook; pay at the cafe; detail checks; hold expiry; cancel and refund; waitlist join, offer and claim; table deposit. Every new screen is axe-clean.
 - Lighthouse, simulated: accessibility 100 everywhere. LCP medians: `/events` 2.30 s, `/events/coffee-rave` about 2.5 s, home 2.46 to 2.56 s. `/menu` (2.60 s) and `/book` (2.65 to 2.77 s) still miss 2.5 s: the gap from D-025 and D-032, for M8.
 - Home JS (Playwright budget test): passes under 170 KB.
+
+## M5: Stamp card and staff scanner
+
+### D-042 The flag, and what it switches
+
+- The stamp card stays behind `NEXT_PUBLIC_FLAG_STAMP_CARD`, off by default (locked decision). Off: `/my-carbon` is a 404, the stamp routes under `/api/auth`, `/api/me` and `/api/staff` (cards, stamps, redeem) answer 404, the footer has no "My Carbon" link, and `/staff` shows only the event door. On: all of it appears. Turn it on in Vercel's environment settings for the pitch and redeploy.
+- CI builds with the flag on, so the stamp card's end-to-end tests run there. A build without it skips them; unit tests cover the "off" answers.
+- Alternatives: a runtime switch in the dev panel (the brief asks for a feature flag, and a visitor toggle would blur "off by default"); two CI builds (twice the time for one 404).
+
+### D-043 Sign-in with a code (mock OTP)
+
+- Phone plus a six-digit code only (locked decision). Consent with the notice version (P-18) is required before a code is sent, and is recorded with the time. A hidden honeypot is the bot check.
+- Rules from Blueprint section 9, numbers in P-25: a code lasts 5 minutes and allows 5 tries; 30 seconds between sends; 3 sends an hour per phone. Codes are stored as SHA-256 hashes with their challenge id, never as typed, and deleted after a day. Six boxes take typing, Backspace, arrows, paste and SMS autofill (`one-time-code`).
+- No SMS is sent. The mock returns the code, and the page shows it in a toast labelled "Demo SMS", only with the dev panel flag on. Phase 2 sends it through a DLT-registered provider and the field disappears.
+- The demo keeps the session id in this browser; the route handlers already set it as a secure, HTTP-only cookie (30 days, sliding), as Phase 2 will.
+- Not built: the per-IP limit (the browser mock has no IP), and a WhatsApp fallback (Blueprint: later).
+
+### D-044 The card, the QR and the ledger
+
+- Stamps are an append-only ledger (Blueprint section 9: stamp_ledger); the balance is the sum. A visit adds 1, an undo adds -1 and points at the visit, a redeem takes off the threshold (P-06, 8).
+- The card's QR is a signed token (HMAC, its own key, kind "stamp") that lasts 60 seconds (brief). The page asks for a fresh one as each runs out and shows the countdown, so a screenshot is useless a minute later. A stamp QR is never accepted as a ticket, and the other way round.
+- The card checks for changes every 3 seconds while open, so a stamp added at the counter lands on the customer's phone with a small bounce and, where supported, a short vibration (Blueprint section 8).
+- Self-service deletion removes the customer, their ledger, rewards, sessions and sign-in records, and anonymises the audit log entries (Blueprint section 12).
+- Seed: two fictional cards (Q-08), +91 90000 00201 with 5 stamps and +91 90000 00202 with a full card, so the scanner has someone to look up.
+
+### D-045 Staff scanner
+
+- `/staff` signs in by picking a sample account (owner, a manager and a barista per outlet, marketing) and the outlet the device is at. Fictional, no names. Phase 2: magic link or Google sign-in on registered devices (Blueprint section 10). M7's admin will reuse these accounts.
+- Who can do what, from Blueprint section 10: owners and baristas stamp and redeem; owners, managers and baristas check people in; marketing does neither. Everyone only at their own outlet, owners anywhere (Q-26).
+- Camera: not in Phase 1 (brief: a mock scanner). "Simulate scan" reads the QR a signed-in My Carbon tab is showing, or the newest ticket not yet checked in, from this browser's demo data. Typing a phone number or a ticket code is the fallback the blueprint asks for when the camera is denied.
+- Adding a stamp is optimistic and rolls back quietly if refused (Blueprint section 8). One stamp per idempotency key, and a minimum gap (P-17, 30 minutes) so a double scan cannot add two; the barista sees "Last stamp 2 h ago" and when the next is allowed. Undo works on the latest stamp for 2 minutes (P-26).
+- A full card takes no more stamps until it is redeemed (Q-25). Redeeming needs the outlet PIN (P-28, mock "1896", shown under the form with the dev panel on). A wrong PIN is logged; the reward cannot be redeemed twice.
+- Every stamp, undo, redemption, wrong PIN and check-in is written to an audit log with the staff account, outlet and time (Blueprint section 9: audit_log), ready for M7's admin.
+
+### D-046 Event door
+
+- Always on: tickets exist without the stamp card. Scan or type the code; the signature is checked first, so a forged QR is refused.
+- A ticket checks in once (`checkedInAt`, `checkedInBy`); a second scan says when it was used. A pay-at-the-cafe ticket is collected first ("Collected the payment, check in" moves the order to paid). Cancelled, refunded and released tickets are refused. A checked-in ticket can no longer be cancelled online.
+- A ticket for another day shows a warning but can still be checked in (Q-27), because the demo's events are always days away.
+- Not built: the cached attendee list for weak signal (Blueprint section 11). Checking the signature needs no network, so Phase 2's offline door scanner can build on it.
+
+### D-047 M5 measurements
+
+- Unit: 157 tests (24 new: sign-in codes, the 60-second QR, gap, undo, full card, PIN redeem, roles, deletion, check-in once, pay at the door, and the routes with the flag on and off). E2E: 162 pass at 360, 744 and 1440 px with the flag on, 3 skipped by design; with the flag off the 12 stamp card tests skip and the door tests pass. Every new screen is axe-clean.
+- Lighthouse on the default build (flag off), simulated: accessibility 100 and CLS 0 everywhere. LCP medians: `/story` 2.18 s, `/events` 2.34 s, `/outlets/c-scheme` 2.38 s, `/cold-brew` 2.47 s, `/events/coffee-rave` 2.49 s, home 2.58 to 2.63 s, `/menu` 2.65 s, `/book` 2.66 s.
+- Home moved from 2.46–2.56 s (M4) to 2.58–2.60 s over five runs. The only M5 bytes on home are the new copy: `copy.ts` ships whole to every page that uses it (about 17 KB gzipped, of which M5 added about 2 KB). Separate exports in the same file were tried and not tree-shaken by Turbopack, so they were reverted. Splitting copy per page is an M8 item and needs a decision on the "one copy file" rule (Q-28).

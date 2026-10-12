@@ -39,3 +39,9 @@ npm run lhci         # Lighthouse budgets
 - `/checkout/<order>` offers pay online or at the cafe. Paying online opens a clearly labelled sample payment sheet; with the dev panel on, pick Success, Failed or Pending there.
 - `/tickets/<code>` shows the signed QR; `/tickets/<code>/cancel` cancels and refunds.
 - "Demo controls" at the foot of these pages: open a seat for the waitlist, play the bank on a pending payment, expire holds, reset demo data.
+
+## Stamp card and staff scanner (M5)
+
+- The stamp card is off by default. Build or run with `NEXT_PUBLIC_FLAG_STAMP_CARD=true` (on Vercel: Environment Variables, then redeploy) to show `/my-carbon` and the stamp side of `/staff`.
+- `/my-carbon`: phone, consent, then the six-digit code from the "Demo SMS" toast. "Show QR to barista" shows a QR that changes every minute.
+- `/staff`: pick a sample account and outlet. In a second tab, "Simulate scan" reads the QR the My Carbon tab is showing; add a stamp, undo it, or look up `90000 00202` to redeem a full card with the demo PIN `1896`. "Event door" checks tickets in once.
