@@ -312,3 +312,53 @@ GSAP, Motion and zod are deferred to the milestone that first uses them, so noth
 - Unit: 157 tests (24 new: sign-in codes, the 60-second QR, gap, undo, full card, PIN redeem, roles, deletion, check-in once, pay at the door, and the routes with the flag on and off). E2E: 162 pass at 360, 744 and 1440 px with the flag on, 3 skipped by design; with the flag off the 12 stamp card tests skip and the door tests pass. Every new screen is axe-clean.
 - Lighthouse on the default build (flag off), simulated: accessibility 100 and CLS 0 everywhere. LCP medians: `/story` 2.18 s, `/events` 2.34 s, `/outlets/c-scheme` 2.38 s, `/cold-brew` 2.47 s, `/events/coffee-rave` 2.49 s, home 2.58 to 2.63 s, `/menu` 2.65 s, `/book` 2.66 s.
 - Home moved from 2.46–2.56 s (M4) to 2.58–2.60 s over five runs. The only M5 bytes on home are the new copy: `copy.ts` ships whole to every page that uses it (about 17 KB gzipped, of which M5 added about 2 KB). Separate exports in the same file were tried and not tree-shaken by Turbopack, so they were reverted. Splitting copy per page is an M8 item and needs a decision on the "one copy file" rule (Q-28).
+
+## M6: Book wall, enquiries, legal, 404 and offline
+
+### D-048 Book wall
+
+- Spines are drawn from the title (Blueprint 5.6): a hash (FNV-1a) picks one of six muted cloth colours, the height and the thickness, so there are no cover images and the same book always looks the same. The colours are new tokens (`--color-spine-0` to `5`), each at least 6:1 against the bone title; they are not Carbon colours.
+- Titles merge when they differ only in case, accents, punctuation, spacing or a leading "The", "A" or "An". A merged spine shows its reader count and every reader's line. Names show only when the reader ticked "Show my name on the wall".
+- Adding a book: title, author, one line (80 characters, wireframe 10), optional first name or handle. Checks, in order: lengths, the bot check, the profanity filter, a repeat within five minutes (returns the first), and 3 an hour per device (P-29; per IP in Phase 2). Then it waits for staff.
+- The mock bot check is a hidden honeypot field plus a time trap (a form sent within 3 seconds of the first keystroke is refused). Phase 2 uses an invisible bot check at the edge (Blueprint section 8).
+- The profanity filter is deliberately short: clear abuse in English and Hinglish, with common letter swaps. Words that appear in real titles ("Moby Dick", "The Bastard of Istanbul") are left to staff, who approve everything anyway.
+- "I read this too" adds a reader with no text, so it needs no approval; once per book per browser. "Report" records a flag for staff.
+- Moderation is M7. Until then the demo panel's "Staff approve waiting books" stands in.
+- Spines slide onto the shelf at a hash-chosen tilt, paused until the shelf is on screen (Blueprint section 7). CSS only: the blueprint names the Motion library, but this needs no dependency. Reduced motion skips it.
+- Seed: 16 real titles with fictional readers and lines, under a visible "Sample shelf" note (Q-29).
+
+### D-049 Enquiries
+
+- `/enquire` takes the brief's four kinds: catering, collab or launch, workshop, other. `?type=` preselects one: the events teaser links to collab, and the booking flow sends groups over 20 to "Something else".
+- Fields: name, phone, optional outlet, date and head count, details (10 to 600 characters), WhatsApp consent, privacy notice, honeypot. A repeat within five minutes returns the first. Each gets a reference (ENQ-1234) and waits in the mock inbox for M7.
+- Nothing is sent anywhere. The reply time is a placeholder (P-30).
+
+### D-050 Legal pages
+
+- `/legal/privacy`, `/legal/terms`, `/legal/refunds`: short, plain-language, and each under a banner saying it is placeholder text for Carbon's lawyer (brief; Blueprint section 12).
+- They describe what the site does (what each form collects, holds, how refunds flow) and state no rule Carbon has not set. Every unconfirmed value is written in the copy as `[[placeholderKey]]` and rendered from `placeholders.ts` with its TBC tag; a unit test checks every key exists. New: privacy contact (P-31), retention period (P-32), legal entity (P-33).
+- Liability, disputes and governing law are left to the lawyer, in so many words.
+
+### D-051 404
+
+- `src/app/not-found.tsx`: one line of copy and links home, to the menu and to booking (Blueprint section 4).
+
+### D-052 Offline
+
+- A small hand-written service worker (`public/sw.js`, no dependency), registered in production builds after the page has loaded. Pages: network first, keeping a copy of each page opened (up to 40), so a ticket or booking opened once still opens with no signal; its data already lives in the browser. A page never opened shows `/offline`. Build assets under `/_next/static` are cache-first (their names change with every build). `/api` is never cached.
+- The worker also keeps the offline page's own scripts and styles at install. Without them the page could not start offline (found by the end-to-end test).
+- `/sw.js` is served with no-cache headers so a new deploy reaches everyone (Next's PWA guide). Next 16's experimental `useOffline` was considered: it covers only in-app navigation, not a reload at the door.
+- Playwright blocks service workers except in the offline test, so cached pages cannot leak between tests.
+
+### D-053 Smaller changes
+
+- The phone "Book a table" bar matched paths by prefix, so `/book` also hid it on `/book-wall` by accident. It now matches whole path segments, and the wall and enquiry pages (which have their own main button) are listed on purpose.
+- Form limits and enquiry types live in zod-free modules (`domain/wall/limits.ts`, `domain/enquiry/types.ts`), so the forms do not pull zod into their first JavaScript. `/enquire` went from 2.77 s to 2.32 s LCP.
+
+### D-054 M6 measurements
+
+- Unit: 172 tests (15 new: title merging, spine shapes, the word filter against real titles, approval, limits, bot checks, enquiries, routes, and legal placeholders). E2E: 192 pass at 360, 744 and 1440 px with the stamp card flag on, 3 skipped by design. New flows: add a book and see it approved, spine detail, bot and word checks, enquiry, the three legal pages, 404, and offline. Every new screen is axe-clean.
+- One earlier full run had 3 timeouts in older booking and event tests under parallel load; they passed when rerun on their own and in the final full run. Worth watching in CI, which retries once.
+- Lighthouse on the default build, simulated: accessibility 100 everywhere. LCP medians: `/outlets/c-scheme` 2.39 s, `/story` 2.32 s, `/enquire` 2.32 s, `/book-wall` 2.34 s, `/cold-brew` 2.42 s, home 2.45 s, `/events/coffee-rave` 2.47 s, `/events` 2.49 s, `/menu` 2.63 s, `/book` 2.78 s. `/menu` and `/book` still miss 2.5 s (M8).
+- Home is back at 2.43 to 2.45 s, so M5's 2.58 to 2.63 s was mostly machine noise. The one-copy-file cost (Q-28, kept as is) still stands: M6 added the legal and wall text to it.
+- `/book-wall` has a layout shift of 0.035 while the shelf loads from the browser (gate: 0.1). The loading placeholder can match the real height more closely in M8.

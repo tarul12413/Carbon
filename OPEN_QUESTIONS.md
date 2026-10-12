@@ -4,50 +4,54 @@ Placeholders (P-xx) match the ids in `src/config/placeholders.ts`. Change the va
 
 ## Placeholders in use
 
-| Id   | What                                    | Placeholder                                   | Source of the gap                                  |
-| ---- | --------------------------------------- | --------------------------------------------- | -------------------------------------------------- |
-| P-01 | Largest party that confirms instantly   | 6, per outlet                                 | Brief, Blueprint open item 1                       |
-| P-02 | Table and seat hold length              | 10 minutes                                    | Brief                                              |
-| P-03 | Event ticket prices                     | "Rs ---"                                      | Brief                                              |
-| P-04 | Online table deposit                    | "Rs ---"                                      | Brief                                              |
-| P-05 | Change and cancellation window          | "X hours" (demo logic: 2 h)                   | Brief, Blueprint open item 4                       |
-| P-06 | Stamps for a reward                     | 8                                             | Brief, Blueprint open item 3                       |
-| P-07 | Large-group reply time                  | "X hours"                                     | Brief, Blueprint open item 10                      |
-| P-08 | Opening hours, all outlets              | 09:00 to 23:45                                | Listings conflict (23:45, 23:59, midnight)         |
-| P-09 | Vaishali Nagar address                  | TBD                                           | B-42 Prince Road vs Plot 42, Yojna-9 B, Bhan Nagar |
-| P-10 | Raja Park / Tilak Nagar building number | Shanti Path, number TBD                       | Brief                                              |
-| P-11 | WhatsApp number                         | fictional +91 0000000000                      | Not given                                          |
-| P-12 | Slot length                             | 30 minutes                                    | Blueprint open item 5 (my placeholder)             |
-| P-13 | Table dwell time                        | 90 minutes                                    | Blueprint open item 5 (my placeholder)             |
-| P-14 | Capacity per slot per outlet            | 24 seats                                      | Blueprint open item 5 (my placeholder)             |
-| P-15 | Same-day lead time                      | 60 minutes                                    | Blueprint data model (my placeholder)              |
-| P-16 | How far ahead you can book              | 30 days                                       | Blueprint data model (my placeholder)              |
-| P-17 | Minimum gap between stamps              | 30 minutes                                    | Blueprint section 9 (my placeholder)               |
-| P-18 | Privacy notice version                  | "draft-0"                                     | Legal text not written                             |
-| P-19 | One line per outlet about the room      | not shown; marked TBC                         | Pitch plan: ask the staff, do not invent           |
-| P-20 | Press article links                     | "Link to come"                                | Brief: titles only, placeholder links              |
-| P-21 | Largest party the booking form takes    | 20; bigger groups go to the enquiry form      | Blueprint 5.3 (my placeholder)                     |
-| P-22 | Pay-at-cafe deadline for event seats    | "a time Carbon sets" (demo logic: 2 h before) | Blueprint 5.4                                      |
-| P-23 | Waitlist claim window                   | 30 minutes                                    | Blueprint 5.4 (my placeholder)                     |
-| P-24 | Tickets per order                       | 6                                             | My placeholder                                     |
-| P-25 | Sign-in code rules                      | 5 min, 5 tries, 30 s between sends, 3 an hour | Blueprint section 9                                |
-| P-26 | Undo window for a stamp                 | 2 minutes                                     | Blueprint 5.7 (my placeholder)                     |
-| P-27 | What a full card earns                  | "Set by Carbon"                               | Wireframe 09, Blueprint open item 3                |
-| P-28 | Outlet PIN to redeem                    | mock "1896", same at every outlet             | Brief: "outlet PIN (mock)"                         |
+| Id   | What                                              | Placeholder                                   | Source of the gap                                  |
+| ---- | ------------------------------------------------- | --------------------------------------------- | -------------------------------------------------- |
+| P-01 | Largest party that confirms instantly             | 6, per outlet                                 | Brief, Blueprint open item 1                       |
+| P-02 | Table and seat hold length                        | 10 minutes                                    | Brief                                              |
+| P-03 | Event ticket prices                               | "Rs ---"                                      | Brief                                              |
+| P-04 | Online table deposit                              | "Rs ---"                                      | Brief                                              |
+| P-05 | Change and cancellation window                    | "X hours" (demo logic: 2 h)                   | Brief, Blueprint open item 4                       |
+| P-06 | Stamps for a reward                               | 8                                             | Brief, Blueprint open item 3                       |
+| P-07 | Large-group reply time                            | "X hours"                                     | Brief, Blueprint open item 10                      |
+| P-08 | Opening hours, all outlets                        | 09:00 to 23:45                                | Listings conflict (23:45, 23:59, midnight)         |
+| P-09 | Vaishali Nagar address                            | TBD                                           | B-42 Prince Road vs Plot 42, Yojna-9 B, Bhan Nagar |
+| P-10 | Raja Park / Tilak Nagar building number           | Shanti Path, number TBD                       | Brief                                              |
+| P-11 | WhatsApp number                                   | fictional +91 0000000000                      | Not given                                          |
+| P-12 | Slot length                                       | 30 minutes                                    | Blueprint open item 5 (my placeholder)             |
+| P-13 | Table dwell time                                  | 90 minutes                                    | Blueprint open item 5 (my placeholder)             |
+| P-14 | Capacity per slot per outlet                      | 24 seats                                      | Blueprint open item 5 (my placeholder)             |
+| P-15 | Same-day lead time                                | 60 minutes                                    | Blueprint data model (my placeholder)              |
+| P-16 | How far ahead you can book                        | 30 days                                       | Blueprint data model (my placeholder)              |
+| P-17 | Minimum gap between stamps                        | 30 minutes                                    | Blueprint section 9 (my placeholder)               |
+| P-18 | Privacy notice version                            | "draft-0"                                     | Legal text not written                             |
+| P-19 | One line per outlet about the room                | not shown; marked TBC                         | Pitch plan: ask the staff, do not invent           |
+| P-20 | Press article links                               | "Link to come"                                | Brief: titles only, placeholder links              |
+| P-21 | Largest party the booking form takes              | 20; bigger groups go to the enquiry form      | Blueprint 5.3 (my placeholder)                     |
+| P-22 | Pay-at-cafe deadline for event seats              | "a time Carbon sets" (demo logic: 2 h before) | Blueprint 5.4                                      |
+| P-23 | Waitlist claim window                             | 30 minutes                                    | Blueprint 5.4 (my placeholder)                     |
+| P-24 | Tickets per order                                 | 6                                             | My placeholder                                     |
+| P-25 | Sign-in code rules                                | 5 min, 5 tries, 30 s between sends, 3 an hour | Blueprint section 9                                |
+| P-26 | Undo window for a stamp                           | 2 minutes                                     | Blueprint 5.7 (my placeholder)                     |
+| P-27 | What a full card earns                            | "Set by Carbon"                               | Wireframe 09, Blueprint open item 3                |
+| P-28 | Outlet PIN to redeem                              | mock "1896", same at every outlet             | Brief: "outlet PIN (mock)"                         |
+| P-29 | Book wall submissions per hour                    | 3 per device                                  | Blueprint section 9 (my placeholder)               |
+| P-30 | Enquiry reply time                                | "X hours"                                     | Not given                                          |
+| P-31 | Privacy contact                                   | to be named                                   | Not given (DPDP Act)                               |
+| P-32 | How long bookings, tickets and enquiries are kept | "an agreed period"                            | Blueprint section 12                               |
+| P-33 | Legal entity behind the cafes                     | to be confirmed                               | Not given                                          |
 
 ## Questions for you (Tarul)
 
-| #    | Question                                                                                                                                                                             | Default I will use unless you say otherwise | Needed by                          |
-| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------- | ---------------------------------- |
-| Q-20 | Prices for each event, and whether each sells online, at the cafe, or both                                                                                                           | "Rs ---"; both offered                      | Before launch                      |
-| Q-21 | Age rules for Coffee Raves (Blueprint open item 9)                                                                                                                                   | Not shown                                   | Before launch                      |
-| Q-22 | The real event calendar: names, dates, capacity, posters                                                                                                                             | Three labelled samples                      | Before the pitch, if you have them |
-| Q-23 | Can tickets be passed to a friend? The demo shares the event link, not the ticket                                                                                                    | Event link only                             | M5                                 |
-| Q-24 | Does Carbon want a stamp card at all, and what does a full card earn? (Blueprint open item 3)                                                                                        | Off; reward shown as "Set by Carbon"        | Before switching the flag on       |
-| Q-25 | On a full card, do stamps keep counting past 8, or wait until the reward is redeemed?                                                                                                | Wait: no stamps on a full card              | Before switching the flag on       |
-| Q-26 | Can managers stamp cards? The blueprint lists only owners and baristas                                                                                                               | Owners and baristas only                    | M7                                 |
-| Q-27 | At the door, should a ticket for another day be refused, or just flagged?                                                                                                            | Flagged, still allowed                      | Before the first real event        |
-| Q-28 | All copy sits in one file, which every page downloads whole (about 17 KB gzipped). May I split it into one copy file per area (still under src/content) in M8 to win back load time? | Keep one file until you say                 | M8                                 |
+| #    | Question                                                                                                                   | Default I will use unless you say otherwise               | Needed by                          |
+| ---- | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ---------------------------------- |
+| Q-20 | Prices for each event, and whether each sells online, at the cafe, or both                                                 | "Rs ---"; both offered                                    | Before launch                      |
+| Q-21 | Age rules for Coffee Raves (Blueprint open item 9)                                                                         | Not shown                                                 | Before launch                      |
+| Q-22 | The real event calendar: names, dates, capacity, posters                                                                   | Three labelled samples                                    | Before the pitch, if you have them |
+| Q-23 | Can tickets be passed to a friend? The demo shares the event link, not the ticket                                          | Event link only                                           | M5                                 |
+| Q-29 | Is the book wall wanted online, and who at Carbon approves entries? The sample shelf uses real titles with made-up readers | Keep the sample shelf; approval in admin (M7)             | Before launch                      |
+| Q-30 | Where should enquiries go (a WhatsApp number, an email, the admin inbox), and how fast does Carbon reply?                  | Admin inbox only; "X hours"                               | Before launch                      |
+| Q-31 | Legal: the registered business name, a privacy contact, and a lawyer to review the three pages                             | Placeholders, clearly marked                              | Before launch                      |
+| Q-32 | Should the word filter cover other languages or stricter rules?                                                            | Short English and Hinglish list; staff approve everything | Before launch                      |
 
 ## Answered
 
@@ -72,6 +76,11 @@ Placeholders (P-xx) match the ids in `src/config/placeholders.ts`. Change the va
 | Q-17 | Defaults accepted (2026-10-10)                                                     | No; staff check capacity when approving (M7)                                                         |
 | Q-18 | Defaults accepted (2026-10-10)                                                     | Not online; they reply on WhatsApp                                                                   |
 | Q-19 | Defaults accepted (2026-10-10)                                                     | "Nothing left, try the next day"; no table waitlist                                                  |
+| Q-24 | Defaults accepted (2026-10-13)                                                     | Off; reward shown as "Set by Carbon"                                                                 |
+| Q-25 | Defaults accepted (2026-10-13)                                                     | Wait: no stamps on a full card                                                                       |
+| Q-26 | Defaults accepted (2026-10-13)                                                     | Owners and baristas only                                                                             |
+| Q-27 | Defaults accepted (2026-10-13)                                                     | Flagged, still allowed                                                                               |
+| Q-28 | Defaults accepted (2026-10-13)                                                     | Keep one copy file                                                                                   |
 
 ## Conflicts between the docs (brief wins)
 

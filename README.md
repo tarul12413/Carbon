@@ -45,3 +45,10 @@ npm run lhci         # Lighthouse budgets
 - The stamp card is off by default. Build or run with `NEXT_PUBLIC_FLAG_STAMP_CARD=true` (on Vercel: Environment Variables, then redeploy) to show `/my-carbon` and the stamp side of `/staff`.
 - `/my-carbon`: phone, consent, then the six-digit code from the "Demo SMS" toast. "Show QR to barista" shows a QR that changes every minute.
 - `/staff`: pick a sample account and outlet. In a second tab, "Simulate scan" reads the QR the My Carbon tab is showing; add a stamp, undo it, or look up `90000 00202` to redeem a full card with the demo PIN `1896`. "Event door" checks tickets in once.
+
+## Book wall, enquiries, legal and offline (M6)
+
+- `/book-wall` shows the sample shelf; tap a spine for its detail. `/book-wall/add` sends a book, which waits until "Staff approve waiting books" in Demo controls (the admin does this from M7).
+- `/enquire` takes catering, collab or launch, workshop and other enquiries; `/enquire?type=collab` preselects one.
+- `/legal/privacy`, `/legal/terms`, `/legal/refunds` are placeholder text. Unconfirmed values are written as `[[placeholderKey]]` in `copy.ts` and filled from `placeholders.ts`.
+- Offline: `public/sw.js` runs in production builds only (`npm run build && npm start`). Open a page, switch the network off and reload it; a page you have not opened shows `/offline`.
