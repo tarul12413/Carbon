@@ -99,6 +99,27 @@ export const placeholders = {
     "1896",
     "Mock outlet PIN for redeeming a full card. The same for every outlet in the demo; real PINs are never in code.",
   ),
+  wallPerHour: placeholder("P-29", 3, "Book wall submissions allowed per device (Phase 2: per IP) in an hour."),
+  enquiryReplyTime: placeholder(
+    "P-30",
+    "X hours",
+    "How fast Carbon replies to catering, collab and workshop enquiries.",
+  ),
+  privacyContact: placeholder(
+    "P-31",
+    "the contact Carbon names",
+    "Who handles privacy requests and grievances (DPDP Act). Not given.",
+  ),
+  retentionPeriod: placeholder(
+    "P-32",
+    "an agreed period",
+    "How long bookings, tickets and enquiries are kept before they are anonymised (Blueprint section 12, to agree with Carbon).",
+  ),
+  legalEntity: placeholder(
+    "P-33",
+    "Carbon (registered business name to be confirmed)",
+    "The legal entity that runs the cafes, for the privacy notice and terms.",
+  ),
 } as const;
 
 export type PlaceholderKey = keyof typeof placeholders;

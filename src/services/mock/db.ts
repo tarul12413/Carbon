@@ -4,6 +4,7 @@ import stampSeed from "../../../data/stamps.json";
 import { newBookingCode } from "@/domain/booking/code";
 import { bookingSchema, type Booking } from "@/domain/booking/schema";
 import type { EventInfo } from "@/domain/events/types";
+import { enquirySchema } from "@/domain/enquiry";
 import { toMinutes } from "@/domain/hours";
 import {
   auditEntrySchema,
@@ -24,6 +25,7 @@ import {
 } from "@/domain/orders/schema";
 import { OUTLET_SLUGS, type Outlet } from "@/domain/outlet";
 import { addDays, localDate, zonedInstant } from "@/domain/time";
+import { wallEntrySchema, wallReportSchema } from "@/domain/wall/schema";
 import type { ServiceError } from "../errors";
 
 /**
@@ -48,6 +50,12 @@ export const mockDbSchema = z.object({
   stamps: z.array(stampEntrySchema).default([]),
   rewards: z.array(rewardSchema).default([]),
   audit: z.array(auditEntrySchema).default([]),
+  /* Book wall and enquiries (M6). */
+  wall: z.array(wallEntrySchema).default([]),
+  wallReports: z.array(wallReportSchema).default([]),
+  /** False on a database saved before M6, so the sample shelf is added once. */
+  wallSeeded: z.boolean().default(false),
+  enquiries: z.array(enquirySchema).default([]),
 });
 export type MockDb = z.infer<typeof mockDbSchema>;
 
@@ -188,5 +196,9 @@ export function seedDb(ctx: EngineContext): MockDb {
     sessions: [],
     rewards: [],
     audit: [],
+    wall: [],
+    wallReports: [],
+    wallSeeded: false,
+    enquiries: [],
   };
 }

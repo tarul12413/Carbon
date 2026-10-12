@@ -5,7 +5,9 @@ import type { DemoControls } from "./demo";
 import { createHttpBookingService } from "./http/bookings";
 import type { MockBackend } from "./mock/mockBackend";
 import type { LoyaltyService } from "./loyalty";
+import type { EnquiryService } from "./enquiries";
 import type { StaffService } from "./staff";
+import type { WallService } from "./wall";
 import type { DemoGateway, TicketingService } from "./ticketing";
 
 /**
@@ -49,6 +51,8 @@ export const clientServices: {
   readonly gateway: DemoGateway;
   readonly loyalty: LoyaltyService;
   readonly staff: StaffService;
+  readonly wall: WallService;
+  readonly enquiries: EnquiryService;
   readonly demo: DemoControls;
 } = {
   bookings: process.env.NEXT_PUBLIC_BOOKING_TRANSPORT === "http" ? createHttpBookingService() : deferred("bookings"),
@@ -56,5 +60,7 @@ export const clientServices: {
   gateway: deferred("gateway"),
   loyalty: deferred("loyalty"),
   staff: deferred("staff"),
+  wall: deferred("wall"),
+  enquiries: deferred("enquiries"),
   demo: deferred("demo"),
 };

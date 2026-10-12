@@ -8,9 +8,12 @@ import { signStampQr } from "@/domain/loyalty/qr";
 import type { Order, WebhookEvent } from "@/domain/orders/schema";
 import type { DemoGateway, TicketingService } from "../ticketing";
 import type { LoyaltyService } from "../loyalty";
+import type { EnquiryService } from "../enquiries";
 import type { StaffService } from "../staff";
+import type { WallService } from "../wall";
 import * as bookingEngine from "./bookingEngine";
 import * as loyaltyEngine from "./loyaltyEngine";
+import * as wallEngine from "./wallEngine";
 import { mockDbSchema, seedDb, type EngineContext, type MockDb } from "./db";
 import { sampleEvents } from "./events";
 import * as ordersEngine from "./ordersEngine";
@@ -45,6 +48,8 @@ export interface MockBackend {
   readonly gateway: DemoGateway;
   readonly loyalty: LoyaltyService;
   readonly staff: StaffService;
+  readonly wall: WallService;
+  readonly enquiries: EnquiryService;
   readonly demo: DemoControls;
   /** Our side of the payment webhook (POST /api/webhooks/payments). */
   readonly webhooks: { receive(event: Omit<WebhookEvent, "receivedAt">): Promise<ServiceResult<Order>> };
@@ -74,6 +79,10 @@ export function createMockBackend(options: BackendOptions): MockBackend {
     bookingEngine.sweepExpiredHolds(db, ctx.now);
     ordersEngine.sweepOrders(db, ctx);
     loyaltyEngine.sweepLoyalty(db, ctx);
+    if (!db.wallSeeded) {
+      db.wall = [...wallEngine.seedWall(ctx), ...db.wall];
+      db.wallSeeded = true;
+    }
     const result = fn(db, ctx);
     options.store.write(db);
     return result;
@@ -148,6 +157,18 @@ export function createMockBackend(options: BackendOptions): MockBackend {
       ),
   };
 
+  const wall: WallService = {
+    getShelf: () => read((db) => wallEngine.getShelf(db)),
+    submit: (input, key) => write(key, { op: "wall", input }, (db, ctx) => wallEngine.submit(db, ctx, input)),
+    addReader: (spine, key) =>
+      write(key, { op: "wall-reader", spine }, (db, ctx) => wallEngine.addReader(db, ctx, spine)),
+    report: (spine, key) => write(key, { op: "wall-report", spine }, (db, ctx) => wallEngine.report(db, ctx, spine)),
+  };
+
+  const enquiries: EnquiryService = {
+    submit: (input, key) => write(key, { op: "enquiry", input }, (db, ctx) => wallEngine.submitEnquiry(db, ctx, input)),
+  };
+
   /** The sample gateway is "someone else's system": no idempotency ledger, its own event ids. */
   const gateway: DemoGateway = {
     pay: (gatewayOrderId, outcome) => read((db, ctx) => ordersEngine.gatewayPay(db, ctx, gatewayOrderId, outcome)),
@@ -171,6 +192,7 @@ export function createMockBackend(options: BackendOptions): MockBackend {
         return holds.length;
       }),
     openSeat: (slug) => read((db, ctx) => ordersEngine.openSeat(db, ctx, slug)),
+    approveWall: () => read((db) => wallEngine.approveWaiting(db)),
     scannable: () =>
       read((db, ctx) => {
         const session = db.sessions.at(-1);
@@ -186,5 +208,5 @@ export function createMockBackend(options: BackendOptions): MockBackend {
     receive: (event: Omit<WebhookEvent, "receivedAt">) => read((db, ctx) => ordersEngine.handleWebhook(db, ctx, event)),
   };
 
-  return { bookings, ticketing, gateway, loyalty, staff, demo, webhooks };
+  return { bookings, ticketing, gateway, loyalty, staff, wall, enquiries, demo, webhooks };
 }
