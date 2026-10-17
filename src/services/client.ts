@@ -8,6 +8,7 @@ import type { LoyaltyService } from "./loyalty";
 import type { EnquiryService } from "./enquiries";
 import type { StaffService } from "./staff";
 import type { WallService } from "./wall";
+import type { AdminService } from "./admin";
 import type { DemoGateway, TicketingService } from "./ticketing";
 
 /**
@@ -53,6 +54,7 @@ export const clientServices: {
   readonly staff: StaffService;
   readonly wall: WallService;
   readonly enquiries: EnquiryService;
+  readonly admin: AdminService;
   readonly demo: DemoControls;
 } = {
   bookings: process.env.NEXT_PUBLIC_BOOKING_TRANSPORT === "http" ? createHttpBookingService() : deferred("bookings"),
@@ -62,5 +64,6 @@ export const clientServices: {
   staff: deferred("staff"),
   wall: deferred("wall"),
   enquiries: deferred("enquiries"),
+  admin: deferred("admin"),
   demo: deferred("demo"),
 };

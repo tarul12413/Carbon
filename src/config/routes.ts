@@ -24,6 +24,11 @@ export const routes = {
   legal: "/legal/privacy",
   legalPage: (page: "privacy" | "terms" | "refunds") => `/legal/${page}`,
   offline: "/offline",
+  admin: "/admin",
+  adminSection: (
+    section: "dashboard" | "bookings" | "capacity" | "menu" | "events" | "wall" | "enquiries" | "audit",
+  ) => (section === "dashboard" ? "/admin" : `/admin/${section}`),
+  adminEvent: (slug: string) => `/admin/events/${slug}`,
   menuItem: (id: string) => `/menu#${id}`,
   steepEnd: "/#steep-96",
 } as const;

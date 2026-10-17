@@ -64,22 +64,7 @@ export const rewardSchema = z.object({
 });
 export type Reward = z.infer<typeof rewardSchema>;
 
-/** Blueprint section 9: audit_log. */
-export const auditEntrySchema = z.object({
-  at: instant,
-  staffId: z.string(),
-  outlet: z.enum(OUTLET_SLUGS),
-  action: z.enum([
-    "stamp.add",
-    "stamp.undo",
-    "reward.redeem",
-    "redeem.pin_wrong",
-    "ticket.check_in",
-    "ticket.paid_at_door",
-  ]),
-  entity: z.string(),
-});
-export type AuditEntry = z.infer<typeof auditEntrySchema>;
+export { auditEntrySchema, type AuditEntry } from "@/domain/audit";
 
 export const otpRequestInputSchema = z.object({
   phone: z.string().transform((value, ctx) => {

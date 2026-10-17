@@ -156,13 +156,6 @@ export function report(db: MockDb, ctx: EngineContext, key: string): ServiceResu
   return ok(null);
 }
 
-/** Demo control standing in for staff moderation (M7): approve everything waiting. */
-export function approveWaiting(db: MockDb): number {
-  const waiting = db.wall.filter((e) => e.status === "pending");
-  for (const e of waiting) e.status = "approved";
-  return waiting.length;
-}
-
 /* Enquiries */
 
 function newEnquiryCode(db: MockDb, random: () => number): string {

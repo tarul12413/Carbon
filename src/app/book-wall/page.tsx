@@ -27,7 +27,13 @@ export default function BookWallPage() {
           {t.add}
         </ButtonLink>
       </div>
-      {flags.devPanel && <DemoPanel approveWall />}
+      {flags.devPanel && (
+        <DemoPanel>
+          <ButtonLink variant="secondary" href={routes.adminSection("wall")}>
+            {copy.booking.demo.moderate}
+          </ButtonLink>
+        </DemoPanel>
+      )}
     </main>
   );
 }

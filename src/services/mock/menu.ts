@@ -4,10 +4,14 @@ import { HOUSE_NAMED_TAG, signatures } from "@/domain/menu/browse";
 import { menuSeedSchema, type MenuItem } from "@/domain/menu/schema";
 import type { ColdBrew, MenuService } from "../menu";
 
-const menu = menuSeedSchema.parse(seed);
+/** The transcribed menu, before any admin edits. */
+export const baseMenu = menuSeedSchema.parse(seed);
+const menu = baseMenu;
 
 const isColdBrew = (item: MenuItem): item is ColdBrew =>
   item.categoryId === "signature-cold-brews" && item.steepHours !== undefined;
+
+export const menuDocument = documentSeed;
 
 export const mockMenuService: MenuService = {
   async getMenu() {

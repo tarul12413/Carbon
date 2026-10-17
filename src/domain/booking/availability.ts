@@ -22,6 +22,8 @@ export interface AvailabilityContext {
   readonly settings: BookingSettings;
   readonly now: Date;
   readonly timeZone: string;
+  /** Dates closed for bookings (blackouts set in admin). */
+  readonly closed?: readonly string[];
 }
 
 /** Start times on the slot grid whose whole dwell fits before closing. */
@@ -80,6 +82,7 @@ export function slotsFor(
   ctx: AvailabilityContext,
 ): Slot[] {
   const { settings, now, timeZone } = ctx;
+  if (ctx.closed?.includes(query.date)) return [];
   const earliest = earliestStart(now, settings).getTime();
   const instant = query.partySize <= settings.instantMaxPartySize;
 

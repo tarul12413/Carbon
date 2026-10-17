@@ -38,6 +38,14 @@ const book = (over: Partial<WallInput> = {}): WallInput => ({
   ...over,
 });
 
+const marketing = { staffId: "stf-marketing" };
+const approveAll = async () => {
+  const q = await mock.admin.wallQueue(marketing);
+  if (!q.ok) throw new Error();
+  for (const e of q.value.waiting) await mock.admin.moderate(marketing, e.id, "approve", key());
+  return q.value.waiting.length;
+};
+
 const shelf = async () => {
   const s = await mock.wall.getShelf();
   if (!s.ok) throw new Error();
@@ -99,7 +107,7 @@ describe("book wall", () => {
 
     later(10);
     await mock.wall.submit(book({ title: "rain in the hills.", line: "", handle: "", showName: false }), key());
-    expect(await mock.demo.approveWall()).toBe(2);
+    expect(await approveAll()).toBe(2);
     const spine = (await shelf()).spines.find((s) => s.key === titleKey("Rain in the Hills"));
     expect(spine).toMatchObject({
       title: "Rain in the Hills",
@@ -110,7 +118,7 @@ describe("book wall", () => {
 
   it("shows a name only with consent", async () => {
     await mock.wall.submit(book({ showName: false }), key());
-    await mock.demo.approveWall();
+    await approveAll();
     const spine = (await shelf()).spines.find((s) => s.title === "Rain in the Hills");
     expect(spine?.lines).toEqual([{ line: "Read it in one go." }]);
   });

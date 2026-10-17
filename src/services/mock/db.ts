@@ -26,6 +26,7 @@ import {
 import { OUTLET_SLUGS, type Outlet } from "@/domain/outlet";
 import { addDays, localDate, zonedInstant } from "@/domain/time";
 import { wallEntrySchema, wallReportSchema } from "@/domain/wall/schema";
+import { menuStateSchema, outletSettingsSchema } from "@/domain/admin/schema";
 import type { ServiceError } from "../errors";
 
 /**
@@ -56,6 +57,9 @@ export const mockDbSchema = z.object({
   /** False on a database saved before M6, so the sample shelf is added once. */
   wallSeeded: z.boolean().default(false),
   enquiries: z.array(enquirySchema).default([]),
+  /* Admin (M7): saved capacity and hours per outlet, and the menu edits. */
+  outletSettings: z.partialRecord(z.enum(OUTLET_SLUGS), outletSettingsSchema).default({}),
+  menu: menuStateSchema.default({ published: {}, drafts: {}, off: {}, pdf: null }),
 });
 export type MockDb = z.infer<typeof mockDbSchema>;
 
@@ -200,5 +204,7 @@ export function seedDb(ctx: EngineContext): MockDb {
     wallReports: [],
     wallSeeded: false,
     enquiries: [],
+    outletSettings: {},
+    menu: { published: {}, drafts: {}, off: {}, pdf: null },
   };
 }

@@ -17,6 +17,8 @@ export interface Availability {
   readonly partySize: number;
   readonly kind: Booking["kind"];
   readonly slots: readonly Slot[];
+  /** Closed for bookings that day (a blackout date set in admin). */
+  readonly closed?: boolean;
 }
 
 /**

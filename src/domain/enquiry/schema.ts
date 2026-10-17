@@ -21,6 +21,8 @@ export const enquirySchema = z.object({
   whatsappOptIn: z.boolean(),
   consent: z.object({ noticeVersion: z.string(), at: instant }),
   status: z.enum(["new", "replied", "closed"]),
+  /** Staff-only note. */
+  note: z.string().optional(),
   createdAt: instant,
 });
 export type Enquiry = z.infer<typeof enquirySchema>;

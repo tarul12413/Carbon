@@ -1,6 +1,8 @@
 import { flags } from "@/config/flags";
+import type { AdminActor } from "@/domain/admin/access";
 import { isOutletSlug } from "@/domain/outlet";
 import { staffById, type StaffActor } from "@/domain/staff";
+import type { OutletScope } from "@/services/admin";
 import type { ServiceErrorCode, ServiceResult } from "@/services/errors";
 
 const statusFor: Record<ServiceErrorCode, number> = {
@@ -84,4 +86,17 @@ export function staffActor(request: Request): StaffActor | Response {
   const outlet = request.headers.get("x-demo-outlet");
   if (staffById(staffId) && isOutletSlug(outlet)) return { staffId, outlet };
   return Response.json({ ok: false, error: { code: "forbidden" } }, { status: 403 });
+}
+
+/** The admin account. Mock only, like staffActor: Phase 2 reads the staff session instead. */
+export function adminActor(request: Request): AdminActor | Response {
+  const staffId = request.headers.get("x-demo-staff") ?? "";
+  if (staffById(staffId)) return { staffId };
+  return Response.json({ ok: false, error: { code: "forbidden" } }, { status: 403 });
+}
+
+/** `?outlet=` as an outlet scope; anything else means every outlet the account sees. */
+export function scopeFrom(request: Request): OutletScope {
+  const outlet = new URL(request.url).searchParams.get("outlet");
+  return isOutletSlug(outlet) ? outlet : "all";
 }

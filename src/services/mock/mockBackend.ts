@@ -11,6 +11,8 @@ import type { LoyaltyService } from "../loyalty";
 import type { EnquiryService } from "../enquiries";
 import type { StaffService } from "../staff";
 import type { WallService } from "../wall";
+import type { AdminService } from "../admin";
+import * as adminEngine from "./adminEngine";
 import * as bookingEngine from "./bookingEngine";
 import * as loyaltyEngine from "./loyaltyEngine";
 import * as wallEngine from "./wallEngine";
@@ -50,6 +52,7 @@ export interface MockBackend {
   readonly staff: StaffService;
   readonly wall: WallService;
   readonly enquiries: EnquiryService;
+  readonly admin: AdminService;
   readonly demo: DemoControls;
   /** Our side of the payment webhook (POST /api/webhooks/payments). */
   readonly webhooks: { receive(event: Omit<WebhookEvent, "receivedAt">): Promise<ServiceResult<Order>> };
@@ -192,7 +195,6 @@ export function createMockBackend(options: BackendOptions): MockBackend {
         return holds.length;
       }),
     openSeat: (slug) => read((db, ctx) => ordersEngine.openSeat(db, ctx, slug)),
-    approveWall: () => read((db) => wallEngine.approveWaiting(db)),
     scannable: () =>
       read((db, ctx) => {
         const session = db.sessions.at(-1);
@@ -208,5 +210,55 @@ export function createMockBackend(options: BackendOptions): MockBackend {
     receive: (event: Omit<WebhookEvent, "receivedAt">) => read((db, ctx) => ordersEngine.handleWebhook(db, ctx, event)),
   };
 
-  return { bookings, ticketing, gateway, loyalty, staff, wall, enquiries, demo, webhooks };
+  const admin: AdminService = {
+    dashboard: (actor, scope) => read((db, ctx) => adminEngine.dashboard(db, ctx, actor, scope)),
+    listBookings: (actor, query) => read((db, ctx) => adminEngine.listBookings(db, ctx, actor, query)),
+    decideBooking: (actor, code, decision, key) =>
+      write(key, { op: "admin-booking", actor, code, decision }, (db, ctx) =>
+        adminEngine.decideBooking(db, ctx, actor, code, decision),
+      ),
+    getSettings: (actor) => read((db, ctx) => adminEngine.getSettings(db, ctx, actor)),
+    saveSettings: (actor, outlet, input, key) =>
+      write(key, { op: "admin-settings", actor, outlet, input }, (db, ctx) =>
+        adminEngine.saveSettings(db, ctx, actor, outlet, input),
+      ),
+    getMenu: (actor) => read((db, ctx) => adminEngine.getMenu(db, ctx, actor)),
+    saveDraft: (actor, itemId, input, key) =>
+      write(key, { op: "admin-draft", actor, itemId, input }, (db, ctx) =>
+        adminEngine.saveDraft(db, ctx, actor, itemId, input),
+      ),
+    publishMenu: (actor, key) =>
+      write(key, { op: "admin-publish", actor }, (db, ctx) => adminEngine.publishMenu(db, ctx, actor)),
+    setAvailability: (actor, outlet, itemId, available, key) =>
+      write(key, { op: "admin-availability", actor, outlet, itemId, available }, (db, ctx) =>
+        adminEngine.setAvailability(db, ctx, actor, outlet, itemId, available),
+      ),
+    uploadMenuPdf: (actor, input, key) =>
+      write(key, { op: "admin-pdf", actor, input }, (db, ctx) => adminEngine.uploadMenuPdf(db, ctx, actor, input)),
+    listEvents: (actor) => read((db, ctx) => adminEngine.listEvents(db, ctx, actor)),
+    attendees: (actor, slug) => read((db, ctx) => adminEngine.attendees(db, ctx, actor, slug)),
+    checkIn: (actor, code, collected, key) =>
+      write(key, { op: "admin-check-in", actor, code, collected }, (db, ctx) =>
+        adminEngine.checkIn(db, ctx, actor, code, collected),
+      ),
+    markPaid: (actor, code, key) =>
+      write(key, { op: "admin-paid", actor, code }, (db, ctx) => adminEngine.markPaid(db, ctx, actor, code)),
+    wallQueue: (actor) => read((db) => adminEngine.wallQueue(db, actor)),
+    moderate: (actor, entryId, decision, key) =>
+      write(key, { op: "admin-moderate", actor, entryId, decision }, (db, ctx) =>
+        adminEngine.moderate(db, ctx, actor, entryId, decision),
+      ),
+    resolveReport: (actor, spineKey, decision, key) =>
+      write(key, { op: "admin-report", actor, spineKey, decision }, (db, ctx) =>
+        adminEngine.resolveReport(db, ctx, actor, spineKey, decision),
+      ),
+    listEnquiries: (actor) => read((db) => adminEngine.listEnquiries(db, actor)),
+    updateEnquiry: (actor, code, update, key) =>
+      write(key, { op: "admin-enquiry", actor, code, update }, (db, ctx) =>
+        adminEngine.updateEnquiry(db, ctx, actor, code, update),
+      ),
+    audit: (actor, scope) => read((db) => adminEngine.audit(db, actor, scope)),
+  };
+
+  return { bookings, ticketing, gateway, loyalty, staff, wall, enquiries, admin, demo, webhooks };
 }

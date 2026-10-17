@@ -10,9 +10,9 @@ import {
   requestInputSchema,
   type Booking,
 } from "@/domain/booking/schema";
-import { bookingSettingsFor } from "@/domain/booking/settings";
-import { toMinutes } from "@/domain/hours";
-import type { Outlet } from "@/domain/outlet";
+import { bookingSettingsFor, type BookingSettings } from "@/domain/booking/settings";
+import { toMinutes, type DailyHours } from "@/domain/hours";
+import type { Outlet, OutletSlug } from "@/domain/outlet";
 import { zonedInstant } from "@/domain/time";
 import { err, ok } from "@/lib/result";
 import type { Availability, BookingResult } from "../bookings";
@@ -29,11 +29,27 @@ import { refundDeposit } from "./ordersEngine";
 
 const outletOf = (ctx: EngineContext, slug: string) => ctx.outlets.find((o) => o.slug === slug);
 
-const contextFor = (ctx: EngineContext, outlet: Outlet) => ({
-  hours: outlet.hours,
-  settings: bookingSettingsFor(outlet.slug),
+/** The placeholders, with anything saved in admin for this outlet on top (capacity, hours, blackouts). */
+export function settingsOf(db: MockDb, slug: OutletSlug): BookingSettings {
+  const saved = db.outletSettings[slug];
+  const settings = bookingSettingsFor(slug);
+  return saved ? { ...settings, capacityPerSlot: saved.capacityPerSlot } : settings;
+}
+
+export function hoursOf(db: MockDb, outlet: Outlet): DailyHours {
+  const saved = db.outletSettings[outlet.slug];
+  return saved ? { open: saved.open, close: saved.close } : outlet.hours;
+}
+
+export const closedDates = (db: MockDb, slug: OutletSlug): string[] =>
+  (db.outletSettings[slug]?.blackouts ?? []).map((b) => b.date);
+
+const contextFor = (db: MockDb, ctx: EngineContext, outlet: Outlet) => ({
+  hours: hoursOf(db, outlet),
+  settings: settingsOf(db, outlet.slug),
   now: ctx.now,
   timeZone: ctx.timeZone,
+  closed: closedDates(db, outlet.slug),
 });
 
 function transition(booking: Booking, event: BookingEvent, now: Date): boolean {
@@ -66,12 +82,13 @@ export function getAvailability(db: MockDb, ctx: EngineContext, raw: unknown): B
   const query = parsed.data;
   const outlet = outletOf(ctx, query.outlet);
   if (!outlet) return err({ code: "not_found" });
-  const settings = bookingSettingsFor(outlet.slug);
+  const settings = settingsOf(db, outlet.slug);
   if (!listDates(ctx, outlet).includes(query.date)) return err({ code: "outside_window" });
   return ok({
     ...query,
     kind: bookingKind(query.partySize, settings),
-    slots: slotsFor({ ...query, ignoreCode: query.excludeCode }, db.bookings, contextFor(ctx, outlet)),
+    ...(closedDates(db, outlet.slug).includes(query.date) ? { closed: true } : {}),
+    slots: slotsFor({ ...query, ignoreCode: query.excludeCode }, db.bookings, contextFor(db, ctx, outlet)),
   });
 }
 
@@ -83,17 +100,17 @@ function checkSlot(
   want: { readonly date: string; readonly time: string; readonly partySize: number },
   ignoreCode?: string,
 ): ServiceError | null {
-  const settings = bookingSettingsFor(outlet.slug);
+  const settings = settingsOf(db, outlet.slug);
   if (want.partySize > settings.maxPartySize) return { code: "party_too_large" };
   if (!listDates(ctx, outlet).includes(want.date)) return { code: "outside_window" };
-  const slot = slotsFor({ outlet: outlet.slug, ...want, ignoreCode }, db.bookings, contextFor(ctx, outlet)).find(
+  const slot = slotsFor({ outlet: outlet.slug, ...want, ignoreCode }, db.bookings, contextFor(db, ctx, outlet)).find(
     (s) => s.time === want.time,
   );
   if (!slot || slot.state === "past") return { code: "outside_window" };
   if (!isBookable(slot)) {
     return {
       code: "slot_full",
-      alternatives: alternativeSlots({ outlet: outlet.slug, ...want }, db.bookings, contextFor(ctx, outlet)),
+      alternatives: alternativeSlots({ outlet: outlet.slug, ...want }, db.bookings, contextFor(db, ctx, outlet)),
     };
   }
   return null;
@@ -112,7 +129,7 @@ export function createHold(db: MockDb, ctx: EngineContext, raw: unknown): Bookin
   const problem = checkSlot(db, ctx, outlet, input);
   if (problem) return err(problem);
 
-  const settings = bookingSettingsFor(outlet.slug);
+  const settings = settingsOf(db, outlet.slug);
   const at = ctx.now.toISOString();
   const booking: Booking = {
     code: newBookingCode(new Set(db.bookings.map((b) => b.code)), ctx.random),
@@ -190,7 +207,7 @@ export function cancel(db: MockDb, ctx: EngineContext, code: string): BookingRes
     return ok(booking);
   }
   if (booking.status !== "confirmed") return err({ code: "not_allowed" });
-  if (!canChangeOrCancel(booking, ctx.now, bookingSettingsFor(booking.outlet))) return err({ code: "cutoff_passed" });
+  if (!canChangeOrCancel(booking, ctx.now, settingsOf(db, booking.outlet))) return err({ code: "cutoff_passed" });
   transition(booking, "cancel", ctx.now);
   if (booking.payment === "online") refundDeposit(db, ctx, booking.code);
   return ok(booking);
@@ -206,7 +223,7 @@ export function change(db: MockDb, ctx: EngineContext, code: string, raw: unknow
   const outlet = outletOf(ctx, booking.outlet);
   if (!outlet) return err({ code: "not_found" });
   if (booking.status !== "confirmed") return err({ code: "not_allowed" });
-  if (!canChangeOrCancel(booking, ctx.now, bookingSettingsFor(booking.outlet))) return err({ code: "cutoff_passed" });
+  if (!canChangeOrCancel(booking, ctx.now, settingsOf(db, booking.outlet))) return err({ code: "cutoff_passed" });
   const problem = checkSlot(db, ctx, outlet, { ...parsed.data, partySize: booking.partySize }, booking.code);
   if (problem) return err(problem);
   booking.date = parsed.data.date;

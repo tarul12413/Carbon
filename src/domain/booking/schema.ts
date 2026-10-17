@@ -39,6 +39,8 @@ export const bookingSchema = z.object({
   holdExpiresAt: instant,
   payment: z.enum(["cafe", "online"]).optional(),
   request: z.object({ occasion: z.string(), budgetPerHead: z.string() }).optional(),
+  /** Staff-only note, never shown to the guest. */
+  staffNote: z.string().optional(),
   source: z.enum(["web", "seed"]),
   createdAt: instant,
   history: z.array(z.object({ status: z.enum(BOOKING_STATUSES), at: instant })),
