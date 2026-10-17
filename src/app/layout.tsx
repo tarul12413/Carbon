@@ -16,7 +16,8 @@ const jost = Jost({
 
 const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  /* One weight: a second file (about 10 KB) cost more first-paint time than the medium labels were worth (D-061). */
+  weight: ["400"],
   variable: "--font-plex-mono",
   display: "swap",
   /* Mono text is never the first paint, so it does not compete with Jost and CSS. */

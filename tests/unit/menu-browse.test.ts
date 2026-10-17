@@ -51,7 +51,7 @@ describe("menu browsing", () => {
   });
 
   it("formats prices the way the menu prints them, in rupees", () => {
-    expect(formatPrices({ prices: [{ paise: 29000 }] })).toBe("₹290");
+    expect(formatPrices({ prices: [{ paise: 29000 }] })).toBe("Rs 290");
     expect(
       formatPrices({
         prices: [
@@ -59,7 +59,7 @@ describe("menu browsing", () => {
           { label: "Cold", paise: 24000 },
         ],
       }),
-    ).toBe("Hot ₹220 · Cold ₹240");
+    ).toBe("Hot Rs 220 · Cold Rs 240");
     expect(formatPrices({ priceNote: "MRP" })).toBe("MRP");
   });
 });

@@ -143,7 +143,7 @@ test.describe("admin", () => {
     await shot(page, "admin-menu-draft", info.project.name, true);
 
     await page.goto("/menu");
-    await expect(page.locator("#mint-lime")).toContainText("₹300");
+    await expect(page.locator("#mint-lime")).toContainText("Rs 300");
 
     await page.goto("/admin/menu");
     await page.getByRole("button", { name: "Publish" }).click();
@@ -158,7 +158,7 @@ test.describe("admin", () => {
     await shot(page, "admin-menu", info.project.name, true);
 
     await page.goto("/menu?src=qr&outlet=c-scheme");
-    await expect(page.locator("#mint-lime")).toContainText("₹310");
+    await expect(page.locator("#mint-lime")).toContainText("Rs 310");
     await expect(page.locator("#mint-lime")).toContainText("Not today");
     await page.goto("/menu");
     await expect(page.locator("#mint-lime")).not.toContainText("Not today");

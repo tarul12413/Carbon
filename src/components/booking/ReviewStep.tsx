@@ -8,6 +8,7 @@ import { copy } from "@/content/copy";
 import { placeholders } from "@/config/placeholders";
 import { formatIndianMobile } from "@/domain/booking/phone";
 import { LIMITS } from "@/domain/booking/limits";
+import { useSettled } from "@/lib/useSettled";
 import type { Booking } from "@/domain/booking/schema";
 import { SummaryList } from "./BookingSummary";
 import { whenShort } from "./format";
@@ -35,9 +36,14 @@ interface ReviewStepProps {
 /** Step five for small groups: summary and the pay choice (wireframe 05, screen 4). */
 export function ReviewStep({ booking, outletName, busy, onConfirm }: ReviewStepProps) {
   const [payment, setPayment] = useState<"cafe" | "online">("cafe");
+  /* The second tap of a double tap on "Review" must not pick a payment or confirm (D-061). */
+  const settled = useSettled();
+  const choose = (value: "cafe" | "online") => (event: { readonly timeStamp: number }) => {
+    if (settled(event)) setPayment(value);
+  };
   const submit = (event: FormEvent) => {
     event.preventDefault();
-    onConfirm(payment);
+    if (settled(event)) onConfirm(payment);
   };
   return (
     <form onSubmit={submit} className="flex flex-col gap-6">
@@ -48,7 +54,7 @@ export function ReviewStep({ booking, outletName, busy, onConfirm }: ReviewStepP
           name="payment"
           value="cafe"
           checked={payment === "cafe"}
-          onChange={() => setPayment("cafe")}
+          onChange={choose("cafe")}
           title={t.review.payCafe}
           hint={t.review.payCafeHint}
         />
@@ -56,7 +62,7 @@ export function ReviewStep({ booking, outletName, busy, onConfirm }: ReviewStepP
           name="payment"
           value="online"
           checked={payment === "online"}
-          onChange={() => setPayment("online")}
+          onChange={choose("online")}
           title={t.review.payOnline}
           hint={
             <>

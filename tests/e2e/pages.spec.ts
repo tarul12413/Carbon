@@ -54,7 +54,7 @@ test.describe("menu", () => {
     await page.getByRole("button", { name: /Pink Carbon/ }).click();
     const sheet = page.getByRole("dialog", { name: "Pink Carbon" });
     await expect(sheet).toBeVisible();
-    await expect(sheet.getByText("₹250")).toBeVisible();
+    await expect(sheet.getByText("Rs 250")).toBeVisible();
     await shot(page, "menu-sheet", info.project.name);
     await page.keyboard.press("Escape");
     await expect(sheet).toBeHidden();

@@ -42,15 +42,12 @@ Placeholders (P-xx) match the ids in `src/config/placeholders.ts`. Change the va
 
 ## Questions for you (Tarul)
 
-| #    | Question                                                                                                                                  | Default I will use unless you say otherwise                           | Needed by                          |
-| ---- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- | ---------------------------------- |
-| Q-20 | Prices for each event, and whether each sells online, at the cafe, or both                                                                | "Rs ---"; both offered                                                | Before launch                      |
-| Q-21 | Age rules for Coffee Raves (Blueprint open item 9)                                                                                        | Not shown                                                             | Before launch                      |
-| Q-22 | The real event calendar: names, dates, capacity, posters                                                                                  | Three labelled samples                                                | Before the pitch, if you have them |
-| Q-23 | Can tickets be passed to a friend? The demo shares the event link, not the ticket                                                         | Event link only                                                       | M5                                 |
-| Q-33 | Who at Carbon gets which admin role, and should baristas see guests' full phone numbers?                                                  | Blueprint's four roles; staff see full numbers, the export masks them | Before launch                      |
-| Q-34 | When staff approve a large group, is it pay at the cafe, or do they ask for a deposit (P-04)?                                             | Pay at the cafe                                                       | Before launch                      |
-| Q-35 | Which later admin parts matter for launch: walk-ins, event creation, payments and refunds, the announcement banner, reports, staff users? | All later; the demo shows the core                                    | Before Phase 2 scoping             |
+| #    | Question                                                                          | Default I will use unless you say otherwise | Needed by                          |
+| ---- | --------------------------------------------------------------------------------- | ------------------------------------------- | ---------------------------------- |
+| Q-20 | Prices for each event, and whether each sells online, at the cafe, or both        | "Rs ---"; both offered                      | Before launch                      |
+| Q-21 | Age rules for Coffee Raves (Blueprint open item 9)                                | Not shown                                   | Before launch                      |
+| Q-22 | The real event calendar: names, dates, capacity, posters                          | Three labelled samples                      | Before the pitch, if you have them |
+| Q-23 | Can tickets be passed to a friend? The demo shares the event link, not the ticket | Event link only                             | M5                                 |
 
 ## Answered
 
@@ -85,6 +82,9 @@ Placeholders (P-xx) match the ids in `src/config/placeholders.ts`. Change the va
 | Q-31 | Defaults accepted (2026-10-17)                                                     | Placeholders, clearly marked                                                                         |
 | Q-32 | Defaults accepted (2026-10-17)                                                     | Short English and Hinglish list; staff approve everything                                            |
 | Q-28 | Revisited (2026-10-17)                                                             | Back-office copy moves to src/content/admin-copy.ts (D-055)                                          |
+| Q-33 | Defaults accepted (2026-10-17)                                                     | Blueprint's four roles; full numbers on screen, masked in the export                                 |
+| Q-34 | Defaults accepted (2026-10-17)                                                     | Pay at the cafe                                                                                      |
+| Q-35 | Defaults accepted (2026-10-17)                                                     | All later; the demo shows the core                                                                   |
 
 ## Conflicts between the docs (brief wins)
 

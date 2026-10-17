@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { copy } from "@/content/copy";
 import { placeholders } from "@/config/placeholders";
@@ -23,6 +23,7 @@ import type { Booking } from "@/domain/booking/schema";
 import type { BookingSettings } from "@/domain/booking/settings";
 import { isOutletSlug, type OutletSlug } from "@/domain/outlet";
 import { useIdempotencyKey } from "@/lib/useIdempotencyKey";
+import { pushSearch, replaceSearch, useLocationSearch } from "@/lib/useLocationSearch";
 import { useNow } from "@/lib/useNow";
 import type { BookingResult } from "@/services/bookings";
 import type { ServiceError } from "@/services/errors";
@@ -53,18 +54,23 @@ type Outcome<T> = BookingResult<T> | { readonly ok: false; readonly error: { rea
 const network = (): Outcome<never> => ({ ok: false, error: { code: "network" } });
 
 /**
- * Steps one to five of the booking flow. Renders on the client only (it sits under a Suspense
- * boundary and reads the URL), so it can read the saved draft on first render.
+ * Steps one to five of the booking flow. The server renders step one; the URL and the saved draft
+ * are read once the page has hydrated, so the first paint is kept rather than replaced (D-061).
  */
 export function BookingFlow({ outlets, settings }: BookingFlowProps) {
   const router = useRouter();
-  const params = useSearchParams();
+  const params = useLocationSearch();
   const keyFor = useIdempotencyKey();
   const linkedOutlet = params.get("outlet");
 
-  const [draft, setDraft] = useDraft((saved) =>
-    isOutletSlug(linkedOutlet) && linkedOutlet !== saved.outlet ? updateDraft(saved, { outlet: linkedOutlet }) : saved,
-  );
+  const [draft, setDraft] = useDraft();
+  /* A link from an outlet page or a table QR picks the outlet, once per visit with that link. */
+  const linked = useRef<string | null>(null);
+  useLayoutEffect(() => {
+    if (!isOutletSlug(linkedOutlet) || linked.current === linkedOutlet) return;
+    linked.current = linkedOutlet;
+    setDraft((saved) => (saved.outlet === linkedOutlet ? saved : updateDraft(saved, { outlet: linkedOutlet })));
+  }, [linkedOutlet, setDraft]);
   const wanted = params.get("step");
   const step = reachableStep(isFlowStep(wanted) ? wanted : isOutletSlug(linkedOutlet) ? "time" : "outlet", draft);
 
@@ -84,7 +90,7 @@ export function BookingFlow({ outlets, settings }: BookingFlowProps) {
 
   const go = useCallback((next: FlowStep) => {
     setProblem(null);
-    window.history.pushState(null, "", `?step=${next}`);
+    pushSearch(`?step=${next}`);
   }, []);
 
   const release = useCallback(
@@ -122,7 +128,7 @@ export function BookingFlow({ outlets, settings }: BookingFlowProps) {
         code: b.code,
         details: { ...d.details, name: b.name, phone: b.phone, note: b.note, privacyAccepted: true },
       }));
-      window.history.replaceState(null, "", "?step=review");
+      replaceSearch("?step=review");
     });
     return () => {
       live = false;

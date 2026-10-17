@@ -192,7 +192,11 @@ test.describe("table deposit", () => {
     await page.getByLabel("Phone").fill("90000 00057");
     await page.getByLabel("I accept the privacy notice").check();
     await page.getByRole("button", { name: "Review" }).click();
-    await page.getByText("Pay online", { exact: true }).click();
+    /* Taps in the review screen's first moments are ignored (double-tap guard), so retry until it takes. */
+    await expect(async () => {
+      await page.getByText("Pay online", { exact: true }).click();
+      await expect(page.getByRole("radio", { name: /^Pay online/ })).toBeChecked({ timeout: 200 });
+    }).toPass();
     await page.getByRole("button", { name: "Continue to payment" }).click();
 
     await expect(page.getByText(/^Table deposit, CRB-\d{4}$/).first()).toBeVisible();

@@ -83,7 +83,8 @@ export function MenuList({ sections, showSectionNav }: MenuListProps) {
             key={category.id}
             id={`section-${category.id}`}
             aria-labelledby={`heading-${category.id}`}
-            className="scroll-mt-48"
+            /* Sections below the first are laid out only when scrolled near: about 160 items is a lot of layout for a phone. */
+            className={cx("scroll-mt-48", index > 0 && "[contain-intrinsic-size:auto_40rem] [content-visibility:auto]")}
           >
             {startsGroup && <p className="label-caps mb-2 text-small text-fg-muted">{category.group}</p>}
             <h2 id={`heading-${category.id}`} className="label-caps text-h3">

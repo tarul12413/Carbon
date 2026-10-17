@@ -132,6 +132,9 @@ test.describe("book a small table", () => {
     await fillDetails(page);
     await page.getByRole("button", { name: "Review" }).dblclick();
     await expect(page.getByRole("heading", { level: 1, name: "Review and pay" })).toBeVisible();
+    /* The second tap landed on the new screen and was ignored: still the default choice, not confirmed. */
+    await expect(page.getByRole("radio", { name: /^Pay at the cafe/ })).toBeChecked();
+    await page.waitForTimeout(450);
     await page.getByText("Pay at the cafe", { exact: true }).click();
     await page.getByRole("button", { name: "Confirm booking" }).dblclick();
     await expect(page.getByRole("heading", { level: 1, name: "Table's yours." })).toBeVisible();

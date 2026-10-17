@@ -95,16 +95,20 @@ export function elementSymbols(names: readonly string[]): string[] {
   });
 }
 
-const rupees = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
+/*
+ * "Rs 290", not "₹290": the rupee sign sits in the fonts' Latin Extended files, so every page that
+ * showed it downloaded one more font file before its first paint (D-061).
+ */
+const amount = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 });
 
-/** 29000 → "₹290". */
-export const formatPaise = (paise: number) => rupees.format(paise / 100);
+/** 29000 → "Rs 290". */
+export const formatPaise = (paise: number) => `Rs ${amount.format(paise / 100)}`;
 
-/** "₹290", "Hot ₹220 · Cold ₹240", or the printed note ("MRP"). */
+/** "Rs 290", "Hot Rs 220 · Cold Rs 240", or the printed note ("MRP"). */
 export function formatPrices(item: Pick<MenuItem, "prices" | "priceNote">): string {
   if (!item.prices) return item.priceNote ?? "";
   return item.prices
-    .map((p: Price) => (p.label ? `${p.label} ${rupees.format(p.paise / 100)}` : rupees.format(p.paise / 100)))
+    .map((p: Price) => (p.label ? `${p.label} ${formatPaise(p.paise)}` : formatPaise(p.paise)))
     .join(" · ");
 }
 
