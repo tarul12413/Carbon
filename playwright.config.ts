@@ -5,6 +5,8 @@ const baseURL = process.env.E2E_BASE_URL ?? `http://localhost:${port}`;
 
 export default defineConfig({
   testDir: "tests/e2e",
+  /* Timing runs on a quiet machine, one test at a time: npm run measure:inp (playwright.measure.config.ts). */
+  testIgnore: "**/inp.spec.ts",
   outputDir: "tests/e2e/.results",
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),

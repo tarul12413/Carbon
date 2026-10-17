@@ -16,6 +16,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
+    "measure:inp": "playwright test -c playwright.measure.config.ts",
     "lhci": "npx --yes @lhci/cli@0.15.1 autorun",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test",
     "screenshots:keep": "node -e \"const [,d]=process.argv;if(!d)throw new Error('usage: npm run screenshots:keep -- m2');require('fs').cpSync('tests/screenshots/latest','tests/screenshots/'+d,{recursive:true})\""

@@ -24,7 +24,15 @@ export function StepHeader({ step, title, onBack, children }: StepHeaderProps) {
       firstRender.current = false;
       return;
     }
-    heading.current?.focus();
+    /* Once the new step has painted: focusing forces a layout, which would hold up the tap's response. */
+    let timer = 0;
+    const frame = requestAnimationFrame(() => {
+      timer = window.setTimeout(() => heading.current?.focus());
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(timer);
+    };
   }, [step]);
 
   return (

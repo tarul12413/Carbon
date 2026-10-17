@@ -28,10 +28,20 @@ const pageLoaded = () =>
     if (document.readyState === "complete") idle(resolve);
     else window.addEventListener("load", () => idle(resolve), { once: true });
   });
+let loading: Promise<MockBackend> | null = null;
 const backend = () =>
-  pageLoaded()
+  (loading ??= pageLoaded()
     .then(() => import("./mock/browserBackend"))
-    .then((m) => m.browserBackend);
+    .then((m) => m.browserBackend));
+
+/**
+ * Starts loading the backend once the page is idle, before the first request. Evaluating it is one
+ * long task; a page whose first screen makes no request (booking step one) calls this so that task
+ * does not land on the visitor's next tap.
+ */
+export function warmServices(): void {
+  void backend();
+}
 
 /** A service whose every method waits for the backend to load, then calls through. */
 function deferred<K extends keyof MockBackend>(name: K): MockBackend[K] {
@@ -40,6 +50,8 @@ function deferred<K extends keyof MockBackend>(name: K): MockBackend[K] {
       (_target, method) =>
       async (...args: unknown[]) => {
         const service = (await backend())[name];
+        /* Let the browser paint the tap's response before the engine runs (INP). */
+        await new Promise((resolve) => setTimeout(resolve, 0));
         const fn = Reflect.get(service, method) as (...a: unknown[]) => Promise<unknown>;
         return fn.apply(service, args);
       },

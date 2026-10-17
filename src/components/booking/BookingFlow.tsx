@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useDeferredValue, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { copy } from "@/content/copy";
 import { placeholders } from "@/config/placeholders";
@@ -27,7 +27,7 @@ import { pushSearch, replaceSearch, useLocationSearch } from "@/lib/useLocationS
 import { useNow } from "@/lib/useNow";
 import type { BookingResult } from "@/services/bookings";
 import type { ServiceError } from "@/services/errors";
-import { clientServices } from "@/services/client";
+import { clientServices, warmServices } from "@/services/client";
 import { DetailsStep, type FieldErrors } from "./DetailsStep";
 import { FlowFrame, OutletChoices, type FlowOutlet } from "./FlowFrame";
 import { whenShort } from "./format";
@@ -64,6 +64,7 @@ export function BookingFlow({ outlets, settings }: BookingFlowProps) {
   const linkedOutlet = params.get("outlet");
 
   const [draft, setDraft] = useDraft();
+  useEffect(warmServices, []);
   /* A link from an outlet page or a table QR picks the outlet, once per visit with that link. */
   const linked = useRef<string | null>(null);
   useLayoutEffect(() => {
@@ -72,7 +73,9 @@ export function BookingFlow({ outlets, settings }: BookingFlowProps) {
     setDraft((saved) => (saved.outlet === linkedOutlet ? saved : updateDraft(saved, { outlet: linkedOutlet })));
   }, [linkedOutlet, setDraft]);
   const wanted = params.get("step");
-  const step = reachableStep(isFlowStep(wanted) ? wanted : isOutletSlug(linkedOutlet) ? "time" : "outlet", draft);
+  const current = reachableStep(isFlowStep(wanted) ? wanted : isOutletSlug(linkedOutlet) ? "time" : "outlet", draft);
+  /* The next step renders as interruptible work, so the tap that asked for it paints at once (INP, D-061). */
+  const step = useDeferredValue(current);
 
   const [busy, setBusy] = useState(false);
   const inFlight = useRef(false);

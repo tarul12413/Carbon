@@ -1,3 +1,5 @@
+import { dateFormat } from "./time";
+
 /**
  * Open-now status from daily hours, evaluated in the outlet's time zone.
  * Times are "HH:MM" 24-hour strings. A close time at or before the open time
@@ -20,7 +22,7 @@ export const toMinutes = (hhmm: string): number => {
 };
 
 export function minutesIntoDay(now: Date, timeZone: string): number {
-  const parts = new Intl.DateTimeFormat("en-GB", {
+  const parts = dateFormat("en-GB", {
     timeZone,
     hour: "2-digit",
     minute: "2-digit",

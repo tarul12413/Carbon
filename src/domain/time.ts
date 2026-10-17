@@ -5,6 +5,19 @@
 
 const DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
+const formatters = new Map<string, Intl.DateTimeFormat>();
+
+/** A shared formatter per locale and options: building one is slow, and slot maths asks for hundreds. */
+export function dateFormat(locale: string, options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
+  const key = `${locale}|${JSON.stringify(options)}`;
+  let format = formatters.get(key);
+  if (!format) {
+    format = new Intl.DateTimeFormat(locale, options);
+    formatters.set(key, format);
+  }
+  return format;
+}
+
 const parseDate = (date: string): [number, number, number] => {
   const match = DATE.exec(date);
   if (!match) throw new Error(`Expected YYYY-MM-DD, got ${date}`);
@@ -21,7 +34,7 @@ export function isLocalDate(value: string): boolean {
 
 /** The calendar date at `now` in `timeZone`. */
 export function localDate(now: Date, timeZone: string): string {
-  return new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+  return dateFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
 }
 
 export function addDays(date: string, days: number): string {
@@ -31,7 +44,7 @@ export function addDays(date: string, days: number): string {
 
 /** Offset of `timeZone` from UTC at `instant`, in minutes (Asia/Kolkata: 330). */
 function offsetMinutes(instant: Date, timeZone: string): number {
-  const parts = new Intl.DateTimeFormat("en-GB", {
+  const parts = dateFormat("en-GB", {
     timeZone,
     year: "numeric",
     month: "2-digit",
@@ -61,16 +74,14 @@ export function toHHMM(minutes: number): string {
 /** "2026-10-16" → "Fri 16". Uses UTC so the label never shifts with the machine's zone. */
 export function shortDay(date: string): string {
   const [y, m, d] = parseDate(date);
-  const weekday = new Intl.DateTimeFormat("en-IN", { weekday: "short", timeZone: "UTC" }).format(
-    new Date(Date.UTC(y, m - 1, d)),
-  );
+  const weekday = dateFormat("en-IN", { weekday: "short", timeZone: "UTC" }).format(new Date(Date.UTC(y, m - 1, d)));
   return `${weekday} ${d}`;
 }
 
 /** "2026-10-16" → "Friday 16 October". */
 export function longDay(date: string): string {
   const [y, m, d] = parseDate(date);
-  return new Intl.DateTimeFormat("en-IN", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).format(
+  return dateFormat("en-IN", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).format(
     new Date(Date.UTC(y, m - 1, d)),
   );
 }
@@ -78,7 +89,7 @@ export function longDay(date: string): string {
 /** "2025-06-21" → "21 June 2025". */
 export function fullDate(date: string): string {
   const [y, m, d] = parseDate(date);
-  return new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(
+  return dateFormat("en-IN", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(
     new Date(Date.UTC(y, m - 1, d)),
   );
 }
