@@ -8,6 +8,7 @@ import type { Menu } from "@/domain/menu/schema";
 import { cx } from "@/lib/cx";
 import { MenuList } from "./MenuList";
 import { PeriodicTable } from "./PeriodicTable";
+import { useMenuOverlay } from "./useMenuOverlay";
 
 const t = copy.menu;
 const FILTERS = Object.keys(t.filters) as MenuFilter[];
@@ -35,7 +36,13 @@ function withTransition(update: () => void) {
   document.startViewTransition(() => flushSync(update));
 }
 
-export function MenuBrowser({ menu, elements }: MenuBrowserProps) {
+export function MenuBrowser({ menu: printed, elements: printedElements }: MenuBrowserProps) {
+  const menu = useMenuOverlay(printed);
+  const elements = useMemo(() => {
+    if (menu === printed) return printedElements;
+    const byId = new Map(menu.items.map((i) => [i.id, i]));
+    return printedElements.map((e) => ({ ...e, item: byId.get(e.item.id) ?? e.item }));
+  }, [menu, printed, printedElements]);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<MenuFilter>("all");
   const [view, setView] = useState<View>("list");

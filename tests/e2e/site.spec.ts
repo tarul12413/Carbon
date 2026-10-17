@@ -61,8 +61,11 @@ test.describe("book wall", () => {
     await page.getByRole("link", { name: "See the wall" }).click();
     await expect(page.getByText("1 waiting for staff")).toBeVisible();
     await expect(page.getByRole("button", { name: /^The Overstory/ })).toHaveCount(0);
-    await page.getByText("Demo controls").click();
-    await page.getByRole("button", { name: "Staff approve waiting books" }).click();
+    await page.goto("/admin/wall");
+    await page.getByRole("button", { name: /^Marketing, All outlets/ }).click();
+    await page.getByRole("button", { name: "Approve: The Overstory" }).click();
+    await expect(page.getByRole("status")).toContainText("The Overstory is on the shelf.");
+    await page.goto("/book-wall");
     await expect(page.getByRole("button", { name: /^The Overstory by Richard Powers, 1 reader$/ })).toBeVisible();
     await page.getByRole("button", { name: /^The Overstory/ }).click();
     await expect(page.getByRole("dialog").getByText("Test reader")).toBeVisible();

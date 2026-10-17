@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { DigitBoxes } from "@/components/ui/DigitBoxes";
 import { TextField, inputClass } from "@/components/ui/Field";
 import { Icon } from "@/components/ui/Icon";
+import { staffCopy } from "@/content/admin-copy";
 import { copy } from "@/content/copy";
 import { placeholders } from "@/config/placeholders";
 import { site } from "@/config/site";
@@ -21,7 +22,7 @@ import type { ServiceError } from "@/services/errors";
 import type { DoorView, StaffCardView } from "@/services/staff";
 import { StampGrid } from "./StampGrid";
 
-const t = copy.staff;
+const t = staffCopy;
 const service = clientServices.staff;
 const ACCOUNT_KEY = "carbon-demo:staff";
 const PIN_DIGITS = 4;

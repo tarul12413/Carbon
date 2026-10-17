@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { DemoPanel } from "@/components/demo/DemoPanel";
 import { StaffScanner } from "@/components/stamps/StaffScanner";
-import { copy } from "@/content/copy";
+import { staffCopy } from "@/content/admin-copy";
 import { flags } from "@/config/flags";
 import { services } from "@/services";
 import { ticketEvents } from "../tickets/props";
 
-export const metadata: Metadata = { title: copy.staff.title };
+export const metadata: Metadata = { title: staffCopy.title };
 
 /**
  * The staff scanner (Blueprint 5.7): the event door always, the stamp card with its flag on.

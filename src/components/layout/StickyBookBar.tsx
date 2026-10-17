@@ -19,6 +19,7 @@ const OWN_ACTION = [
   routes.staff,
   routes.bookWall,
   routes.enquire,
+  routes.admin,
 ];
 
 const covers = (path: string, entry: string) =>

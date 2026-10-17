@@ -68,6 +68,7 @@ export function SlotPicker({
   const visible = slots.filter((s) => s.state !== "past");
   const failed = data === "network" || (data !== null && !data.ok);
   const nothingLeft = !loading && !failed && !visible.some(isBookable);
+  const closed = data !== null && data !== "network" && data.ok && data.value.closed === true;
   const nextDay = dates[dates.indexOf(day) + 1];
   const full = visible.filter((s) => s.state === "full").map((s) => formatClock(s.time));
   const low = visible.filter((s) => s.state === "low");
@@ -152,7 +153,7 @@ export function SlotPicker({
         )}
         {nothingLeft && (
           <div className="flex flex-col items-start gap-2 rounded-sm border border-line p-4">
-            <p>{t.nothingLeft(dayLabel(day, dates.indexOf(day)))}</p>
+            <p>{(closed ? t.closedDay : t.nothingLeft)(dayLabel(day, dates.indexOf(day)))}</p>
             {nextDay ? (
               <button
                 type="button"

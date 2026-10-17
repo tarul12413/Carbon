@@ -11,7 +11,7 @@ Authority order: BRIEF.md, then blueprint, then pitch plan. Log conflicts in OPE
 - If something is missing or ambiguous, ask me. Never assume.
 - Never invent prices, policies, hours, addresses, awards or claims.
 - Placeholders live in src/config/placeholders.ts and in OPEN_QUESTIONS.md (same ids).
-- All user-facing copy lives in src/content/copy.ts.
+- All customer-facing copy lives in src/content/copy.ts; back-office copy (admin, staff scanner) in src/content/admin-copy.ts.
 - Work in milestones M0 to M8. Stop after each one, summarise, and wait for my go-ahead.
 - Keep DECISIONS.md current (what, why, alternatives).
 - Dependencies: use whatever is best for the job, pinned exactly, at least two weeks old unless a security fix needs newer. Record each one in DECISIONS.md.

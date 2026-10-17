@@ -1,7 +1,6 @@
 import { mockDbSchema } from "./db";
 import { memoryStore, type DbStore } from "./mockBackend";
-
-export const BROWSER_DB_KEY = "carbon-demo:db:v2";
+import { BROWSER_DB_KEY } from "./storageKey";
 
 /**
  * Keeps the mock database in this browser's localStorage (D-026), so a booking made on one page
