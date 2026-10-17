@@ -1,62 +1,79 @@
 # Carbon: "Brewed Slowly"
 
-An unofficial concept site for Carbon, a craft coffee bar in Jaipur. It is a pitch demo with mock data only: no real bookings, payments or messages.
+An unofficial concept site for Carbon, a craft coffee bar in Jaipur, built as a pitch demo. Mock data
+only: no real bookings, payments or messages, and nothing is sent anywhere. Every value Carbon has not
+confirmed is shown with a "TBC" tag and listed in `OPEN_QUESTIONS.md`.
 
 ## Run it
 
 ```bash
 npm install
-npm run dev          # http://localhost:3000
+npm run dev                       # http://localhost:3000
+npm run build && npm start        # production build (needed for the offline service worker)
 ```
+
+Feature flags (build time, `.env.local` or Vercel Environment Variables, then rebuild):
+
+- `NEXT_PUBLIC_FLAG_STAMP_CARD=true` turns on the stamp card (`/my-carbon`, the stamp side of `/staff`). Off by default.
+- `NEXT_PUBLIC_BOOKING_TRANSPORT=http` sends bookings through the route handlers instead of the in-browser engine.
+
+## A five-minute demo
+
+1. **Home** (`/`): scroll to steep the cold brew from 0 to 96 hours, or type "96" anywhere.
+2. **Menu** (`/menu`): search, filter, the periodic table of signatures, the PDF download. A table QR opens `/menu?src=qr&outlet=c-scheme`.
+3. **Book** (`/book`): a table for two is instant; a group of seven or more (above P-01, six) sends a request. Open "Demo controls" at the foot of the page to expire the hold.
+4. **Admin** (`/admin`): sign in as "Manager, C Scheme", approve the request under Bookings, then open the guest's `/book/<code>` page and the Audit log.
+5. **Events** (`/events/coffee-rave`): buy a ticket, pick Success, Failed or Pending on the sample payment sheet, and open the ticket's QR. `/events/drip-it-up` is sold out with a waitlist.
+6. **Book wall** (`/book-wall`): add a book, then approve it as Marketing in `/admin/wall`.
+
+All demo data lives in the visitor's browser (localStorage), so each device has its own. "Reset demo data" in Demo controls starts over.
+
+## Pages
+
+| Route                                    | What it is                                                                                    |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `/`                                      | Home: steep clock, today at Carbon, signatures (no prices), outlets, events, proof, book wall |
+| `/menu`                                  | Structured menu (166 items), search, filters, periodic view, PDF download                     |
+| `/cold-brew`                             | The 18 to 96 hour story and the steep explorer                                                |
+| `/outlets`, `/outlets/[slug]`            | Three outlets; unconfirmed addresses are marked                                               |
+| `/story`                                 | Brand, awards, press titles                                                                   |
+| `/book`, `/book/[code]`                  | Six-step booking; manage, change or cancel by code                                            |
+| `/events`, `/events/[slug]`              | Sample events, seat holds, waitlist                                                           |
+| `/checkout/[orderId]`, `/tickets/[code]` | Pay online or at the cafe; signed QR ticket; cancel and refund                                |
+| `/my-carbon`, `/staff`                   | Stamp card (flag) and the staff scanner, including the event door                             |
+| `/book-wall`, `/book-wall/add`           | Shelf of spines drawn from titles; add a book for approval                                    |
+| `/enquire`                               | Catering, collab or launch, workshop, other                                                   |
+| `/admin/*`                               | Back office with a role switcher (owner, manager, barista, marketing)                         |
+| `/legal/*`, 404, `/offline`              | Placeholder legal text, friendly errors, offline fallback                                     |
 
 ## Check it
 
 ```bash
-npm run check        # typecheck, lint, format, unit tests
+npm run check          # typecheck, lint, format, unit tests
 npm run build
-npm run e2e          # Playwright + axe at 360, 744 and 1440 px (PW_CHANNEL=msedge to use installed Edge)
-npm run lhci         # Lighthouse budgets
+npm run e2e            # Playwright + axe at 360, 744 and 1440 px, plus 393, 1366, 1920 and a dual-screen view
+npm run measure:inp    # INP with a 4x slower CPU, one test at a time (run on a quiet machine)
+npm run lhci           # Lighthouse budgets against the production build
 ```
 
-## Where things are
+Locally, `PW_CHANNEL=msedge` uses the installed Edge if Playwright's Chromium is not installed. Screenshots land in `tests/screenshots/latest`; each milestone's set is kept in `tests/screenshots/m1` to `m8`.
 
-- `docs/`: brief, blueprint, pitch plan, wireframes, menu PDF
-- `src/config/placeholders.ts`: every unconfirmed value, mirrored in `OPEN_QUESTIONS.md`
-- `src/content/copy.ts`: all user-facing copy
-- `src/styles/tokens.css`: design tokens (Night and Paper themes)
-- `/styleguide`: palette and type specimen
-- `DECISIONS.md`: what was decided and why
+## Deploy
 
-## Booking (M3)
+Vercel, from the repository root, with the default Next.js settings. No secrets are needed: payment signing keys in the demo are fixed sample values in code, clearly named as such. The demo is not indexed (`robots: noindex`).
 
-- `/book` runs the six-step flow; `/book/CRB-1234` confirms and manages a booking.
-- Bookings live in your browser (localStorage) in the hosted demo, so a booking made on one device is not visible on another. "Demo controls" at the foot of the booking pages expire holds or reset the demo data.
-- Rules: `src/domain/booking`. Mock engine: `src/services/mock/bookingEngine.ts`. Route handlers with the same rules: `src/app/api`. Set `NEXT_PUBLIC_BOOKING_TRANSPORT=http` to send the UI through them.
+## How it is built
 
-## Events and checkout (M4)
+- Next.js 16 (App Router), strict TypeScript, Tailwind v4 tokens, GSAP for the steep clock only, zod for validation. Dependencies and why: `DECISIONS.md` (D-001, D-002, D-033).
+- `src/domain`: pure rules and state machines (availability, booking and order machines, stamp card, wall, admin roles).
+- `src/services`: typed interfaces. `src/services/mock`: engines over one in-memory database, saved in the browser for the hosted demo (D-026). `src/app/api/*`: route handlers with the same engines, shaped like the Phase 2 API.
+- `src/config/placeholders.ts`: every unconfirmed value, mirrored in `OPEN_QUESTIONS.md` under the same id.
+- `src/content/copy.ts`: customer-facing copy. `src/content/admin-copy.ts`: back-office copy.
+- `src/styles/tokens.css`: Night and Paper themes. `/styleguide` shows the palette and type.
 
-- `/events` lists the labelled sample events; `/events/coffee-rave` sells tickets, `/events/drip-it-up` is sold out with a waitlist.
-- `/checkout/<order>` offers pay online or at the cafe. Paying online opens a clearly labelled sample payment sheet; with the dev panel on, pick Success, Failed or Pending there.
-- `/tickets/<code>` shows the signed QR; `/tickets/<code>/cancel` cancels and refunds.
-- "Demo controls" at the foot of these pages: open a seat for the waitlist, play the bank on a pending payment, expire holds, reset demo data.
+## Documents
 
-## Stamp card and staff scanner (M5)
-
-- The stamp card is off by default. Build or run with `NEXT_PUBLIC_FLAG_STAMP_CARD=true` (on Vercel: Environment Variables, then redeploy) to show `/my-carbon` and the stamp side of `/staff`.
-- `/my-carbon`: phone, consent, then the six-digit code from the "Demo SMS" toast. "Show QR to barista" shows a QR that changes every minute.
-- `/staff`: pick a sample account and outlet. In a second tab, "Simulate scan" reads the QR the My Carbon tab is showing; add a stamp, undo it, or look up `90000 00202` to redeem a full card with the demo PIN `1896`. "Event door" checks tickets in once.
-
-## Book wall, enquiries, legal and offline (M6)
-
-- `/book-wall` shows the sample shelf; tap a spine for its detail. `/book-wall/add` sends a book, which waits until staff approve it in the admin (`/admin/wall`).
-- `/enquire` takes catering, collab or launch, workshop and other enquiries; `/enquire?type=collab` preselects one.
-- `/legal/privacy`, `/legal/terms`, `/legal/refunds` are placeholder text. Unconfirmed values are written as `[[placeholderKey]]` in `copy.ts` and filled from `placeholders.ts`.
-- Offline: `public/sw.js` runs in production builds only (`npm run build && npm start`). Open a page, switch the network off and reload it; a page you have not opened shows `/offline`.
-
-## Admin (M7)
-
-- `/admin` opens with a sample sign-in. Pick a role; switch account or outlet at the top of any admin page. Each role sees only its sections (Blueprint section 10).
-- Try: send a group request from `/book` (more than 6 people), then approve it as the outlet's manager in `/admin/bookings`; the guest's `/book/<code>` page shows it confirmed and `/admin/audit` logs it.
-- `/admin/capacity` changes seats per slot, hours and closed dates; booking slots on this device follow at once. `/admin/menu` drafts and publishes edits, switches items sold out per outlet, and checks a new PDF; `/menu` on this device shows the result.
-- Admin data lives in this browser with the rest of the demo. `/api/admin/*` mirrors it for Phase 2, with the account in an `x-demo-staff` header.
-- Back-office text lives in `src/content/admin-copy.ts`; customer text stays in `src/content/copy.ts`.
+- `docs/BRIEF.md`, `docs/blueprint.md`, `docs/pitch-plan.md`: the brief and plans (originals in `docs/originals`).
+- `DECISIONS.md`: what was decided, why, and the alternatives, milestone by milestone, with measurements.
+- `OPEN_QUESTIONS.md`: placeholders, questions for Carbon, answered questions.
+- `docs/case-study.md`: case-study notes (not for publication without Carbon's agreement).

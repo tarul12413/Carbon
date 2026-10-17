@@ -51,6 +51,7 @@ GSAP, Motion and zod are deferred to the milestone that first uses them, so noth
 
 - **What:** Jost (variable) and IBM Plex Mono 400/500, exposed as CSS variables. Next generates size-matched fallbacks to prevent layout shift.
 - **Why:** The brief's two families. No request goes to Google at runtime.
+- **Changed in M8 (D-061):** Plex Mono ships 400 only.
 
 ### D-008 Demo is not indexed
 
@@ -408,3 +409,68 @@ GSAP, Motion and zod are deferred to the milestone that first uses them, so noth
 - E2E with the stamp card flag on (as CI builds): 208 pass, 3 skipped by design. Two home clock tests timed out in one slow full run (5.1 min) and passed 63 of 63 when rerun on their own; the same load pattern as M6. New admin flows: a manager approves a group request and the guest sees it confirmed; each role's sections; closing a date closes it for booking; menu draft, publish, PDF warning and sold-out showing on `/menu`; manager limits; marketing moves an enquiry and opens attendees. All axe-clean at 360, 744 and 1440 px, run three times in a row without a failure.
 - Lighthouse (default build): accessibility 100 everywhere. LCP medians: `/story` 2.30 s, `/book-wall` 2.30 s, `/enquire` 2.31 s, `/outlets/c-scheme` 2.31 s, `/cold-brew` 2.41 s, home 2.43 s, `/events/coffee-rave` 2.46 s, `/events` 2.49 s, `/menu` 2.60 s, `/book` 2.78 s. `/menu` and `/book` still miss 2.5 s (M8). The menu overlay hook did not move `/menu`.
 - Home first-load JavaScript is back under 170 KB after D-055. Lighthouse's own script total (which also counts what loads after the page is idle) still warns on several pages, as before; M8 looks at it with the rest of performance.
+
+## M8: Polish
+
+### D-061 Performance: LCP and INP
+
+**Why Lighthouse's LCP was high.** Lighthouse estimates mobile LCP from a fast local load. Here every script has arrived and run before the first frame, so the estimate charges the page's whole download (HTML, CSS, fonts and all JavaScript at simulated 4G) to the main text's paint. Measured in a real browser with the CPU 4x slower, the first paint and LCP of `/menu`, `/book` and `/story` land at 0.4 to 0.5 s. The fixes cut what the estimate counts, and each one also helps real visitors:
+
+- **Prices read "Rs 290", not "₹290".** The rupee sign lives in the fonts' Latin Extended files, so every menu load downloaded one more font file (about 9 KB) just for that glyph. This also matches the site's "Rs ---" placeholders. Alternatives: subsetting the fonts by hand, or a system font for the sign alone (still a fallback swap).
+- **IBM Plex Mono ships one weight (400).** The 500 weight was a second file (about 10 KB) for a few medium labels, which now render at 400. This changes D-007.
+- **The booking flow renders on the server and hydrates in place.** It used to render on the client only, so step one's static HTML was replaced by an identical copy after hydration, and the browser counted that as a new, later LCP. The flow now reads the URL and the saved draft through small external stores (`useLocationSearch`, `useDraft`). The server and the hydrating render see an empty query and draft; the real ones arrive straight after.
+- **Menu sections below the first skip layout until scrolled near** (`content-visibility: auto`). Layout and paint work on `/menu` fell by about a third; it did not move LCP by itself.
+
+**INP**, measured with the Event Timing API under 4x CPU slowdown (`npm run measure:inp`), was 312 to 680 ms on the booking flow's first "Continue". The fixes:
+
+- **Cached date formatters** (`dateFormat` in `src/domain/time.ts`). Building an `Intl.DateTimeFormat` is slow, and slot maths and date chips built hundreds of them per screen.
+- **The browser store keeps the parsed database in memory.** It parses the saved text again only when the text changes (another tab wrote). Before, every service call re-checked the whole database with zod.
+- **Service calls yield to the browser before the engine runs**, so the tap's response paints first.
+- **The booking flow loads the mock backend once step one is idle** (`warmServices`), so its one long evaluation does not land on the next tap. Only the booking flow does this: other pages call a service as soon as they open anyway. Warming every page made parallel test runs much slower.
+- **The step heading takes focus just after the new step paints, not before.** Focusing forces a layout. Screen-reader users still land on the heading, one frame later.
+- **The next booking step renders as interruptible work** (`useDeferredValue`). The tap paints at once; step two itself appears 172 to 204 ms after the tap under 4x slowdown, about what it took before. The difference is that the page stays responsive meanwhile.
+
+### D-062 Foldables and dual screens
+
+Blueprint section 6 asks for viewport segments as a progressive enhancement, plus a fallback two-column layout that keeps controls out of a 40 px band around the seam. Three utilities in `globals.css`:
+
+- `fold-grid`: the site's two-column layouts. From the tablet band up, two equal columns with a 40 px centre gap, so a control is never on the fold of an open foldable. Three-column tablet grids (home events teaser) became two columns at tablet, three at laptop. Where the browser reports two screens side by side, the columns follow the screens and the gap covers the seam.
+- `fold-segments`: laptop-only splits (1fr / 1.2fr and the like) become one column per screen when two screens are reported.
+- `fold-left`: single-column pages (forms, tickets, the menu, the book wall, the admin, legal, 404, offline) stay whole on the left-hand screen when two are reported. The header nav moves to the right-hand screen beside "Book a table" (`fold-nav`).
+
+Tested with Chromium's display-feature emulation: two 540 px screens with a 34 px seam (Surface Duo-like). On every page, no link, button or field overlaps the seam. The fallback is tested at 600, 673, 744 and 884 px: no control in a two-column layout sits within 20 px of the middle.
+
+Not covered: rows of small controls on single-column pages (date chips, time slots, filter chips) can cross the middle of an open foldable that does not report segments. They sit on one screen when segments are reported. To check on real devices in Phase 2.
+
+### D-063 Smaller fixes
+
+- **Double tap on "Review" (from D-039):** the review screen ignores taps in its first 400 ms (`useSettled`), so the second tap can no longer pick a payment or confirm.
+- **Book wall layout shift:** the loading placeholder now matches the sample shelf's loaded height at each width (39.3, 32.65 and 17 rem). Measured to within 0.03 rem; it was a fixed 25 rem.
+
+### D-064 Accessibility and responsive pass
+
+- **Keyboard tests (`tests/e2e/keyboard.spec.ts`):**
+  - The skip link is the first stop.
+  - Every focus stop on the home page (first 25) shows a 2 px focus ring (the amber `--focus-ring`).
+  - A table can be booked to the details step with the keyboard alone, with focus moving to each step's heading.
+  - The book wall dialog closes with Escape and returns focus to its spine.
+  - With reduced motion, the steep clock is not pinned and nothing animates longer than 1 ms.
+- **Responsive (`tests/e2e/responsive.spec.ts`):** the brief's other sizes, 393x852, 1366x768 and 1920x1080, across 15 pages. No sideways scroll anywhere, and content stays capped at 1440 px and centred at 1920. Screenshots at those sizes and of the dual-screen view are kept in `tests/screenshots/m8`.
+- **axe:** WCAG 2.2 AA (`wcag2a`, `wcag2aa`, `wcag21aa`, `wcag22aa`) on every screen of every flow at 360, 744 and 1440 px.
+
+### D-065 Measuring INP
+
+INP is measured in the browser with the Event Timing API, during scripted interactions on the menu, booking and home pages, with the CPU 4x slower. Each test fails above 200 ms (brief).
+
+These timings depend on the machine, so they have their own command, run one test at a time (`npm run measure:inp`, `playwright.measure.config.ts`). The normal e2e run and CI leave them out: run in parallel, or on a busy machine, the same build measured up to three times slower. Field INP from real phones needs real visitors (Blueprint section 15).
+
+### D-066 M8 measurements
+
+- Unit: 195 tests pass.
+- E2E on the default build (stamp card off), three workers: 207 pass, 35 skipped by design (stamp card tests, and the keyboard and responsive specs outside the laptop project). One failed under load: typing "96" on the home page at 744 px, which typed before the clock had loaded. The test now waits for the clock, as a person would, and passed 9 of 9 across the three projects.
+- New: `keyboard.spec.ts` (5 tests) and `responsive.spec.ts` (15 pages at three more sizes, the foldable fallback at four widths, the dual-screen view). All pass.
+- Lighthouse, full run, on a heavily loaded machine (benchmark index 150 to 1,900 against about 1,400 earlier). Accessibility 100 and CLS 0 on every page. LCP medians: `/outlets/c-scheme` 2.33 s, `/story` 2.34 s, `/events` 2.40 s, `/cold-brew` 2.43 s, `/book` 2.49 s, `/menu` 2.52 s, `/book-wall` 2.60 s, `/enquire` 2.63 s, `/events/coffee-rave` 2.66 s, home 3.06 s.
+- On the same day (2026-10-17), the M8 working tree and the previous commit measured the same within noise: home 2.93 s and 2.95 s (five runs each), `/enquire` 2.52 s and 2.51 s, `/book-wall` 2.49 s both, `/events/coffee-rave` 2.48 s both. The previous commit's `/book-wall` showed CLS 0.035, which D-063 removes. So the misses above come from the machine's load, not the code.
+- Earlier in M8, on a quieter machine: `/menu` 2.46 to 2.50 s (was 2.60 s), `/book` 2.46 s (was 2.78 s), `/story` 2.30 to 2.40 s. In a real browser with the CPU 4x slower, first paint and LCP land at 0.4 to 0.5 s.
+- Still warns: total blocking time on pages that load the in-browser backend after idle (`/events`, `/book-wall`, `/events/coffee-rave`), and Lighthouse's script total. Both count the mock engines, which a real backend (Phase 2) would not ship to the browser.
+- INP (Event Timing, CPU 4x slower, quiet machine): booking at most 104 ms, menu at most 128 ms, home at most 64 ms, against 200 ms. Not repeated on 2026-10-17 because of the load (D-065).
