@@ -20,7 +20,7 @@ export function SteepExplorer({ brews }: { readonly brews: readonly Brew[] }) {
 
   return (
     <div
-      className="grid gap-8 rounded-md border border-line bg-surface-raised p-5 tablet:grid-cols-[auto_1fr] tablet:p-8"
+      className="fold-grid gap-y-8 rounded-md border border-line bg-surface-raised p-5 tablet:p-8 laptop:grid-cols-[auto_1fr]"
       style={{ "--steep": progressForHour(hours) } as CSSProperties}
     >
       <div className="flex justify-center tablet:w-40">

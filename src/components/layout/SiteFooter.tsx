@@ -17,7 +17,7 @@ export async function SiteFooter() {
   const outlets = await services.outlets.listOutlets();
   return (
     <footer className="mt-auto border-t border-line bg-surface-raised">
-      <div className="content-cap grid gap-10 py-12 tablet:grid-cols-2 laptop:grid-cols-4">
+      <div className="content-cap fold-grid gap-y-10 py-12 laptop:grid-cols-4">
         <div className="flex flex-col gap-4">
           <Logo withTagline className="text-[1.375rem]" />
           <p className="text-fg-muted">{copy.footer.line}</p>

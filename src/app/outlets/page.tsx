@@ -18,7 +18,7 @@ export default async function OutletsPage() {
         <h1 className="text-h1 font-semibold">{t.heading}</h1>
         <p className="text-fg-muted">{t.intro}</p>
       </header>
-      <ul className="grid gap-12 tablet:grid-cols-2 laptop:grid-cols-3">
+      <ul className="fold-grid gap-y-12 laptop:grid-cols-3 laptop:gap-x-12">
         {outlets.map((outlet) => (
           <li key={outlet.slug} className="flex flex-col gap-3">
             <OutletCard outlet={outlet} as="h2" />

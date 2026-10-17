@@ -7,7 +7,7 @@ const t = copy.notFound;
 /** 404 (Blueprint section 4: short copy, links back to the menu and booking). */
 export default function NotFound() {
   return (
-    <main id="content" className="content-cap flex flex-1 flex-col justify-center gap-6 py-16 laptop:py-28">
+    <main id="content" className="content-cap fold-left flex flex-1 flex-col justify-center gap-6 py-16 laptop:py-28">
       <p className="font-mono text-h2 text-accent" aria-hidden="true">
         404
       </p>

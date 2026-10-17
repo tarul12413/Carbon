@@ -17,7 +17,7 @@ export async function TodayAtCarbon() {
   const nextOutlet = outlets.find((o) => o.slug === next?.outlet);
   return (
     <section aria-labelledby="today-title" className="border-t border-line">
-      <div className="content-cap grid gap-10 py-16 laptop:grid-cols-[1fr_1.2fr] laptop:items-center laptop:py-24">
+      <div className="content-cap grid fold-segments gap-10 py-16 laptop:grid-cols-[1fr_1.2fr] laptop:items-center laptop:py-24">
         <header className="flex flex-col gap-3">
           <p className="label-caps text-small text-fg-muted">{t.eyebrow}</p>
           <h2 id="today-title" className="text-h1 font-semibold">
@@ -57,7 +57,7 @@ export async function TodayAtCarbon() {
               </Chip>
             </Link>
           )}
-          <div className="grid gap-3 tablet:grid-cols-2">
+          <div className="fold-grid gap-y-3">
             <ButtonLink href={routes.book}>{copy.home.hero.book}</ButtonLink>
             <ButtonLink href={routes.menu} variant="secondary">
               {copy.home.hero.menu}

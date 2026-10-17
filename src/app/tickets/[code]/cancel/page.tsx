@@ -12,7 +12,7 @@ interface PageProps {
 export default async function CancelTicketPage({ params }: PageProps) {
   const [{ code }, events] = await Promise.all([params, ticketEvents()]);
   return (
-    <main id="content" className="content-cap flex max-w-xl flex-col py-8 laptop:py-14">
+    <main id="content" className="content-cap fold-left flex max-w-xl flex-col py-8 laptop:py-14">
       <CancelTicket code={code} events={events} />
     </main>
   );

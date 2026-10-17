@@ -27,7 +27,7 @@ interface FlowFrameProps {
  */
 export function FlowFrame({ header, children, action, summary }: FlowFrameProps) {
   return (
-    <div className="content-cap flex flex-col gap-8 py-8 tablet:grid tablet:grid-cols-[minmax(0,1fr)_16rem] tablet:items-start tablet:gap-12 laptop:grid-cols-[minmax(0,40rem)_20rem] laptop:py-14">
+    <div className="content-cap fold-grid gap-y-8 py-8 tablet:items-start tablet:gap-x-12 laptop:grid-cols-[minmax(0,40rem)_20rem] laptop:py-14">
       <div className="flex flex-col gap-6">
         {header}
         {children}

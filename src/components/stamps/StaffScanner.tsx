@@ -98,7 +98,7 @@ export function StaffScanner({ outlets, events, stampCard, devPanel }: StaffScan
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3 rounded-sm border border-dashed border-line-strong p-4">
-        <div className="grid gap-3 tablet:grid-cols-2">
+        <div className="fold-grid gap-y-3">
           <div className="flex flex-col gap-1.5">
             <label htmlFor={accountId} className="text-small font-medium">
               {t.account}

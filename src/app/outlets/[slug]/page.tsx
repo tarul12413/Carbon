@@ -74,7 +74,7 @@ export default async function OutletPage({ params }: PageProps) {
         <OutletStatus hours={outlet.hours} timeZone={site.timeZone} />
       </header>
 
-      <div className="grid gap-10 laptop:grid-cols-[1.4fr_1fr]">
+      <div className="grid fold-segments gap-10 laptop:grid-cols-[1.4fr_1fr]">
         <div className="grid grid-cols-2 gap-3">
           <PlaceholderFrame label={t.photo(outlet.name, 1)} className="col-span-2 aspect-[16/10]" />
           <PlaceholderFrame label={t.photo(outlet.name, 2)} className="aspect-square" />

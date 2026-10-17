@@ -16,7 +16,7 @@ export default async function StaffPage() {
   const [outlets, events] = await Promise.all([services.outlets.listOutlets(), ticketEvents()]);
   return (
     <main id="content" className="flex flex-1 flex-col">
-      <div className="content-cap flex max-w-xl flex-col py-8 laptop:py-14">
+      <div className="content-cap fold-left flex max-w-xl flex-col py-8 laptop:py-14">
         <StaffScanner
           outlets={outlets.map((o) => ({ slug: o.slug, name: o.name }))}
           events={events}

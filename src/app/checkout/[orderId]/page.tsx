@@ -18,7 +18,7 @@ export default async function CheckoutPage({ params }: PageProps) {
   ]);
   const outletNames = Object.fromEntries(outlets.map((o) => [o.slug, o.name]));
   return (
-    <main id="content" className="content-cap flex max-w-2xl flex-col py-8 laptop:py-14">
+    <main id="content" className="content-cap fold-left flex max-w-2xl flex-col py-8 laptop:py-14">
       <Checkout
         orderId={orderId}
         events={events.map((e) => ({ slug: e.slug, title: e.title, outletName: outletNames[e.outlet] ?? e.outlet }))}

@@ -23,7 +23,7 @@ const SPINES = [
 export function BookWallTeaser() {
   return (
     <section aria-labelledby="wall-title" className="border-t border-line">
-      <div className="content-cap grid gap-10 py-16 laptop:grid-cols-2 laptop:items-end laptop:py-24">
+      <div className="content-cap grid fold-segments gap-10 py-16 laptop:grid-cols-2 laptop:items-end laptop:py-24">
         <div className="flex flex-col gap-6">
           <SectionHeading id="wall-title" eyebrow={t.eyebrow}>
             {t.title}

@@ -189,3 +189,50 @@
     }
   }
 }
+
+/*
+ * Two-column layouts that respect a fold or seam (Blueprint section 6). From the tablet band up: two
+ * equal columns with a centre gap of at least 40px, so no control sits on a hinge or a dual-screen
+ * seam. Where the browser reports two screens side by side, the columns follow the screens and the
+ * gap covers the seam. Laptop layouts can still set their own columns (laptop:grid-cols-3).
+ */
+@utility fold-grid {
+  display: grid;
+  /* One column that never grows past the screen (a plain grid sizes it to its widest content). */
+  grid-template-columns: minmax(0, 1fr);
+  @media (width >= 37.5rem) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2.5rem;
+  }
+  @media (horizontal-viewport-segments: 2) {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    column-gap: calc(env(viewport-segment-left 1 0, 0px) - env(viewport-segment-right 0 0, 0px) + 2rem) !important;
+  }
+}
+
+/* Laptop-only splits (1fr / 1.2fr and the like): left alone, except across two reported screens. */
+@utility fold-segments {
+  @media (horizontal-viewport-segments: 2) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    column-gap: calc(env(viewport-segment-left 1 0, 0px) - env(viewport-segment-right 0 0, 0px) + 2rem) !important;
+  }
+}
+
+/* The header nav, centred on one screen, moves onto the right-hand screen beside "Book a table". */
+@utility fold-nav {
+  @media (horizontal-viewport-segments: 2) {
+    margin-inline-start: auto;
+    & > ul {
+      column-gap: 1.25rem;
+    }
+  }
+}
+
+/* Single-column forms and tickets stay whole on the left-hand screen instead of straddling the seam. */
+@utility fold-left {
+  @media (horizontal-viewport-segments: 2) {
+    max-width: env(viewport-segment-width 0 0, 100%) !important;
+    margin-inline: 0 !important;
+  }
+}

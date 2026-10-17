@@ -15,7 +15,7 @@ export const metadata: Metadata = { title: t.title };
 export default function BookWallPage() {
   return (
     <main id="content" className="flex flex-1 flex-col">
-      <div className="content-cap flex flex-col gap-8 py-8 laptop:py-14">
+      <div className="content-cap fold-left flex flex-col gap-8 py-8 laptop:py-14">
         <header className="flex flex-col gap-3">
           <h1 className="text-display font-semibold text-balance">{t.title}</h1>
           <p className="text-h3 text-fg-muted">{t.lead}</p>

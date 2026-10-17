@@ -16,7 +16,7 @@ export default async function ManageBookingPage({ params }: PageProps) {
   const code = normalizeBookingCode((await params).code);
   const { outlets, settings } = await bookingProps();
   return (
-    <div className="content-cap flex max-w-3xl flex-col py-8 laptop:py-14">
+    <div className="content-cap fold-left flex max-w-3xl flex-col py-8 laptop:py-14">
       <ManageBooking code={code} outlets={outlets} settings={settings} />
     </div>
   );

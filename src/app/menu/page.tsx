@@ -23,7 +23,7 @@ export default async function MenuPage() {
 
   return (
     <main id="content" data-theme="paper" className="bg-surface text-fg">
-      <div className="content-cap flex flex-col gap-8 py-10 laptop:py-16">
+      <div className="content-cap fold-left flex flex-col gap-8 py-10 laptop:py-16">
         <header className="flex flex-col gap-4">
           <Suspense fallback={null}>
             <QrBanner outlets={outlets.map(({ slug, name }) => ({ slug, name }))} />

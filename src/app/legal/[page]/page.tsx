@@ -35,7 +35,7 @@ export default async function LegalPageView({ params }: PageProps) {
   const content = t.pages[page];
 
   return (
-    <main id="content" className="content-cap flex max-w-3xl flex-col gap-8 py-8 laptop:py-14">
+    <main id="content" className="content-cap fold-left flex max-w-3xl flex-col gap-8 py-8 laptop:py-14">
       <nav aria-label={t.nav}>
         <ul className="flex flex-wrap gap-2">
           {PAGES.map((p) => (

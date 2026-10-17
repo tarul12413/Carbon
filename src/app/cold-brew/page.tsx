@@ -17,7 +17,7 @@ export default async function ColdBrewPage() {
 
   return (
     <main id="content" className="content-cap flex flex-col gap-16 py-12 laptop:gap-24 laptop:py-20">
-      <header className="grid gap-8 laptop:grid-cols-[1fr_1.2fr] laptop:items-end">
+      <header className="grid fold-segments gap-8 laptop:grid-cols-[1fr_1.2fr] laptop:items-end">
         <div className="flex flex-col gap-3">
           <p className="label-caps text-small text-fg-muted">{t.eyebrow}</p>
           <h1 className="font-mono text-h1 font-medium text-accent">{t.heading}</h1>
@@ -39,7 +39,7 @@ export default async function ColdBrewPage() {
         <SectionHeading id="seven-title" eyebrow={t.seven.eyebrow}>
           {t.seven.title}
         </SectionHeading>
-        <ul className="grid gap-4 tablet:grid-cols-2 laptop:grid-cols-3">
+        <ul className="fold-grid gap-y-4 laptop:grid-cols-3 laptop:gap-x-4">
           {brews.map((brew) => (
             <li key={brew.id}>
               <BrewCard brew={brew} />

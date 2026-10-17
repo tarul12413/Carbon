@@ -12,7 +12,7 @@ export function EventsTeaser() {
         <SectionHeading id="events-title" eyebrow={t.eyebrow} className="bg-surface p-1 tablet:self-start">
           {t.title}
         </SectionHeading>
-        <ul className="grid gap-4 tablet:grid-cols-3">
+        <ul className="fold-grid gap-y-4 laptop:grid-cols-3 laptop:gap-x-4">
           {t.items.map((item) => (
             <li key={item.name} className="flex flex-col gap-2 rounded-md border border-line bg-surface p-6">
               <h3 className="text-h3 font-semibold">{item.name}</h3>

@@ -63,7 +63,7 @@ export function MenuBrowser({ menu: printed, elements: printedElements }: MenuBr
   return (
     <div className="flex flex-col gap-8">
       <div className="sticky top-0 z-30 flex flex-col gap-3 border-b border-line bg-surface py-3">
-        <div className="flex flex-col gap-3 tablet:flex-row tablet:items-center">
+        <div className="fold-grid gap-y-3 tablet:items-center laptop:flex laptop:gap-3">
           <label htmlFor={searchId} className="sr-only">
             {t.searchLabel}
           </label>
@@ -75,9 +75,9 @@ export function MenuBrowser({ menu: printed, elements: printedElements }: MenuBr
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t.searchPlaceholder}
             autoComplete="off"
-            className="min-h-11 w-full rounded-sm border border-line-strong bg-surface-raised px-4 text-body text-fg placeholder:text-fg-muted tablet:max-w-sm"
+            className="min-h-11 w-full rounded-sm border border-line-strong bg-surface-raised px-4 text-body text-fg placeholder:text-fg-muted laptop:max-w-sm"
           />
-          <div role="group" aria-label={t.viewLabel} className="flex gap-2 tablet:ml-auto">
+          <div role="group" aria-label={t.viewLabel} className="flex gap-2 tablet:justify-self-end laptop:ml-auto">
             {(["list", "periodic"] as const).map((v) => (
               <button
                 key={v}

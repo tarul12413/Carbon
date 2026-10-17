@@ -16,7 +16,7 @@ interface PageProps {
 export default async function EnquirePage({ searchParams }: PageProps) {
   const [{ type }, outlets] = await Promise.all([searchParams, services.outlets.listOutlets()]);
   return (
-    <main id="content" className="content-cap flex max-w-3xl flex-col py-8 laptop:py-14">
+    <main id="content" className="content-cap fold-left flex max-w-3xl flex-col py-8 laptop:py-14">
       <EnquiryForm
         initialType={isEnquiryType(type) ? type : undefined}
         outlets={outlets.map((o) => ({ slug: o.slug, name: o.name }))}

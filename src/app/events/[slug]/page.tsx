@@ -34,7 +34,7 @@ export default async function EventPage({ params, searchParams }: PageProps) {
 
   return (
     <main id="content" className="flex flex-col">
-      <div className="content-cap grid gap-8 py-8 tablet:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] tablet:items-start tablet:gap-12 laptop:py-14">
+      <div className="content-cap fold-grid gap-y-8 py-8 tablet:items-start tablet:gap-x-12 laptop:py-14">
         <div className="flex flex-col gap-6">
           <Link
             href={routes.events}

@@ -13,7 +13,7 @@ export function SiteHeader() {
         <Link href={routes.home} aria-label={copy.nav.home} className="rounded-sm text-[1.125rem]">
           <Logo assemble />
         </Link>
-        <nav aria-label={copy.nav.label} className="hidden laptop:block">
+        <nav aria-label={copy.nav.label} className="fold-nav hidden laptop:block">
           <ul className="flex items-center gap-8">
             {primaryNav.map((item) => (
               <li key={item.href}>

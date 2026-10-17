@@ -59,7 +59,7 @@ export default async function EventsPage({ searchParams }: PageProps) {
       </nav>
 
       {shown.length > 0 ? (
-        <ul className="grid gap-10 tablet:grid-cols-2 laptop:grid-cols-3">
+        <ul className="fold-grid gap-y-10 laptop:grid-cols-3">
           {shown.map((event) => (
             <li key={event.slug}>
               <EventCard event={event} outletName={outletName(event.outlet)} />

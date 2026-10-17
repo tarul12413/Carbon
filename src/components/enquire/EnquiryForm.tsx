@@ -132,7 +132,7 @@ export function EnquiryForm({ initialType, outlets, today }: EnquiryFormProps) {
 
       <fieldset className="flex min-w-0 flex-col gap-3" aria-describedby={errors.type ? "type-error" : undefined}>
         <legend className="mb-3 text-h3 font-semibold">{t.typeLegend}</legend>
-        <div className="grid gap-3 tablet:grid-cols-2">
+        <div className="fold-grid gap-y-3">
           {ENQUIRY_TYPES.map((type) => (
             <RadioCard
               key={type}
@@ -152,7 +152,7 @@ export function EnquiryForm({ initialType, outlets, today }: EnquiryFormProps) {
         )}
       </fieldset>
 
-      <div className="grid gap-5 tablet:grid-cols-2">
+      <div className="fold-grid gap-y-5">
         <TextField
           label={t.name}
           autoComplete="name"

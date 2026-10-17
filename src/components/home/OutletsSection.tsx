@@ -13,7 +13,7 @@ export async function OutletsSection() {
         <SectionHeading id="outlets-title" eyebrow={t.eyebrow}>
           {t.title}
         </SectionHeading>
-        <ul className="grid gap-10 tablet:grid-cols-2 laptop:grid-cols-3">
+        <ul className="fold-grid gap-y-10 laptop:grid-cols-3">
           {outlets.map((outlet) => (
             <li key={outlet.slug}>
               <OutletCard outlet={outlet} />

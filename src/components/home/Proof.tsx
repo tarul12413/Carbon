@@ -11,7 +11,7 @@ export function Proof() {
         <SectionHeading id="proof-title" eyebrow={t.eyebrow}>
           {t.title}
         </SectionHeading>
-        <div className="grid gap-10 laptop:grid-cols-[2fr_1fr]">
+        <div className="grid fold-segments gap-10 laptop:grid-cols-[2fr_1fr]">
           <section aria-labelledby="awards-title" className="flex flex-col gap-4">
             <h3 id="awards-title" className="label-caps text-small text-fg-muted">
               {t.awardsLabel}
