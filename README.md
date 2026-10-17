@@ -48,7 +48,15 @@ npm run lhci         # Lighthouse budgets
 
 ## Book wall, enquiries, legal and offline (M6)
 
-- `/book-wall` shows the sample shelf; tap a spine for its detail. `/book-wall/add` sends a book, which waits until "Staff approve waiting books" in Demo controls (the admin does this from M7).
+- `/book-wall` shows the sample shelf; tap a spine for its detail. `/book-wall/add` sends a book, which waits until staff approve it in the admin (`/admin/wall`).
 - `/enquire` takes catering, collab or launch, workshop and other enquiries; `/enquire?type=collab` preselects one.
 - `/legal/privacy`, `/legal/terms`, `/legal/refunds` are placeholder text. Unconfirmed values are written as `[[placeholderKey]]` in `copy.ts` and filled from `placeholders.ts`.
 - Offline: `public/sw.js` runs in production builds only (`npm run build && npm start`). Open a page, switch the network off and reload it; a page you have not opened shows `/offline`.
+
+## Admin (M7)
+
+- `/admin` opens with a sample sign-in. Pick a role; switch account or outlet at the top of any admin page. Each role sees only its sections (Blueprint section 10).
+- Try: send a group request from `/book` (more than 6 people), then approve it as the outlet's manager in `/admin/bookings`; the guest's `/book/<code>` page shows it confirmed and `/admin/audit` logs it.
+- `/admin/capacity` changes seats per slot, hours and closed dates; booking slots on this device follow at once. `/admin/menu` drafts and publishes edits, switches items sold out per outlet, and checks a new PDF; `/menu` on this device shows the result.
+- Admin data lives in this browser with the rest of the demo. `/api/admin/*` mirrors it for Phase 2, with the account in an `x-demo-staff` header.
+- Back-office text lives in `src/content/admin-copy.ts`; customer text stays in `src/content/copy.ts`.

@@ -42,16 +42,15 @@ Placeholders (P-xx) match the ids in `src/config/placeholders.ts`. Change the va
 
 ## Questions for you (Tarul)
 
-| #    | Question                                                                                                                   | Default I will use unless you say otherwise               | Needed by                          |
-| ---- | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ---------------------------------- |
-| Q-20 | Prices for each event, and whether each sells online, at the cafe, or both                                                 | "Rs ---"; both offered                                    | Before launch                      |
-| Q-21 | Age rules for Coffee Raves (Blueprint open item 9)                                                                         | Not shown                                                 | Before launch                      |
-| Q-22 | The real event calendar: names, dates, capacity, posters                                                                   | Three labelled samples                                    | Before the pitch, if you have them |
-| Q-23 | Can tickets be passed to a friend? The demo shares the event link, not the ticket                                          | Event link only                                           | M5                                 |
-| Q-29 | Is the book wall wanted online, and who at Carbon approves entries? The sample shelf uses real titles with made-up readers | Keep the sample shelf; approval in admin (M7)             | Before launch                      |
-| Q-30 | Where should enquiries go (a WhatsApp number, an email, the admin inbox), and how fast does Carbon reply?                  | Admin inbox only; "X hours"                               | Before launch                      |
-| Q-31 | Legal: the registered business name, a privacy contact, and a lawyer to review the three pages                             | Placeholders, clearly marked                              | Before launch                      |
-| Q-32 | Should the word filter cover other languages or stricter rules?                                                            | Short English and Hinglish list; staff approve everything | Before launch                      |
+| #    | Question                                                                                                                                  | Default I will use unless you say otherwise                           | Needed by                          |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- | ---------------------------------- |
+| Q-20 | Prices for each event, and whether each sells online, at the cafe, or both                                                                | "Rs ---"; both offered                                                | Before launch                      |
+| Q-21 | Age rules for Coffee Raves (Blueprint open item 9)                                                                                        | Not shown                                                             | Before launch                      |
+| Q-22 | The real event calendar: names, dates, capacity, posters                                                                                  | Three labelled samples                                                | Before the pitch, if you have them |
+| Q-23 | Can tickets be passed to a friend? The demo shares the event link, not the ticket                                                         | Event link only                                                       | M5                                 |
+| Q-33 | Who at Carbon gets which admin role, and should baristas see guests' full phone numbers?                                                  | Blueprint's four roles; staff see full numbers, the export masks them | Before launch                      |
+| Q-34 | When staff approve a large group, is it pay at the cafe, or do they ask for a deposit (P-04)?                                             | Pay at the cafe                                                       | Before launch                      |
+| Q-35 | Which later admin parts matter for launch: walk-ins, event creation, payments and refunds, the announcement banner, reports, staff users? | All later; the demo shows the core                                    | Before Phase 2 scoping             |
 
 ## Answered
 
@@ -81,6 +80,11 @@ Placeholders (P-xx) match the ids in `src/config/placeholders.ts`. Change the va
 | Q-26 | Defaults accepted (2026-10-13)                                                     | Owners and baristas only                                                                             |
 | Q-27 | Defaults accepted (2026-10-13)                                                     | Flagged, still allowed                                                                               |
 | Q-28 | Defaults accepted (2026-10-13)                                                     | Keep one copy file                                                                                   |
+| Q-29 | Defaults accepted (2026-10-17)                                                     | Keep the sample shelf; approval in admin                                                             |
+| Q-30 | Defaults accepted (2026-10-17)                                                     | Admin inbox only; "X hours"                                                                          |
+| Q-31 | Defaults accepted (2026-10-17)                                                     | Placeholders, clearly marked                                                                         |
+| Q-32 | Defaults accepted (2026-10-17)                                                     | Short English and Hinglish list; staff approve everything                                            |
+| Q-28 | Revisited (2026-10-17)                                                             | Back-office copy moves to src/content/admin-copy.ts (D-055)                                          |
 
 ## Conflicts between the docs (brief wins)
 

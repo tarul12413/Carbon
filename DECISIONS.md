@@ -362,3 +362,49 @@ GSAP, Motion and zod are deferred to the milestone that first uses them, so noth
 - Lighthouse on the default build, simulated: accessibility 100 everywhere. LCP medians: `/outlets/c-scheme` 2.39 s, `/story` 2.32 s, `/enquire` 2.32 s, `/book-wall` 2.34 s, `/cold-brew` 2.42 s, home 2.45 s, `/events/coffee-rave` 2.47 s, `/events` 2.49 s, `/menu` 2.63 s, `/book` 2.78 s. `/menu` and `/book` still miss 2.5 s (M8).
 - Home is back at 2.43 to 2.45 s, so M5's 2.58 to 2.63 s was mostly machine noise. The one-copy-file cost (Q-28, kept as is) still stands: M6 added the legal and wall text to it.
 - `/book-wall` has a layout shift of 0.035 while the shelf loads from the browser (gate: 0.1). The loading placeholder can match the real height more closely in M8.
+
+## M7: Admin with role switcher
+
+### D-055 Back-office copy in its own file
+
+- The admin's text pushed the home page to 176.3 KB of first-load JavaScript (budget 170 KB), because `copy.ts` ships whole to every page and Turbopack does not tree-shake separate exports of one module (D-047, Q-28).
+- Tarul chose (2026-10-17): customer-facing copy stays in `src/content/copy.ts`; back-office copy (the admin and the staff scanner) moves to `src/content/admin-copy.ts` (`adminCopy`, `staffCopy`). CLAUDE.md says so. Home is back under budget, and customer pages lost the scanner's text too.
+- Alternatives: keep one file and list the miss as a known gap, or cut about 7 KB elsewhere on home.
+
+### D-056 Admin sign-in and roles
+
+- `/admin` opens with a mock sign-in: pick one of the sample accounts (owner, a manager and a barista per outlet, marketing). The choice is kept in this browser (`carbon-demo:admin`) and can be switched or signed out at the top of every admin page. Phase 2: magic link or Google sign-in, multi-factor optional (Blueprint section 10).
+- What each role sees and does follows Blueprint section 10 and lives in one table (`src/domain/admin/access.ts`): owner everything; manager their outlet's bookings, capacity and hours, menu availability, events, check-in and audit log; barista today's bookings and check-in; marketing events, wall moderation and enquiries. The engine checks every call (role, then outlet); the screens only hide what the engine would refuse.
+- Every change is logged with the account, outlet, what changed and when (`audit_log`). The audit log moved out of the stamp card schema into `src/domain/audit.ts` and gained an optional outlet and a short "what changed" detail.
+- Route handlers under `/api/admin/*` mirror the service, with the account in an `x-demo-staff` header (mock only, like the scanner's; Phase 2 reads the staff session).
+
+### D-057 Bookings, capacity and hours
+
+- Bookings: group requests, oldest date first, with the seats still free at that time and a warning when the group is bigger than that (Q-17: staff check capacity when approving). Approve, decline (asks once more), staff note. On the day: seated, and no-show once the time has passed. Baristas see today only. An approved request is pay-at-the-cafe; deposits stay an open question (Q-34).
+- Capacity and hours per outlet: opening and closing time, seats per slot, and dates closed for bookings with a staff-only reason. Saved values sit on top of the placeholders (P-08, P-14), which stay open until Carbon confirms. Booking availability reads them at once; a closed date shows "Closed for bookings" in the slot picker and refuses holds.
+- Bookings already made stay put when hours shrink or a date closes; the save says how many now fall outside so staff can call those guests. Moving or cancelling them automatically would be a policy Carbon has not set.
+- Public pages keep showing the hours from `placeholders.ts`: in Phase 2 a publish revalidates them. The demo says so on the screen.
+- Not built (Blueprint section 10, later): walk-ins, a calendar view, slot rules beyond seats per slot, special hours for one day, reports.
+
+### D-058 Menu editor
+
+- Owner edits name, notes, price per serving (in rupees), steep hours (cold brews only) and the two tags the site uses ("signature cold brew", "carries Carbon's name"). Edits wait as drafts and go live together on "Publish" (Blueprint 11: prices change only on publish). A draft that matches what is live is dropped. The printed shape is kept: one price per printed serving, no prices where the menu prints a note.
+- Dietary tags are not offered: the brief asks to confirm veg and alcohol facts before stating them.
+- The sold-out switch is per outlet and live at once, for owners and that outlet's manager. `/menu` greys the item ("Not today") at the outlet from a table QR (`?outlet=`), and everywhere only when it is off at all three.
+- Mock PDF upload: the browser reads the file's name, size and first bytes; the service checks it is a PDF ("%PDF-") under 10 MB (a technical cap, not a Carbon rule) and records it. The file is not kept and the download stays the shipped PDF; the screen says so. A warning lists items published after the last upload (Blueprint 11).
+- Demo only: `/menu` reads published edits from this browser's saved data with a small zod-free hook, so a publish shows there straight away. Other pages (home signatures, cold brew) keep the transcribed menu until Phase 2 revalidates them.
+
+### D-059 Events, wall, enquiries
+
+- Events: sales per event (sold, checked in, to pay at the cafe, waitlist) for the account's outlets. Attendees: name, masked phone, code, type, paid, check-in. Staff can take payment at the counter before the event ("Mark paid") or collect and check in at once, through the same check-in as the door scanner. Export as CSV with phones still masked. Seats sold in the sample data have no names, and the screen says how many. Creating events and ticket types is later.
+- Book wall: approve or reject waiting books; reported spines can come off the shelf or stay (reports cleared). The demo panel's "Staff approve waiting books" from M6 is gone; the book wall's demo panel links to the admin instead.
+- Enquiries: newest first, filter by status, move between new, replied and closed, with a staff note. Nothing is sent from the demo.
+- Dashboard ("Today"): covers, requests to review, people checked in, orders paid online (counts only, prices are unknown), books waiting, new enquiries, today's bookings, seats by slot for one outlet, and coming events. Each tile appears only for roles that can act on it.
+- Admin views reload when another tab changes the demo data, so a booking made in one tab appears in the admin in another.
+
+### D-060 M7 measurements
+
+- Unit: 195 tests (23 new: roles, dashboard, requests, seating rules, capacity and closed dates feeding availability, menu drafts and publish, availability per outlet, PDF checks, attendees and payment at the counter, moderation, enquiries, audit scope, older saved data, routes).
+- E2E with the stamp card flag on (as CI builds): 208 pass, 3 skipped by design. Two home clock tests timed out in one slow full run (5.1 min) and passed 63 of 63 when rerun on their own; the same load pattern as M6. New admin flows: a manager approves a group request and the guest sees it confirmed; each role's sections; closing a date closes it for booking; menu draft, publish, PDF warning and sold-out showing on `/menu`; manager limits; marketing moves an enquiry and opens attendees. All axe-clean at 360, 744 and 1440 px, run three times in a row without a failure.
+- Lighthouse (default build): accessibility 100 everywhere. LCP medians: `/story` 2.30 s, `/book-wall` 2.30 s, `/enquire` 2.31 s, `/outlets/c-scheme` 2.31 s, `/cold-brew` 2.41 s, home 2.43 s, `/events/coffee-rave` 2.46 s, `/events` 2.49 s, `/menu` 2.60 s, `/book` 2.78 s. `/menu` and `/book` still miss 2.5 s (M8). The menu overlay hook did not move `/menu`.
+- Home first-load JavaScript is back under 170 KB after D-055. Lighthouse's own script total (which also counts what loads after the page is idle) still warns on several pages, as before; M8 looks at it with the rest of performance.
