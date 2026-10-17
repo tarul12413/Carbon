@@ -59,6 +59,7 @@ test.describe("home", () => {
 
   test('typing "96" runs the clock to the end', async ({ page }) => {
     await page.goto("/");
+    await expect(page.locator("#steep-clock")).toHaveAttribute("data-mode", "pinned");
     await page.mouse.wheel(0, 200);
     await page.keyboard.type("96");
     await expect(clockFace(page)).toHaveText("96 hours steeped", { timeout: 10_000 });

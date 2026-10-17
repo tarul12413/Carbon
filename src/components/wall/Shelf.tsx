@@ -73,7 +73,16 @@ export function Shelf() {
     return () => observer.disconnect();
   }, [shelf]);
 
-  if (!shelf) return <div className="shelf min-h-[25rem]" aria-busy="true" aria-label={t.shelfLabel} />;
+  /* Holds the loaded height of the sample shelf (16 books and the count line) at each width, so nothing below it moves. */
+  if (!shelf) {
+    return (
+      <div
+        className="shelf min-h-[39.3rem] tablet:min-h-[32.65rem] laptop:min-h-[17rem]"
+        aria-busy="true"
+        aria-label={t.shelfLabel}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">
