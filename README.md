@@ -15,6 +15,7 @@ npm run build && npm start        # production build (needed for the offline ser
 Feature flags (build time, `.env.local` or Vercel Environment Variables, then rebuild):
 
 - `NEXT_PUBLIC_FLAG_STAMP_CARD=true` turns on the stamp card (`/my-carbon`, the stamp side of `/staff`). Off by default.
+- `NEXT_PUBLIC_FLAG_3D=false` turns off the 3D layer (three.js) and keeps the SVG and HTML versions. On by default; it also stays off for reduced motion, Save-Data, low-memory devices and screens under 390 px.
 - `NEXT_PUBLIC_BOOKING_TRANSPORT=http` sends bookings through the route handlers instead of the in-browser engine.
 
 ## A five-minute demo

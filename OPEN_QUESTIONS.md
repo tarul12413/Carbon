@@ -51,40 +51,41 @@ Placeholders (P-xx) match the ids in `src/config/placeholders.ts`. Change the va
 
 ## Answered
 
-| #    | Answer (date)                                                                      | Applied                                                                                              |
-| ---- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Q-01 | Logo was taken online; it stays a placeholder and changes after a yes (2026-10-10) | SVG redraw of the mark, Jost wordmark                                                                |
-| Q-04 | Keep the short slugs (2026-10-10)                                                  | `c-scheme`, `raja-park`, `vaishali-nagar`                                                            |
-| Q-05 | Derived symbols are fine (2026-10-10)                                              | First letters of the menu name, unique, see `elementSymbols`                                         |
-| Q-06 | Serve the full PDF; admin can upload a newer one later (2026-10-10)                | `/menu/carbon-menu-march-2026.pdf`, upload in M7                                                     |
-| Q-09 | Derived Paper accents are fine (2026-10-10)                                        | D-006                                                                                                |
-| Q-10 | Find the signatures across all menu pages, exact menu names (2026-10-10)           | Four drinks carry the Carbon name: Black Carbon Latte, Carbon Ginger Brew, Carbon Toddy, Pink Carbon |
-| Q-11 | OK to reuse "Coffee stronger than your ex." (2026-10-10)                           | Footer and /story heading                                                                            |
-| Q-12 | OK to name the BMW Motorrad launch (2026-10-10)                                    | Events teaser and /story timeline                                                                    |
-| Q-02 | Defaults accepted (2026-10-10)                                                     | LocalBusiness schema only; the rest logged as "later"                                                |
-| Q-03 | Defaults accepted (2026-10-10)                                                     | Brief's six; the large-group request replaces step 5's pay choice                                    |
-| Q-07 | Defaults accepted (2026-10-10)                                                     | Labelled "sample" with future dates, "Rs ---" prices                                                 |
-| Q-08 | Defaults accepted (2026-10-10)                                                     | Obviously fake names and +91 90000 000xx numbers                                                     |
-| Q-13 | Defaults accepted (2026-10-10)                                                     | Added with the events module in M4                                                                   |
-| Q-14 | Defaults accepted (2026-10-10)                                                     | Show the menu's section name as printed; make no caffeine-free claim or filter                       |
-| Q-15 | Defaults accepted (2026-10-10)                                                     | One menu for all three outlets                                                                       |
-| Q-16 | Defaults accepted (2026-10-10)                                                     | Last slot = closing minus table time                                                                 |
-| Q-17 | Defaults accepted (2026-10-10)                                                     | No; staff check capacity when approving (M7)                                                         |
-| Q-18 | Defaults accepted (2026-10-10)                                                     | Not online; they reply on WhatsApp                                                                   |
-| Q-19 | Defaults accepted (2026-10-10)                                                     | "Nothing left, try the next day"; no table waitlist                                                  |
-| Q-24 | Defaults accepted (2026-10-13)                                                     | Off; reward shown as "Set by Carbon"                                                                 |
-| Q-25 | Defaults accepted (2026-10-13)                                                     | Wait: no stamps on a full card                                                                       |
-| Q-26 | Defaults accepted (2026-10-13)                                                     | Owners and baristas only                                                                             |
-| Q-27 | Defaults accepted (2026-10-13)                                                     | Flagged, still allowed                                                                               |
-| Q-28 | Defaults accepted (2026-10-13)                                                     | Keep one copy file                                                                                   |
-| Q-29 | Defaults accepted (2026-10-17)                                                     | Keep the sample shelf; approval in admin                                                             |
-| Q-30 | Defaults accepted (2026-10-17)                                                     | Admin inbox only; "X hours"                                                                          |
-| Q-31 | Defaults accepted (2026-10-17)                                                     | Placeholders, clearly marked                                                                         |
-| Q-32 | Defaults accepted (2026-10-17)                                                     | Short English and Hinglish list; staff approve everything                                            |
-| Q-28 | Revisited (2026-10-17)                                                             | Back-office copy moves to src/content/admin-copy.ts (D-055)                                          |
-| Q-33 | Defaults accepted (2026-10-17)                                                     | Blueprint's four roles; full numbers on screen, masked in the export                                 |
-| Q-34 | Defaults accepted (2026-10-17)                                                     | Pay at the cafe                                                                                      |
-| Q-35 | Defaults accepted (2026-10-17)                                                     | All later; the demo shows the core                                                                   |
+| #    | Answer (date)                                                                      | Applied                                                                                                  |
+| ---- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Q-01 | Logo was taken online; it stays a placeholder and changes after a yes (2026-10-10) | SVG redraw of the mark, Jost wordmark                                                                    |
+| Q-04 | Keep the short slugs (2026-10-10)                                                  | `c-scheme`, `raja-park`, `vaishali-nagar`                                                                |
+| Q-05 | Derived symbols are fine (2026-10-10)                                              | First letters of the menu name, unique, see `elementSymbols`                                             |
+| Q-06 | Serve the full PDF; admin can upload a newer one later (2026-10-10)                | `/menu/carbon-menu-march-2026.pdf`, upload in M7                                                         |
+| Q-09 | Derived Paper accents are fine (2026-10-10)                                        | D-006                                                                                                    |
+| Q-10 | Find the signatures across all menu pages, exact menu names (2026-10-10)           | Four drinks carry the Carbon name: Black Carbon Latte, Carbon Ginger Brew, Carbon Toddy, Pink Carbon     |
+| Q-11 | OK to reuse "Coffee stronger than your ex." (2026-10-10)                           | Footer and /story heading                                                                                |
+| Q-12 | OK to name the BMW Motorrad launch (2026-10-10)                                    | Events teaser and /story timeline                                                                        |
+| Q-02 | Defaults accepted (2026-10-10)                                                     | LocalBusiness schema only; the rest logged as "later"                                                    |
+| Q-03 | Defaults accepted (2026-10-10)                                                     | Brief's six; the large-group request replaces step 5's pay choice                                        |
+| Q-07 | Defaults accepted (2026-10-10)                                                     | Labelled "sample" with future dates, "Rs ---" prices                                                     |
+| Q-08 | Defaults accepted (2026-10-10)                                                     | Obviously fake names and +91 90000 000xx numbers                                                         |
+| Q-13 | Defaults accepted (2026-10-10)                                                     | Added with the events module in M4                                                                       |
+| Q-14 | Defaults accepted (2026-10-10)                                                     | Show the menu's section name as printed; make no caffeine-free claim or filter                           |
+| Q-15 | Defaults accepted (2026-10-10)                                                     | One menu for all three outlets                                                                           |
+| Q-16 | Defaults accepted (2026-10-10)                                                     | Last slot = closing minus table time                                                                     |
+| Q-17 | Defaults accepted (2026-10-10)                                                     | No; staff check capacity when approving (M7)                                                             |
+| Q-18 | Defaults accepted (2026-10-10)                                                     | Not online; they reply on WhatsApp                                                                       |
+| Q-19 | Defaults accepted (2026-10-10)                                                     | "Nothing left, try the next day"; no table waitlist                                                      |
+| Q-24 | Defaults accepted (2026-10-13)                                                     | Off; reward shown as "Set by Carbon"                                                                     |
+| Q-25 | Defaults accepted (2026-10-13)                                                     | Wait: no stamps on a full card                                                                           |
+| Q-26 | Defaults accepted (2026-10-13)                                                     | Owners and baristas only                                                                                 |
+| Q-27 | Defaults accepted (2026-10-13)                                                     | Flagged, still allowed                                                                                   |
+| Q-28 | Defaults accepted (2026-10-13)                                                     | Keep one copy file                                                                                       |
+| Q-29 | Defaults accepted (2026-10-17)                                                     | Keep the sample shelf; approval in admin                                                                 |
+| Q-30 | Defaults accepted (2026-10-17)                                                     | Admin inbox only; "X hours"                                                                              |
+| Q-31 | Defaults accepted (2026-10-17)                                                     | Placeholders, clearly marked                                                                             |
+| Q-32 | Defaults accepted (2026-10-17)                                                     | Short English and Hinglish list; staff approve everything                                                |
+| Q-28 | Revisited (2026-10-17)                                                             | Back-office copy moves to src/content/admin-copy.ts (D-055)                                              |
+| Q-33 | Defaults accepted (2026-10-17)                                                     | Blueprint's four roles; full numbers on screen, masked in the export                                     |
+| Q-34 | Defaults accepted (2026-10-17)                                                     | Pay at the cafe                                                                                          |
+| Q-35 | Defaults accepted (2026-10-17)                                                     | All later; the demo shows the core                                                                       |
+| Q-36 | Full 3D scenes; three.js loads after the page, like GSAP (2026-10-19)              | Home first load stays within the brief's 170 KB; the 3D layer loads on first interaction or idle (D-067) |
 
 ## Conflicts between the docs (brief wins)
 

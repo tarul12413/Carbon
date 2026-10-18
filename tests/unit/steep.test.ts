@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   activeCheckpoint,
+  brewLook,
   checkpointsOf,
   clockDigits,
   hourFromProgress,
   joinNames,
+  mixColour,
   nextCheckpoint,
   previousCheckpoint,
   progressForHour,
@@ -77,5 +79,31 @@ describe("steep clock maths", () => {
       expect(Math.abs(strikeTilt(a, 0, h))).toBeLessThanOrEqual(4);
       expect(strikeTilt(b, 1, h)).toBe(strikeTilt(b, 1, h));
     }
+  });
+});
+
+describe("3D glass look", () => {
+  it("fills and darkens with the steep, like the SVG glass", () => {
+    expect(brewLook(0)).toEqual({ level: 0, darkness: 0, settled: 0 });
+    expect(brewLook(1)).toEqual({ level: 1, darkness: 0.9, settled: 1 });
+    expect(brewLook(2).level).toBe(1);
+    expect(brewLook(-1).level).toBe(0);
+  });
+
+  it("settles the grounds after the colour starts to change, and only ever more", () => {
+    expect(brewLook(0.15).settled).toBe(0);
+    let last = 0;
+    for (let p = 0; p <= 1; p += 0.05) {
+      const { settled } = brewLook(p);
+      expect(settled).toBeGreaterThanOrEqual(last);
+      last = settled;
+    }
+  });
+
+  it("mixes colours channel by channel", () => {
+    expect(mixColour("#000000", "#ffffff", 0.5)).toEqual([0.5, 0.5, 0.5]);
+    const close = (got: number[], want: number[]) => got.forEach((c, i) => expect(c).toBeCloseTo(want[i]!, 10));
+    close(mixColour("#d98e3b", "#2a1a0e", 0), [217 / 255, 142 / 255, 59 / 255]);
+    close(mixColour("#d98e3b", "#2a1a0e", 3), [42 / 255, 26 / 255, 14 / 255]);
   });
 });

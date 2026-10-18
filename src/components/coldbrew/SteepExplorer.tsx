@@ -2,7 +2,7 @@
 
 import { useId, useState, type CSSProperties } from "react";
 import type { Brew } from "@/components/home/BrewCard";
-import { SteepGlass } from "@/components/home/SteepGlass";
+import { SteepGlass3D } from "@/components/three/SteepGlass3D";
 import { Chip } from "@/components/ui/Chip";
 import { copy } from "@/content/copy";
 import { MAX_STEEP_HOURS, activeCheckpoint, checkpointsOf, progressForHour } from "@/domain/steep";
@@ -25,7 +25,7 @@ export function SteepExplorer({ brews }: { readonly brews: readonly Brew[] }) {
     >
       <div className="flex justify-center tablet:w-40">
         <div className="w-24 tablet:w-32">
-          <SteepGlass />
+          <SteepGlass3D />
         </div>
       </div>
       <div className="flex flex-col gap-5">

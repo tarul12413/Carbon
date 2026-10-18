@@ -55,3 +55,26 @@ export function clockDigits(hour: number): [string, string] {
 export function strikeTilt(digit: string, position: number, hour: number): number {
   return ((Number(digit) * 37 + position * 11 + hour * 7) % 9) - 4;
 }
+
+/** What the glass shows at a point in the steep (3D glass, D-068). Mirrors the SVG glass: level and darkness follow progress. */
+export interface BrewLook {
+  /** Share of the glass filled, 0 to 1. */
+  readonly level: number;
+  /** How far the colour has moved from amber to the dark brew, 0 to 0.9. */
+  readonly darkness: number;
+  /** Share of the grounds settled at the bottom, 0 to 1; it lags the colour, as grounds sink slowly. */
+  readonly settled: number;
+}
+
+export function brewLook(progress: number): BrewLook {
+  const p = clamp(progress, 0, 1);
+  const s = clamp((p - 0.15) / 0.85, 0, 1);
+  return { level: p, darkness: p * 0.9, settled: s * s * (3 - 2 * s) };
+}
+
+/** Linear mix of two #rrggbb colours, as 0 to 1 channels for a shader. */
+export function mixColour(from: string, to: string, t: number): [number, number, number] {
+  const channel = (hex: string, i: number) => parseInt(hex.slice(1 + i * 2, 3 + i * 2), 16) / 255;
+  const k = clamp(t, 0, 1);
+  return [0, 1, 2].map((i) => channel(from, i) + (channel(to, i) - channel(from, i)) * k) as [number, number, number];
+}

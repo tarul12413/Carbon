@@ -474,3 +474,22 @@ These timings depend on the machine, so they have their own command, run one tes
 - Earlier in M8, on a quieter machine: `/menu` 2.46 to 2.50 s (was 2.60 s), `/book` 2.46 s (was 2.78 s), `/story` 2.30 to 2.40 s. In a real browser with the CPU 4x slower, first paint and LCP land at 0.4 to 0.5 s.
 - Still warns: total blocking time on pages that load the in-browser backend after idle (`/events`, `/book-wall`, `/events/coffee-rave`), and Lighthouse's script total. Both count the mock engines, which a real backend (Phase 2) would not ship to the browser.
 - INP (Event Timing, CPU 4x slower, quiet machine): booking at most 104 ms, menu at most 128 ms, home at most 64 ms, against 200 ms. Not repeated on 2026-10-17 because of the load (D-065).
+
+## M9: 3D and interaction
+
+### D-067 3D as a layer, loaded after the page
+
+- **What:** Full 3D scenes on the steep glass, the hero, the book wall, and CSS 3D on the menu's periodic table (Q-36). three.js 0.186.1, with `@types/three` 0.186.0, both pinned exactly and older than two weeks. Plain three.js with no React Three Fiber or drei: the scenes are imperative, like the GSAP code, and it is about 40 KB smaller.
+- **A layer, never a replacement:** each scene draws on a canvas over the SVG or HTML version, which stays rendered underneath. Canvases are `aria-hidden`; text, buttons and focus stay in the DOM. Once the first frame is drawn, the host gets `data-3d="ready"` and CSS cross-fades. If the GPU drops the context, the original fades back.
+- **Budget (the user, 2026-10-19):** the brief's 170 KB applies to the first load, as with GSAP (D-013). Only a small trigger ships in it (`useScene`). The capability check and render loop (`runtime.ts`) load on the first scroll, pointer move, tap or key, or 2.5 s after `load` once the page is idle, and only when the scene is near the screen. three.js and the scene load only if the device passes the check. Home first load stays under 170 KB (`budget.spec.ts`).
+- **Who gets 3D** (`src/lib/three/capability.ts`): WebGL2, no reduced motion, no Save-Data, at least 4 GB where the device reports memory, wider than the compact band (390 px and up; Blueprint section 6 turns decorative motion off below that), and the `NEXT_PUBLIC_FLAG_3D` flag (on by default).
+- **Smoothness:** frames are drawn only while the scene is on screen and the tab is visible; the pixel ratio is capped at 1.75.
+- **Alternatives:** React Three Fiber (heavier, a second rendering model); spline or model files (would need assets we do not have, and the brief allows no stock); CSS 3D everywhere (no real lighting or liquid).
+
+### D-068 The steep glass in 3D
+
+- **What:** A turned tumbler (lathe geometry) with a fresnel glass shader, on the home steep clock and the `/cold-brew` explorer. The brew fills and darkens from amber to the SVG glass's dark brew as the steep runs, swirls slowly, and its grounds settle at the bottom, lagging the colour (`brewLook` in `src/domain/steep.ts`). The drip falls into it until the glass is full.
+- **Interaction:** dragging sideways tilts the glass and the brew sloshes, staying level in the world, then both spring back. Vertical swipes still scroll the page (`touch-action: pan-y`). Scrolling the steep nudges the brew too.
+- **No changes to the drivers:** the scene reads the same `--steep` (0 to 1) that the clock and the explorer already write inline, once a frame. The 3D glass is drawn a little larger than the SVG box, in the canvas's bleed, so the layout does not change.
+- **Not glass refraction:** three's `transmission` renders the scene twice; too heavy for mid-range phones. The fresnel rim and a highlight streak read as glass.
+- **Also fixed:** on a dual-screen device, the hero's "Scroll to steep" link could land on the seam, depending on the width of the outlet status text (it changes with the time of day). With two screens, the link now stays beside "00h" on the left screen.

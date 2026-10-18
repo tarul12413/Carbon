@@ -1,0 +1,49 @@
+/*
+  The 3D layer (D-067). The host keeps its SVG or HTML version in place, so layout never moves;
+  once the first frame is drawn the canvas fades in over it and the original fades out.
+  --three-bleed-x and --three-bleed-y let a scene draw past the host's box (a glass and its drip).
+*/
+
+.host {
+  position: relative;
+}
+
+.host > :not(.canvas) {
+  transition: opacity 450ms ease;
+}
+
+.host[data-3d="ready"] > :not(.canvas) {
+  opacity: 0;
+}
+
+.canvas {
+  --bx: var(--three-bleed-x, 0px);
+  --by: var(--three-bleed-y, 0px);
+  position: absolute;
+  top: calc(-1 * var(--by));
+  left: calc(-1 * var(--bx));
+  width: calc(100% + 2 * var(--bx));
+  height: calc(100% + 2 * var(--by));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 450ms ease;
+}
+
+.host[data-3d="ready"] > .canvas {
+  opacity: 1;
+}
+
+.glass {
+  --three-bleed-x: 70%;
+  --three-bleed-y: 35%;
+}
+
+/* Sideways drags tilt the glass; vertical swipes still scroll the page. */
+.glass[data-3d="ready"] {
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.glass[data-3d="ready"]:active {
+  cursor: grabbing;
+}

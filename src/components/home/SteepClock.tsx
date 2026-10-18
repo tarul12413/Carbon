@@ -19,7 +19,7 @@ import {
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import { cx } from "@/lib/cx";
 import { BrewCard, type Brew } from "./BrewCard";
-import { SteepGlass } from "./SteepGlass";
+import { SteepGlass3D } from "@/components/three/SteepGlass3D";
 import styles from "./SteepClock.module.css";
 
 const t = copy.home.clock;
@@ -194,7 +194,7 @@ export function SteepClock({ brews }: SteepClockProps) {
                 </div>
 
                 <div className={styles.glassCell}>
-                  <SteepGlass />
+                  <SteepGlass3D />
                 </div>
                 <ol className={styles.timeline} aria-hidden="true">
                   {checkpoints.map((cp) => (

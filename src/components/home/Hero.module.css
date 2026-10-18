@@ -49,6 +49,17 @@
   padding-top: 0.75rem;
 }
 
+/* Two screens: the scroll link stays beside 00h on the left screen, the outlet status goes right (D-062). */
+@media (horizontal-viewport-segments: 2) {
+  .bar {
+    justify-content: flex-start;
+  }
+
+  .bar > :last-child {
+    margin-left: auto;
+  }
+}
+
 @media (min-width: 64rem) {
   .hero {
     min-height: calc(100svh - 5rem);

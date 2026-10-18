@@ -13,6 +13,8 @@ export const flags = {
   stampCard: flag(process.env.NEXT_PUBLIC_FLAG_STAMP_CARD, false),
   devPanel: flag(process.env.NEXT_PUBLIC_FLAG_DEV_PANEL, true),
   showPlaceholders: flag(process.env.NEXT_PUBLIC_FLAG_SHOW_PLACEHOLDERS, true),
+  /** The WebGL layer over the steep glass, hero and book wall (D-067). */
+  threeD: flag(process.env.NEXT_PUBLIC_FLAG_3D, true),
 } as const;
 
 export type FlagName = keyof typeof flags;
